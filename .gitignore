@@ -25,6 +25,7 @@ yarn-error.log*
 
 # env
 /server/.env
+/client/.env
 
 # history
 /.history
