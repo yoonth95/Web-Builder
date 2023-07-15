@@ -18,12 +18,20 @@ const Login = () => {
         body: JSON.stringify({ userID: id, userPW: pw }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        throw new Error(res.status);
+        alert(data);
+        return;
       }
 
-      const data = await res.json();
-      dispatch(setUser({ user_id: data.user_id, user_name: data.user_name }));
+      const userInfo = {
+        user_id: data.user_id,
+        user_name: data.user_name,
+      };
+
+      dispatch(setUser(userInfo));
+      alert('로그인 성공');
     } catch (err) {
       console.error(err);
     }

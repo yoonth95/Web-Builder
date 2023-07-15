@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'redux/userSlice';
 
-const useUserLogin = () => {
-  const [isLogin, setIsLogin] = useState(false);
+const useAuth = () => {
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -15,25 +15,28 @@ const useUserLogin = () => {
         });
 
         if (!res.ok) {
-          throw new Error(res.status);
+          console.log('no token');
+          return;
         }
 
         const data = await res.json();
-        setIsLogin(data.isLogin);
         const userInfo = {
           user_id: data.user.userID,
           user_name: data.user.userName,
         };
         dispatch(setUser(userInfo));
+        setLoading(false);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
     getUser();
-  }, []);
+  }, [dispatch]);
 
-  return isLogin;
+  return { loading };
 };
 
-export default useUserLogin;
+export default useAuth;

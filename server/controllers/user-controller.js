@@ -14,17 +14,6 @@ const jwt = require("jsonwebtoken");
 //     }
 // }
 
-const hashCompare = async (inputValue, hash) => {
-  try {
-    const isMatch = await bcrypt.compare(inputValue, hash);
-    if (isMatch) return true;
-    else return false;
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
-};
-
 // exports.signup = async (req, res) => {
 //     const { userID, userPW } = req.body;
 
@@ -43,6 +32,17 @@ const hashCompare = async (inputValue, hash) => {
 //         res.status(500).json(err);
 //     }
 // };
+
+const hashCompare = async (inputValue, hash) => {
+  try {
+    const isMatch = await bcrypt.compare(inputValue, hash);
+    if (isMatch) return true;
+    else return false;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+};
 
 exports.login = async (req, res) => {
   const { userID, userPW } = req.body;
@@ -69,7 +69,7 @@ exports.login = async (req, res) => {
         userName: getUser[0].userName,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" } // JWT 유효기간 설정
+      { expiresIn: "10s" } // JWT 유효기간 설정
     );
 
     // JWT를 HTTP Only 쿠키로 설정하여 응답
@@ -89,7 +89,7 @@ exports.login = async (req, res) => {
 };
 
 exports.verifyToken = (req, res) => {
-  const token = req.cookies.token;
+  const token = req.cookies?.token;
 
   let result = {
     isLogin: false,
@@ -103,10 +103,10 @@ exports.verifyToken = (req, res) => {
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
+      res.clearCookie("token");
       result.isLogin = false;
       return res.status(401).json(result);
     }
-
     result.isLogin = true;
     result.user = decoded;
     res.status(200).json(result);

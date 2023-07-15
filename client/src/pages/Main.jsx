@@ -1,12 +1,20 @@
 import React from 'react';
-import useUserLogin from 'hooks/useUserLogin';
+
+import useAuth from 'hooks/useAuth';
+
 import Login from 'components/Login';
 import Management from 'components/Management';
+import { useSelector } from 'react-redux';
 
 const Main = () => {
-  const isLogin = useUserLogin();
+  const { loading } = useAuth();
+  const { user } = useSelector((state) => state.user);
 
-  return <>{!isLogin ? <Login /> : <Management />}</>;
+  if (loading) {
+    return null;
+  }
+
+  return <>{!user ? <Login /> : <Management />}</>;
 };
 
 export default Main;
