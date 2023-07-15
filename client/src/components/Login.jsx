@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'redux/userSlice';
 
+import logo from 'assets/images/logo.svg';
+
 const Login = () => {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
@@ -38,21 +40,24 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={submit}>
-      <input
-        type='text'
-        placeholder='아이디 입력'
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-      />
-      <input
-        type='password'
-        placeholder='비밀번호 입력'
-        value={pw}
-        onChange={(e) => setPw(e.target.value)}
-      />
-      <button type='submit'>Login</button>
-    </form>
+    <>
+      <img src={logo} alt='로고 이미지' />
+      <form onSubmit={submit}>
+        <input
+          type='text'
+          placeholder='아이디 입력'
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        />
+        <input
+          type='password'
+          placeholder='비밀번호 입력'
+          value={pw}
+          onChange={(e) => setPw(e.target.value)}
+        />
+        <button type='submit'>Login</button>
+      </form>
+    </>
   );
 };
 
