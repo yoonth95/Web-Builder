@@ -69,7 +69,7 @@ exports.login = async (req, res) => {
         userName: getUser[0].userName,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "10s" } // JWT 유효기간 설정
+      { expiresIn: "1d" } // JWT 유효기간 설정
     );
 
     // JWT를 HTTP Only 쿠키로 설정하여 응답

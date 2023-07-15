@@ -1,0 +1,39 @@
+.primaryMenus {
+  border-radius: 10px;
+  border: 0.5px solid var(--grayscale-30, #b3b3b3);
+  background: var(--grayscale-0, #fff);
+  display: flex;
+  justify-content: space-between;
+}
+
+.primaryMenus .box:first-child {
+  width: 10%;
+}
+.primaryMenus .box:nth-child(2) {
+  width: 70%;
+}
+.primaryMenus .box:last-child {
+  width: 20%;
+}
+
+.subMenus {
+  border-radius: 10px;
+  border: 0.5px solid var(--grayscale-30, #b3b3b3);
+  background: var(--grayscale-0, #fff);
+  width: 90%;
+  display: flex;
+  margin-left: auto;
+}
+
+/* .subMenus::before {
+  content: '';
+  width: 10%;
+  border: 0;
+} */
+
+.subMenus .box:first-child {
+  width: 80%;
+}
+.subMenus .box:nth-child(2) {
+  width: 20%;
+}
