@@ -3,12 +3,20 @@ import { useSelector } from 'react-redux';
 
 import 'styles/menu.css';
 
-import logo from 'assets/images/logo.svg';
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// // import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+// import { faAngleRight } from "@fortawesome/free-regular-svg-icons";
+
+import arrow_img from 'assets/images/arrow.svg';
+import close_img from 'assets/images/close.svg';
+import setting_img from 'assets/images/setting.svg';
 
 const Management = () => {
   const { user } = useSelector((state) => state.user);
   const [firstList, setFirstList] = useState([]);
   const [secondList, setSecondList] = useState([]);
+  const [isClosed, setIsClosed] = useState(true);
+  const [clickId, setClickId] = useState([]);
 
   useEffect(() => {
     const getMenu = async () => {
@@ -18,7 +26,7 @@ const Management = () => {
           credentials: 'include',
         });
 
-        if (!res.ok) {
+        if (!res.ok) { 
           console.log('get menu fail');
           return;
         }
@@ -33,44 +41,74 @@ const Management = () => {
         console.error(err);
       }
     };
-
+    
     getMenu();
   }, []);
 
+  
+  const toggleImage = (id) => {
+    if (isClosed) {
+      setClickId(id)
+      setIsClosed(false)
+    } else {
+      setClickId("");
+      setIsClosed(true)
+    }
+  };
+
+  console.log(clickId)
   return (
-    <>
-      <img src={logo} alt='로고 이미지' />
-      <p>
-        안녕하세요 <strong>{user.user_name}</strong>님
-      </p>
-      <div>
+    <div className='wrap'>
+    <div className='memu_title_wrap'>
+      <div className='menu_title'>
+        <p>메뉴 설정</p>
+        <p>메뉴 항목과 구조를 설정해주세요.</p>
+      </div>
+      <button>메뉴 항목 추가</button>
+    </div>
+      <div className="menu_list_wrap">
         {firstList.map((menu) => (
-          <div key={menu.idx}>
+          <div key={menu.idx} className="menu_list">
             <div className='primaryMenus'>
-              <span className='box'>버튼1</span>
-              <h1 className='box'>{menu.title}</h1>
+              <div className="img_wrap">
+                {/* <span style={{ transform: clickId.includes(menu.idx) ? 'rotate(90deg)' : 'rotate(0deg)' }} onClick={()=>toggleImage(menu.idx)}><FontAwesomeIcon icon={faAngleRight} /></span> */}
+                <img src={arrow_img} style={{ transform: clickId===menu.idx ? 'rotate(90deg)' : 'rotate(0deg)' }} alt='화살표' width='42px' height='42px' onClick={()=>toggleImage(menu.idx)}/>
+              </div>
+              <h1>{menu.title}</h1>
               <div className='box'>
-                <span>버튼2</span>
-                <span>버튼3</span>
+                <span>
+                  <img src={setting_img} alt='셋팅' width='42px' height='42px'/>
+                </span>
+                <span>
+                  <img src={close_img} alt='닫기' width='42px' height='42px'/>
+                </span>
               </div>
             </div>
-            <div>
+            <div className={secondList
+                .map((submenu) => submenu.parent_id === clickId ) &&isClosed ? "subMenusHidden" : ""}>
               {secondList
                 .filter((submenu) => submenu.parent_id === menu.idx)
                 .map((submenu) => (
-                  <div key={submenu.idx} className='subMenus'>
-                    <h2 className='box'>{submenu.title}</h2>
-                    <div className='box'>
-                      <span>버튼2</span>
-                      <span>버튼3</span>
+                  <div>
+                    <div key={submenu.idx} className={ "subMenus"}>
+                      <h1 className='sub_box'>{submenu.title}</h1>
+                      <div className='box'>
+                        <span>
+                          <img src={setting_img} alt='셋팅' width='42px' height='42px'/>
+                        </span>
+                        <span>
+                          <img src={close_img} alt='닫기' width='42px' height='42px'/>
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  </div> 
                 ))}
+              <div className='subMenus addSubMenu'>+</div>
             </div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

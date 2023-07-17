@@ -88,6 +88,11 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.logout = async (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: 'Logout successful' });
+}
+
 exports.verifyToken = (req, res) => {
   const token = req.cookies?.token;
 
