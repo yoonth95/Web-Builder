@@ -1,34 +1,35 @@
-.login{
+.login {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
 
-.login_main{
+.login_main {
   width: 394px;
   height: 410px;
 }
 
-.logo{
+.logo {
   display: block;
   margin: auto;
   margin-bottom: 34.56px;
 }
 
-.login_form{
-  width:100%
+.login_form {
+  width: 100%;
 }
 
-.login_main div {
+.login_main .inputTag {
   position: relative;
-  width:100%;
+  width: 100%;
+  margin-bottom: 22px;
 }
 
-.login_main div input {
+.login_main .inputTag input {
   height: 60px;
   border-radius: 10px;
-  background: var(--grayscale-5, #F3F3F3);
+  background: var(--grayscale-5, #f3f3f3);
   padding: 29px 0px 12px 15px;
   outline: none;
   color: var(--grayscale-100, #030303);
@@ -42,10 +43,10 @@ input[type='password'] {
 }
 
 .validation {
-  visibility:hidden;
+  visibility: hidden;
 }
 
-.login_main div input+label {
+.login_main .inputTag input + label {
   display: block;
   position: absolute;
   text-align: left;
@@ -59,20 +60,19 @@ input[type='password'] {
   letter-spacing: -0.24px;
 }
 
-.link_box{
-  display:flex;
-  width:100%;
+.link_box {
+  display: flex;
+  width: 100%;
   justify-content: space-between;
   margin-bottom: 53px;
   font-size: 12px;
   font-weight: 400;
 }
 
-
-#login_btn{
+#login_btn {
   width: 100%;
   border-radius: 10px;
-  background-color: #EE7D00;
+  background-color: #ee7d00;
   color: #f0f0f0;
   height: 57px;
   font-weight: 700;

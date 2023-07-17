@@ -9,3 +9,15 @@ exports.getMenu = async (req, res) => {
     res.status(500).json(err);
   }
 };
+
+exports.deleteMenu = async (req, res) => {
+  const { menu_idx } = req.body;
+
+  try {
+    await menuDB.deleteMenu(menu_idx);
+    res.status(200).json('메뉴를 삭제하였습니다.');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json('삭제 오류');
+  }
+};

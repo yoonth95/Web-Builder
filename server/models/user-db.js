@@ -15,11 +15,11 @@ exports.getUser = async (userID) => {
   }
 };
 
-// exports.signUp = async (data) => {
-//   try {
-//     const result = await query(`INSERT INTO user (userID, userPW) VALUES (?, ?)`, [data[0], data[1]]);
-//     return result;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+exports.signUp = async (data) => {
+  try {
+    const result = await query(`INSERT INTO user (userName, userID, userPW) VALUES (?, ?, ?)`, [data[0], data[1], data[2]]);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};

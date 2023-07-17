@@ -3,13 +3,8 @@ import { useSelector } from 'react-redux';
 
 import 'styles/menu.css';
 
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// // import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
-// import { faAngleRight } from "@fortawesome/free-regular-svg-icons";
-
-import arrow_img from 'assets/images/arrow.svg';
-import close_img from 'assets/images/close.svg';
-import setting_img from 'assets/images/setting.svg';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight, faGear, faXmark, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const Management = () => {
   const { user } = useSelector((state) => state.user);
@@ -56,6 +51,29 @@ const Management = () => {
     }
   };
 
+  const deleteMenu = (id) => {
+    const deleteMenu = async () => {
+      try {
+        const res = await fetch('/api/deleteMenu', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ menu_idx: id }),
+        });
+
+        const data = await res.json();
+
+        alert(data);
+        if (!res.ok) console.log(res.error);
+        else window.location.reload();
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    
+    if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) deleteMenu();
+  }
+
   console.log(clickId)
   return (
     <div className='wrap'>
@@ -71,16 +89,15 @@ const Management = () => {
           <div key={menu.idx} className="menu_list">
             <div className='primaryMenus'>
               <div className="img_wrap">
-                {/* <span style={{ transform: clickId.includes(menu.idx) ? 'rotate(90deg)' : 'rotate(0deg)' }} onClick={()=>toggleImage(menu.idx)}><FontAwesomeIcon icon={faAngleRight} /></span> */}
-                <img src={arrow_img} style={{ transform: clickId===menu.idx ? 'rotate(90deg)' : 'rotate(0deg)' }} alt='화살표' width='42px' height='42px' onClick={()=>toggleImage(menu.idx)}/>
+                <span style={{ transform: clickId===menu.idx ? 'rotate(90deg)' : 'rotate(0deg)' }} onClick={()=>toggleImage(menu.idx)}><FontAwesomeIcon icon={faAngleRight} /></span>
               </div>
               <h1>{menu.title}</h1>
               <div className='box'>
                 <span>
-                  <img src={setting_img} alt='셋팅' width='42px' height='42px'/>
+                  <FontAwesomeIcon icon={faGear} />
                 </span>
-                <span>
-                  <img src={close_img} alt='닫기' width='42px' height='42px'/>
+                <span onClick={() => deleteMenu(menu.idx)}>
+                  <FontAwesomeIcon icon={faXmark} />
                 </span>
               </div>
             </div>
@@ -94,16 +111,18 @@ const Management = () => {
                       <h1 className='sub_box'>{submenu.title}</h1>
                       <div className='box'>
                         <span>
-                          <img src={setting_img} alt='셋팅' width='42px' height='42px'/>
+                          <FontAwesomeIcon icon={faGear} />
                         </span>
-                        <span>
-                          <img src={close_img} alt='닫기' width='42px' height='42px'/>
+                        <span onClick={() => deleteMenu(submenu.idx)}>
+                          <FontAwesomeIcon icon={faXmark} />
                         </span>
                       </div>
                     </div>
                   </div> 
                 ))}
-              <div className='subMenus addSubMenu'>+</div>
+              <div className='subMenus addSubMenu'>
+                <FontAwesomeIcon icon={faPlus} />
+              </div>
             </div>
           </div>
         ))}
