@@ -68,3 +68,112 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+```
+Project
+├─ .git
+│  ├─ HEAD
+│  ├─ config
+│  ├─ description
+│  ├─ hooks
+│  │  ├─ applypatch-msg.sample
+│  │  ├─ commit-msg.sample
+│  │  ├─ fsmonitor-watchman.sample
+│  │  ├─ post-update.sample
+│  │  ├─ pre-applypatch.sample
+│  │  ├─ pre-commit.sample
+│  │  ├─ pre-merge-commit.sample
+│  │  ├─ pre-push.sample
+│  │  ├─ pre-rebase.sample
+│  │  ├─ pre-receive.sample
+│  │  ├─ prepare-commit-msg.sample
+│  │  ├─ push-to-checkout.sample
+│  │  └─ update.sample
+│  ├─ index
+│  ├─ info
+│  │  └─ exclude
+│  ├─ logs
+│  │  ├─ HEAD
+│  │  └─ refs
+│  │     ├─ heads
+│  │     │  └─ master
+│  │     └─ remotes
+│  │        └─ origin
+│  │           └─ HEAD
+│  ├─ objects
+│  │  ├─ info
+│  │  └─ pack
+│  │     ├─ pack-289414af609f2bf0a5f14a168ad57cf1098e0c94.idx
+│  │     └─ pack-289414af609f2bf0a5f14a168ad57cf1098e0c94.pack
+│  ├─ packed-refs
+│  └─ refs
+│     ├─ heads
+│     │  └─ master
+│     ├─ remotes
+│     │  └─ origin
+│     │     └─ HEAD
+│     └─ tags
+├─ .gitignore
+├─ .vscode
+│  └─ setting.json
+├─ README.md
+├─ client
+│  ├─ .prettierrc.json
+│  ├─ jsconfig.json
+│  ├─ package-lock.json
+│  ├─ package.json
+│  ├─ public
+│  │  └─ index.html
+│  └─ src
+│     ├─ Router.js
+│     ├─ assets
+│     │  └─ images
+│     │     ├─ Vector.svg
+│     │     ├─ arrow.svg
+│     │     ├─ close.svg
+│     │     ├─ logo.svg
+│     │     └─ setting.svg
+│     ├─ components
+│     │  ├─ Login.jsx
+│     │  ├─ MainHeader.jsx
+│     │  ├─ Management.jsx
+│     │  ├─ Modal.jsx
+│     │  ├─ Nav.jsx
+│     │  ├─ Pagement.jsx
+│     │  └─ Signup.jsx
+│     ├─ hooks
+│     │  └─ useAuth.js
+│     ├─ index.js
+│     ├─ pages
+│     │  ├─ Main.jsx
+│     │  └─ NotFound.jsx
+│     ├─ redux
+│     │  ├─ store.js
+│     │  └─ userSlice.js
+│     ├─ setupProxy.js
+│     └─ styles
+│        ├─ login.css
+│        ├─ mainHeader.css
+│        ├─ management.css
+│        ├─ menu.css
+│        ├─ modal.css
+│        ├─ notFound.css
+│        └─ reset.css
+├─ package-lock.json
+└─ server
+   ├─ controllers
+   │  ├─ menu-controller.js
+   │  └─ user-controller.js
+   ├─ database
+   │  └─ db.js
+   ├─ models
+   │  ├─ menu-db.js
+   │  └─ user-db.js
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ routes
+   │  ├─ menu-route.js
+   │  └─ user-route.js
+   └─ server.js
+
+```
