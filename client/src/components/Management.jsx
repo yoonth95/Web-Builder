@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBtn } from 'redux/buttonSlice';
 
 import 'styles/menu.css';
 
@@ -11,7 +12,8 @@ const Management = ({isOpen , setIsOpen}) => {
   const [firstList, setFirstList] = useState([]);
   const [secondList, setSecondList] = useState([]);
   const [clickId, setClickId] = useState([]);
-  const [editMenu, setEditMenu] = useState(false);
+  const [editMenuId, setEditMenuId] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getMenu = async () => {
@@ -72,15 +74,14 @@ const Management = ({isOpen , setIsOpen}) => {
     if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) deleteMenu();
   }
 
-  const IseditMenu = ()=>{
-    console.log('editing!');
+  const editMenu = (id) => {
+    setEditMenuId((prevId) => (prevId === id ? null : id));
   }
 
   const addMenu = (isParent) => {
     console.log(isParent);
   }
   
-  console.log()
   return (
     <div className='wrap'>
     <div className='memu_title_wrap'>
@@ -88,7 +89,7 @@ const Management = ({isOpen , setIsOpen}) => {
         <p>메뉴 설정</p>
         <p>메뉴 항목과 구조를 설정해주세요.</p>
       </div>
-      <button onClick={() => {addMenu(true);setIsOpen(true)}}>메뉴 항목 추가</button>
+      <button onClick={() => {addMenu(true);setIsOpen(true);dispatch(setBtn("메뉴"))}}>메뉴 항목 추가</button>
     </div>
       <div className="menu_list_wrap">
         {firstList.map((menu) => (
@@ -99,7 +100,7 @@ const Management = ({isOpen , setIsOpen}) => {
               </div>
               <h1>{menu.title}</h1>
               <div className='box'>
-                <span onClick={() => editMenu()}>
+                <span onClick={() => editMenu(menu.idx)}>
                   <FontAwesomeIcon icon={faGear} />
                 </span>
                 <span onClick={() => deleteMenu(menu.idx)}>
@@ -107,16 +108,21 @@ const Management = ({isOpen , setIsOpen}) => {
                 </span>
               </div>
             </div>
+            {editMenuId === menu.idx ? (
+                <div className='edit_wrap'>
+                  <input type="text" value={menu.title} />
+                  <input type="text" value={menu.link} />
+                </div>):null}
             {(clickId.includes(menu.idx) &&
             <div>
               {secondList
                 .filter((submenu) => submenu.parent_id === menu.idx)
                 .map((submenu) => (
-                  <div>
+                  <div className='subMenus_wrap'>
                     <div key={submenu.idx} className="subMenus">
                       <h1 className='sub_box'>{submenu.title}</h1>
                       <div className='box'>
-                        <span onClick={() => editMenu()}>
+                        <span onClick={() => editMenu(submenu.idx)}>
                           <FontAwesomeIcon icon={faGear} />
                         </span>
                         <span onClick={() => deleteMenu(submenu.idx)}>

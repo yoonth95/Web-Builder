@@ -78,7 +78,7 @@
 .box {
   height: 100%;
   display: flex;
-  text-align: end;
+  justify-content: flex-end;
 }
 .box span {
   display: inline-flex;
@@ -112,6 +112,12 @@
 .primaryMenus h1 {
   width: 80%;
 }
+
+.subMenus_wrap{
+  display: flex;
+flex-direction: column;
+}
+
 .subMenus h1 {
   width:100%;
 }
@@ -143,6 +149,13 @@
 .subMenus .box:nth-child(2) {
   width: 20%;
 }
+
+.edit_wrap{
+  border-radius: 0px 0px 10px 10px;
+  border: 0.5px solid var(--grayscale-30, #B3B3B3);
+  background: var(--grayscale-0, #FFF);
+}
+
 
 .subMenus.addSubMenu {
   justify-content: center;
