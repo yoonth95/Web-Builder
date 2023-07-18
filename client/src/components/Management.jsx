@@ -6,12 +6,12 @@ import 'styles/menu.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faGear, faXmark, faPlus } from "@fortawesome/free-solid-svg-icons";
 
-const Management = () => {
+const Management = ({isOpen , setIsOpen}) => {
   const { user } = useSelector((state) => state.user);
   const [firstList, setFirstList] = useState([]);
   const [secondList, setSecondList] = useState([]);
-  const [isClosed, setIsClosed] = useState(true);
   const [clickId, setClickId] = useState([]);
+  const [editMenu, setEditMenu] = useState(false);
 
   useEffect(() => {
     const getMenu = async () => {
@@ -39,26 +39,24 @@ const Management = () => {
     
     getMenu();
   }, []);
-
+  console.log(isOpen)
   
   const toggleImage = (id) => {
-    if (isClosed) {
-      setClickId(id)
-      setIsClosed(false)
+    if (clickId.includes(id)) {
+      setClickId((prevClickId) => prevClickId.filter((clickedId) => clickedId !== id));
     } else {
-      setClickId("");
-      setIsClosed(true)
+      setClickId((prevClickId) => [...prevClickId, id]);
     }
   };
+
 
   const deleteMenu = (id) => {
     const deleteMenu = async () => {
       try {
-        const res = await fetch('/api/deleteMenu', {
-          method: 'POST',
+        const res = await fetch(`/api/deleteMenu/${id}`, {
+          method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({ menu_idx: id }),
         });
 
         const data = await res.json();
@@ -74,7 +72,15 @@ const Management = () => {
     if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) deleteMenu();
   }
 
-  console.log(clickId)
+  const IseditMenu = ()=>{
+    console.log('editing!');
+  }
+
+  const addMenu = (isParent) => {
+    console.log(isParent);
+  }
+  
+  console.log()
   return (
     <div className='wrap'>
     <div className='memu_title_wrap'>
@@ -82,18 +88,18 @@ const Management = () => {
         <p>메뉴 설정</p>
         <p>메뉴 항목과 구조를 설정해주세요.</p>
       </div>
-      <button>메뉴 항목 추가</button>
+      <button onClick={() => {addMenu(true);setIsOpen(true)}}>메뉴 항목 추가</button>
     </div>
       <div className="menu_list_wrap">
         {firstList.map((menu) => (
           <div key={menu.idx} className="menu_list">
             <div className='primaryMenus'>
-              <div className="img_wrap">
-                <span style={{ transform: clickId===menu.idx ? 'rotate(90deg)' : 'rotate(0deg)' }} onClick={()=>toggleImage(menu.idx)}><FontAwesomeIcon icon={faAngleRight} /></span>
+              <div className="img_wrap" onClick={()=>toggleImage(menu.idx)}>
+                <span style={{ transform: clickId.includes(menu.idx) ? 'rotate(90deg)' : 'rotate(0deg)' }} ><FontAwesomeIcon icon={faAngleRight} /></span>
               </div>
               <h1>{menu.title}</h1>
               <div className='box'>
-                <span>
+                <span onClick={() => editMenu()}>
                   <FontAwesomeIcon icon={faGear} />
                 </span>
                 <span onClick={() => deleteMenu(menu.idx)}>
@@ -101,29 +107,30 @@ const Management = () => {
                 </span>
               </div>
             </div>
-            <div className={secondList
-                .map((submenu) => submenu.parent_id === clickId ) &&isClosed ? "subMenusHidden" : ""}>
+            {(clickId.includes(menu.idx) &&
+            <div>
               {secondList
                 .filter((submenu) => submenu.parent_id === menu.idx)
                 .map((submenu) => (
                   <div>
-                    <div key={submenu.idx} className={ "subMenus"}>
+                    <div key={submenu.idx} className="subMenus">
                       <h1 className='sub_box'>{submenu.title}</h1>
                       <div className='box'>
-                        <span>
+                        <span onClick={() => editMenu()}>
                           <FontAwesomeIcon icon={faGear} />
                         </span>
                         <span onClick={() => deleteMenu(submenu.idx)}>
                           <FontAwesomeIcon icon={faXmark} />
                         </span>
                       </div>
+                      </div>
                     </div>
-                  </div> 
                 ))}
               <div className='subMenus addSubMenu'>
-                <FontAwesomeIcon icon={faPlus} />
+                <FontAwesomeIcon icon={faPlus} onClick={() => addMenu(false)}/>
               </div>
             </div>
+        )}
           </div>
         ))}
       </div>

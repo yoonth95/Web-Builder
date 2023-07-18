@@ -11,13 +11,26 @@ exports.getMenu = async (req, res) => {
 };
 
 exports.deleteMenu = async (req, res) => {
-  const { menu_idx } = req.body;
+  const { id } = req.params;
 
   try {
-    await menuDB.deleteMenu(menu_idx);
+    await menuDB.deleteMenu(id);
     res.status(200).json('메뉴를 삭제하였습니다.');
   } catch (err) {
     console.error(err);
     res.status(500).json('삭제 오류');
+  }
+};
+
+exports.insertMenu = async (req, res) => {
+  const { isParent, title, link, new_window } = req.body;
+
+  try {
+    const getMenu = await menuDB.getMenu();
+    await menuDB.insertMenu(id);
+    res.status(200).json('메뉴를 추가하였습니다.');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json('추가 오류');
   }
 };

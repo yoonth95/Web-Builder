@@ -12,11 +12,11 @@ const Router = () => {
 
   return (
     <BrowserRouter>
-      <Modal isOpen={isOpen} />
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} />
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/admin' element={<Main setIsOpen={setIsOpen} />} />
+        <Route path='/admin' element={<Main isOpen={isOpen} setIsOpen={setIsOpen} />} />
         {/* <Route path='/editor:idx' element={<Modify />}/> */}
         <Route path='/*' element={<NotFound />} />
       </Routes>

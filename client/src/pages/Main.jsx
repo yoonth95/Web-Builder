@@ -9,11 +9,11 @@ import Management from 'components/Management';
 import Pagement from 'components/Pagement';
 
 
-const Main = ({ setIsOpen }) => {
+const Main = ({ isOpen,setIsOpen }) => {
   const navigate = useNavigate();
   const { loading } = useAuth();
   const { user } = useSelector((state) => state.user);
-
+  
   const query = new URLSearchParams(useLocation().search);
   const tab = query.get('tab');
 
@@ -29,7 +29,7 @@ const Main = ({ setIsOpen }) => {
   return (
     <>
       <MainHeader/>
-      {(tab === 'a' || tab === null) ? <Management /> : <Pagement />}
+      {(tab === 'a' || tab === null) ? <Management isOpen={isOpen} setIsOpen={setIsOpen}/> : <Pagement />}
     </>
   )
 };

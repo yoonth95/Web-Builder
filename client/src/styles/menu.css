@@ -56,7 +56,7 @@
   margin-bottom: 10px;
 }
 .primaryMenus .box:last-child {
-  width: 20%;
+  width: 18.2%;
 }
 .img_wrap{
   display: flex;
@@ -77,6 +77,7 @@
 
 .box {
   height: 100%;
+  display: flex;
   text-align: end;
 }
 .box span {
@@ -97,8 +98,7 @@
   border-right: 0.5px solid var(--grayscale-30, #b3b3b3);
   text-align: center;
 }
-.menu_list h1 , .subMenus h1{
-  width: 70%;
+.primaryMenus h1 , .subMenus h1{
   color: var(--grayscale-60, #666);
   /* Body2_18/M */
   font-family: Pretendard;
@@ -109,7 +109,12 @@
   letter-spacing: -0.36px;
   padding-left: 20px;
 }
-
+.primaryMenus h1 {
+  width: 80%;
+}
+.subMenus h1 {
+  width:100%;
+}
 .subMenus {
   border-radius: 10px;
   border: 0.5px solid var(--grayscale-30, #b3b3b3);
