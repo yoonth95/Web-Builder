@@ -41,14 +41,24 @@ exports.deleteMenu = async (idx) => {
 // 임시로 만든 코드 data 값들 수정 해야 함
 exports.insertMenu = async (data) => {
   try {
+    await beginTransaction(); // 트랜잭션 시작
+
     let result;
     if (!data[0]) {
       result = await query("INSERT INTO menus (parent_id, title, link, new_window, order_num) VALUES (?, ?, ?, ?, ?)", [data[1], data[2], data[3], data[4], data[5]])
     } else {
       result = await query("INSERT INTO menus (title, order_num) VALUES (?, ?)", [data[1], data[2]]);
     }
-    return result;
+
+    const lastId = result.insertId;
+
+    const selectRow = await query(`SELECT * FROM menus WHERE idx = ?`, lastId);
+
+    await commit();   // 트랜잭션 수행
+
+    return selectRow;
   } catch (error) {
+    await rollback(); // 중간에서 에러 발생 시 rollback으로 트랜잭션 시작 지점으로 돌아가기
     throw error; // 오류
   }
 };

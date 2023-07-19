@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { setBtn } from 'redux/buttonSlice';
+import { updateFirstList, updateSecondList } from 'redux/menuSlice';
 import SelectBox from './SelectBox';
-import store from 'redux/store';
 
 import 'styles/menu.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight, faGear, faXmark, faPlus, faCropSimple } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faGear, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 
 const Management = ({ setIsOpen }) => {
-  const [firstList, setFirstList] = useState([]);
-  const [secondList, setSecondList] = useState([]);
+  const { firstList, secondList } = useSelector((state) => state.menu);
+
   const [clickId, setClickId] = useState([]);
   const [editMenuIds, setEditMenuIds] = useState([]);
   const [primaryValue,setPrimaryValue] = useState('');
@@ -34,28 +34,23 @@ const Management = ({ setIsOpen }) => {
 
         const data = await res.json();
        
+        let f_list = [], s_list = [];
         data.forEach((item) => {
-          !item.parent_id
-            ? setFirstList((prev) => [...prev, item])
-            : setSecondList((prev) => [...prev, item]);
+          !item.parent_id ? f_list.push(item) : s_list.push(item)
         });
+
+        dispatch(updateFirstList(f_list));
+        dispatch(updateSecondList(s_list));
+        
       } catch (err) {
         console.error(err);
       }
     };
 
     getMenu();
+  }, [dispatch]);
 
-    // const unsubscribe = store.subscribe(() => {
-    //   if (store.getState().menu.menu) {
-    //     getMenu();
-    //     store.getState().menu.menu = false;
-    //   }
-    // });
-
-    // return () => unsubscribe();
-  }, []);
-
+  // 메뉴 drop down
   const toggleImage = (id) => {
     if (clickId.includes(id)) {
       setClickId((prevClickId) =>
@@ -65,18 +60,21 @@ const Management = ({ setIsOpen }) => {
       setClickId((prevClickId) => [...prevClickId, id]);
     }
   };
+
   // /api/updateMenu // method : put
 
   const handlePrimaryValue=(e)=>{
     setPrimaryValue(e.target.value);
   }
 
+  // 메뉴 수정
   const updateMenu = ()=>{
     // 제목,링크 값 저장 할 수 있게 하기
     // 온체인지 함수로 실시간으로 값 저장되게하기
     console.log(primaryValue);
   }
 
+  // 메뉴 삭제
   const deleteMenu = (id) => {
     const deleteMenu = async () => {
       try {
@@ -90,7 +88,12 @@ const Management = ({ setIsOpen }) => {
         
         alert(data);
         if (!res.ok) console.log(res.error);
-        else window.location.reload();
+        else {
+          const newFirstList = firstList.filter((item) => item.idx !== id);
+          const newSecondList = secondList.filter((item) => item.idx !== id);
+          dispatch(updateFirstList(newFirstList));
+          dispatch(updateSecondList(newSecondList));
+        }
       } catch (err) {
         console.error(err);
       }
@@ -98,7 +101,6 @@ const Management = ({ setIsOpen }) => {
 
     if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) deleteMenu();
   };
-
 
   console.log(clickId)
   const editMenu = (id) => {

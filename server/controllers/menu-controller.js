@@ -30,8 +30,8 @@ exports.insertMenu = async (req, res) => {
     try {
       const getMenuLastOrder = await menuDB.getMenuLastOrder([true]);
       const order_num = getMenuLastOrder[0].count + 1;
-      await menuDB.insertMenu([true, data.title, order_num]);
-      res.status(200).json('메뉴를 추가하였습니다.');
+      const result = await menuDB.insertMenu([true, data.title, order_num]);
+      res.status(200).json(result[0]);
     } catch (err) {
       console.error(err);
       res.status(500).json('추가 오류');
@@ -42,8 +42,8 @@ exports.insertMenu = async (req, res) => {
     try {
       const getMenuLastOrder = await menuDB.getMenuLastOrder([false, data.parent_id]);
       const order_num = getMenuLastOrder[0].count + 1;
-      await menuDB.insertMenu([false, data.parent_id, data.title, data.link, data.new_window, order_num]);
-      res.status(200).json('메뉴를 추가하였습니다.');
+      const result = await menuDB.insertMenu([false, data.parent_id, data.title, data.link, data.new_window, order_num]);
+      res.status(200).json(result[0]);
     } catch (err) {
       console.error(err);
       res.status(500).json('추가 오류');

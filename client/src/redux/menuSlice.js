@@ -4,14 +4,18 @@ import { createSlice } from '@reduxjs/toolkit';
 export const menuSlice = createSlice({
     name: 'menu',
     initialState: {
-        menu: false,
+        firstList: [],
+        secondList: []
     },
     reducers: {
-        refreshMenu: (state, action) => {
-            state.menu = action.payload;
-        }
+        updateFirstList: (state, action) => {
+            state.firstList = action.payload;
+        },
+        updateSecondList: (state, action) => {
+            state.secondList = action.payload;
+        },
     },
 });
 
-export const { refreshMenu } = menuSlice.actions;
+export const { updateFirstList, updateSecondList } = menuSlice.actions;
 export default menuSlice.reducer;
