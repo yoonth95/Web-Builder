@@ -75,10 +75,11 @@ const Management = ({ setIsOpen }) => {
   }
 
   // 메뉴 삭제
-  const deleteMenu = (id) => {
+  const deleteMenu = (id, order_num, parent_id) => {
     const deleteMenu = async () => {
+      const isParent = firstList.filter(e => e.idx === id).length > 0 ? true : false;
       try {
-        const res = await fetch(`/api/deleteMenu/${id}`, {
+        const res = await fetch(`/api/deleteMenu/${id}_${isParent}_${order_num}_${parent_id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -133,19 +134,9 @@ const Management = ({ setIsOpen }) => {
         {firstList.map((menu) => (
           <div key={menu.idx} className='menu_list'>
             <div className='primaryMenus_wrap'>
-              <div
-                className={`primaryMenus ${
-                  editMenuIds.includes(menu.idx) ? 'withEdit' : ''
-                }`}
-              >
+              <div className={`primaryMenus ${editMenuIds.includes(menu.idx) ? 'withEdit' : ''}`}>
                 <div className='img_wrap' onClick={() => toggleImage(menu.idx)}>
-                  <span
-                    style={{
-                      transform: clickId.includes(menu.idx)
-                        ? 'rotate(90deg)'
-                        : 'rotate(0deg)',
-                    }}
-                  >
+                  <span style={{transform: clickId.includes(menu.idx) ? 'rotate(90deg)' : 'rotate(0deg)',}}>
                     <FontAwesomeIcon icon={faAngleRight} />
                   </span>
                 </div>
@@ -154,30 +145,19 @@ const Management = ({ setIsOpen }) => {
                   <span onClick={() => {editMenu(menu.idx)}}>
                     <FontAwesomeIcon icon={faGear} />
                   </span>
-                  <span onClick={() => deleteMenu(menu.idx)}>
+                  <span onClick={() => deleteMenu(menu.idx, menu.order_num)}>
                     <FontAwesomeIcon icon={faXmark} />
                   </span>
                 </div>
               </div>
               {editMenuIds.includes(menu.idx) && (
               <form className='edit_wrap'>
-                <label
-                  className='primaryMenu_label primaryMenu_title_label'
-                  htmlFor='primaryMenu_title'
-                >
+                <label className='primaryMenu_label primaryMenu_title_label' htmlFor='primaryMenu_title'>
                   제목
-                  <input
-                    id='primaryMenu_title'
-                    type='text'
-                    defaultValue={menu.title}
-                    onChange={handlePrimaryValue}
-                  />
+                  <input id='primaryMenu_title' type='text' defaultValue={menu.title} onChange={handlePrimaryValue}/>
                 </label>
                 <div className='edit_wrap_sub'>
-                  <label
-                    className='primaryMenu_label link_label'
-                    htmlFor='primaryMenu_link'
-                  >
+                  <label className='primaryMenu_label link_label' htmlFor='primaryMenu_link'>
                     링크
                     <SelectBox curMenuData={menu} subMenusData={secondList}/>
                   </label>
@@ -194,39 +174,25 @@ const Management = ({ setIsOpen }) => {
                   .filter((submenu) => submenu.parent_id === menu.idx)
                   .map((submenu) => (
                     <div className='subMenus_wrap' key={submenu.idx}>
-                      <div
-                        className={`subMenus ${
-                          editMenuIds.includes(submenu.idx) ? 'withEdit' : ''
-                        }`}
-                      >
+                      <div className={`subMenus ${editMenuIds.includes(submenu.idx) ? 'withEdit' : ''}`}>
                         <h1 className='sub_box'>{submenu.title}</h1>
                         <div className='box'>
                           <span onClick={() => editMenu(submenu.idx)}>
                             <FontAwesomeIcon icon={faGear} />
                           </span>
-                          <span onClick={() => deleteMenu(submenu.idx)}>
+                          <span onClick={() => deleteMenu(submenu.idx, submenu.order_num, submenu.parent_id)}>
                             <FontAwesomeIcon icon={faXmark} />
                           </span>
                         </div>
                       </div>
                       {editMenuIds.includes(submenu.idx) && (
                         <div className='edit_wrap'>
-                          <label
-                            className='subMenu_label subMenu_title_label'
-                            htmlFor='subMenu_title'
-                          >
+                          <label className='subMenu_label subMenu_title_label' htmlFor='subMenu_title'>
                             제목
-                            <input
-                              id='subMenu_title'
-                              type='text'
-                              defaultValue={submenu.title}
-                            />
+                            <input id='subMenu_title' type='text' defaultValue={submenu.title}/>
                           </label>
                           <div className='edit_wrap_sub'>
-                            <label
-                              className='subMenu_label link_label'
-                              htmlFor='subMenu_link'
-                            >
+                            <label className='subMenu_label link_label' htmlFor='subMenu_link'>
                               링크
                             <SelectBox curMenuData={menu} subMenusData={secondList}/>
                             </label>

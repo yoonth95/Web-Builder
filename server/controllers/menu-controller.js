@@ -12,9 +12,10 @@ exports.getMenu = async (req, res) => {
 
 exports.deleteMenu = async (req, res) => {
   const { id } = req.params;
-
+  const [idx, isParent, order_num, parent_id] = id.split("_");
+  
   try {
-    await menuDB.deleteMenu(id);
+    await menuDB.deleteMenu(idx, isParent, order_num, parent_id);
     res.status(200).json('메뉴를 삭제하였습니다.');
   } catch (err) {
     console.error(err);
