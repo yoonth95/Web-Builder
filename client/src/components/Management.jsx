@@ -10,13 +10,14 @@ import 'styles/menu.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faGear, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-
 const Management = ({ setIsOpen }) => {
   const { firstList, secondList } = useSelector((state) => state.menu);
 
   const [clickId, setClickId] = useState([]);
   const [editMenuIds, setEditMenuIds] = useState([]);
-  const [primaryValue,setPrimaryValue] = useState('');
+  const [editedTitle, setEditedTitle] = useState('');
+  const [editedLink, setEditedLink] = useState('');
+  const [isNewWindow, setIsNewWindow] = useState({});
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,15 +34,14 @@ const Management = ({ setIsOpen }) => {
         }
 
         const data = await res.json();
-       
+
         let f_list = [], s_list = [];
         data.forEach((item) => {
-          !item.parent_id ? f_list.push(item) : s_list.push(item)
+          !item.parent_id ? f_list.push(item) : s_list.push(item);
         });
 
         dispatch(updateFirstList(f_list));
         dispatch(updateSecondList(s_list));
-        
       } catch (err) {
         console.error(err);
       }
@@ -61,18 +61,50 @@ const Management = ({ setIsOpen }) => {
     }
   };
 
-  // /api/updateMenu // method : put
+  const handleTitleValue = (e) => {
+    setEditedTitle(e.target.value);
+  };
 
-  const handlePrimaryValue=(e)=>{
-    setPrimaryValue(e.target.value);
-  }
+  const handleLinkValue = (e) => {
+    setEditedLink(e.target.value);
+  };
+  const handleNewWindowValue = (e, menuId) => {
+    const { checked } = e.target;
+    setIsNewWindow((prevIsNewWindow) => ({
+      ...prevIsNewWindow,
+      [menuId]: checked,
+    }));
+  };
 
   // 메뉴 수정
-  const updateMenu = ()=>{
-    // 제목,링크 값 저장 할 수 있게 하기
-    // 온체인지 함수로 실시간으로 값 저장되게하기
-    console.log(primaryValue);
-  }
+  const updateMenu = (e, id) => {
+    e.preventDefault();
+
+    const formData = {
+      title: editedTitle,
+      link: editedLink,
+      newWindow: isNewWindow[id] || false,
+    };
+
+    const updateFetch = async () => {
+      try {
+        const res = await fetch(`/api/updateMenu`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        });
+
+        const data = await res.json();
+        if (!res.ok) console.log(res.error);
+        alert(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    if (window.confirm('해당 메뉴를 수정 하시겠습니까?')) updateFetch();
+
+    console.log(formData);
+  };
 
   // 메뉴 삭제
   const deleteMenu = (id, order_num, parent_id) => {
@@ -86,7 +118,7 @@ const Management = ({ setIsOpen }) => {
         });
 
         const data = await res.json();
-        
+
         alert(data);
         if (!res.ok) console.log(res.error);
         else {
@@ -103,7 +135,6 @@ const Management = ({ setIsOpen }) => {
     if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) deleteMenu();
   };
 
-  console.log(clickId)
   const editMenu = (id) => {
     setEditMenuIds((prevIds) => {
       if (prevIds.includes(id)) {
@@ -121,12 +152,7 @@ const Management = ({ setIsOpen }) => {
           <p>메뉴 설정</p>
           <p>메뉴 항목과 구조를 설정해주세요.</p>
         </div>
-        <button
-          onClick={() => {
-            setIsOpen(true);
-            dispatch(setBtn('메뉴'));
-          }}
-        >
+        <button onClick={() => { setIsOpen(true); dispatch(setBtn('메뉴')); }}>
           메뉴 항목 추가
         </button>
       </div>
@@ -151,19 +177,31 @@ const Management = ({ setIsOpen }) => {
                 </div>
               </div>
               {editMenuIds.includes(menu.idx) && (
-              <form className='edit_wrap'>
+              <form className='edit_wrap' onSubmit={(e) => updateMenu(e, menu.idx)}>
                 <label className='primaryMenu_label primaryMenu_title_label' htmlFor='primaryMenu_title'>
                   제목
-                  <input id='primaryMenu_title' type='text' defaultValue={menu.title} onChange={handlePrimaryValue}/>
+                  <input
+                    id='primaryMenu_title'
+                    type='text'
+                    defaultValue={menu.title}
+                    onChange={handleTitleValue}
+                  />
                 </label>
                 <div className='edit_wrap_sub'>
                   <label className='primaryMenu_label link_label' htmlFor='primaryMenu_link'>
                     링크
-                    <SelectBox curMenuData={menu} subMenusData={secondList}/>
+                    <SelectBox curMenuData={menu} subMenusData={secondList} handleLinkValue={handleLinkValue}/>
                   </label>
-                  <input type='checkbox' name='' id='primaryMenu_chkBox' className='new_window_chkBox' />
-                  <label htmlFor='primaryMenu_chkBox' className='txt_new_window'>새 창 열기</label>
-                  <button className='save_btn' onClick={updateMenu}>저장</button>
+                  <input
+                    type='checkbox'
+                    name='isNewWindow'
+                    id={`primaryMenu_chkBox_${menu.idx}`}
+                    className='new_window_chkBox'
+                    checked={isNewWindow[menu.idx] || false}
+                    onChange={(e) => handleNewWindowValue(e, menu.idx)}
+                  />
+                  <label htmlFor={`primaryMenu_chkBox_${menu.idx}`} className='txt_new_window'>새 창 열기</label>
+                  <button className='save_btn' type='submit'>저장</button>
                 </div>
               </form>
               )}
@@ -186,26 +224,38 @@ const Management = ({ setIsOpen }) => {
                         </div>
                       </div>
                       {editMenuIds.includes(submenu.idx) && (
-                        <div className='edit_wrap'>
+                        <form className='edit_wrap' onSubmit={(e) => updateMenu(e, submenu.idx)}>
                           <label className='subMenu_label subMenu_title_label' htmlFor='subMenu_title'>
                             제목
-                            <input id='subMenu_title' type='text' defaultValue={submenu.title}/>
+                            <input
+                              id='subMenu_title'
+                              type='text'
+                              defaultValue={submenu.title}
+                              onChange={handleTitleValue}
+                            />
                           </label>
                           <div className='edit_wrap_sub'>
                             <label className='subMenu_label link_label' htmlFor='subMenu_link'>
                               링크
-                            <SelectBox curMenuData={menu} subMenusData={secondList}/>
+                              <SelectBox curMenuData={menu} subMenusData={secondList} handleLinkValue={handleLinkValue}/>
                             </label>
-                            <input type='checkbox' name='' id='subMenu_chkBox' className='new_window_chkBox' />
-                            <label htmlFor='subMenu_chkBox' className='txt_new_window'>새 창 열기</label>
-                            <button className='save_btn' onClick={updateMenu}>저장</button>
+                            <input
+                              type='checkbox'
+                              name='isNewWindow'
+                              id={`subMenu_chkBox_${submenu.idx}`}
+                              className='new_window_chkBox'
+                              checked={isNewWindow[submenu.idx] || false}
+                              onChange={(e) => handleNewWindowValue(e, submenu.idx)}
+                            />
+                            <label htmlFor={`subMenu_chkBox_${submenu.idx}`} className='txt_new_window'>새 창 열기</label>
+                            <button className='save_btn' type='submit'>저장</button>
                           </div>
-                        </div>
+                        </form>
                       )}
                     </div>
                   ))}
                 <div className='subMenus addSubMenu' onClick={() => {setIsOpen(true); dispatch(setBtn(`추가${menu.idx}`));}}>
-                  <FontAwesomeIcon icon={faPlus}/>
+                  <FontAwesomeIcon icon={faPlus} />
                 </div>
               </div>
             )}
