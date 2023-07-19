@@ -7,6 +7,10 @@ import Login from 'components/Login';
 import Signup from 'components/Signup';
 import Modal from 'components/Modal';
 
+
+
+import Test from 'components/Test';
+
 const Router = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -15,8 +19,9 @@ const Router = () => {
       <Modal isOpen={isOpen} setIsOpen={setIsOpen} />
       <Routes>
         <Route path='/' element={<Login />} />
+        {/* <Route path='/test' element={<Test />} /> */}
         <Route path='/signup' element={<Signup />} />
-        <Route path='/admin' element={<Main isOpen={isOpen} setIsOpen={setIsOpen} />} />
+        <Route path='/admin' element={<Main setIsOpen={setIsOpen} />} />
         {/* <Route path='/editor:idx' element={<Modify />}/> */}
         <Route path='/*' element={<NotFound />} />
       </Routes>

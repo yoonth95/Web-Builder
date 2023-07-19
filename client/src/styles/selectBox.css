@@ -1,0 +1,7 @@
+.link_select{
+    height: 48px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(243, 243, 243, 0.90);
+    padding: 0px 5px;
+}

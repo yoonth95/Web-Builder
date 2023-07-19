@@ -40,13 +40,14 @@ const MainHeader = () => {
 
   useEffect(() => {
     const tabValue = searchParams.get('tab');
-    if (!tabValue) {
+    if (!tabValue||tabValue==="a") {
       setTab('menu');
       setSortParams('menu');
     } else {
-      setTab(tabValue === 'page' ? 'page' : 'menu');
+      setTab(tabValue === 'b' ? 'page' : 'menu');
     }
-  }, []);
+  }, [searchParams]);
+
 
   return (
     <header className='header'>

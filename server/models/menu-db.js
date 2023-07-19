@@ -9,7 +9,19 @@ const rollback = util.promisify(db.rollback).bind(db);
 // 메뉴 가져오기
 exports.getMenu = async () => {
   try {
-    const result = await query(`SELECT * FROM menus order by order_num asc`);
+    const result = await query(`SELECT * FROM menus order by order_num asc, idx asc`);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// 메뉴의 마지막 순서 가져오기
+exports.getMenuLastOrder = async (data) => {
+  try {
+    const result = data[0]
+      ? await query(`SELECT count(*) as count FROM menus where parent_id is null`)
+      : await query(`SELECT count(*) as count FROM menus where parent_id = ?`, data[1])
     return result;
   } catch (err) {
     throw err;
@@ -29,22 +41,23 @@ exports.deleteMenu = async (idx) => {
 // 임시로 만든 코드 data 값들 수정 해야 함
 exports.insertMenu = async (data) => {
   try {
-    await beginTransaction(); // 트랜잭션 시작
-
-    // Insert menus table
-    const result1 = await query("INSERT INTO menus (title, link, parent_id) VALUES (?, ?, ?)", ["New Menu", "/new_menu", 1]);
-
-    // last idx
-    const lastId = result1.insertId;
-
-    // Insert pages table
-    const result2 = await query("INSERT INTO pages (menu_idx, page_name, page_path, menu_name) VALUES (?, ?, ?, ?)", [lastId, "New Menu Page", "/new_menu", "First Menu"]);
-
-    await commit(); // 트랜잭션 수행
-
-    return result2;
+    let result;
+    if (!data[0]) {
+      result = await query("INSERT INTO menus (parent_id, title, link, new_window, order_num) VALUES (?, ?, ?, ?, ?)", [data[1], data[2], data[3], data[4], data[5]])
+    } else {
+      result = await query("INSERT INTO menus (title, order_num) VALUES (?, ?)", [data[1], data[2]]);
+    }
+    return result;
   } catch (error) {
-    await rollback(); // 중간에서 에러 발생 시 rollback으로 트랜잭션 시작 지점으로 돌아가기
     throw error; // 오류
   }
+};
+
+exports.updateMenu = async (idx) => {
+  // try {
+  //   const result = await query(`DELETE FROM menus where idx = ?`, idx);
+  //   return result;
+  // } catch (err) {
+  //   throw err;
+  // }
 };
