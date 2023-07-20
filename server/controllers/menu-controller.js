@@ -13,7 +13,7 @@ exports.getMenu = async (req, res) => {
 exports.deleteMenu = async (req, res) => {
   const { id } = req.params;
   const [idx, isParent, order_num, parent_id] = id.split("_");
-  
+
   try {
     await menuDB.deleteMenu(idx, isParent, order_num, parent_id);
     res.status(200).json('메뉴를 삭제하였습니다.');
@@ -54,12 +54,16 @@ exports.insertMenu = async (req, res) => {
 
 exports.updateMenu = async (req, res) => {
   console.log('업데이트');
+  console.log(req.body);
+
+  const { title, link, newWindow } = req.body;
+  console.log(title, link, newWindow);
 
   // try {
-  //   await menuDB.deleteMenu(id);
+  //   await menuDB.updateMenu(id);
   //   res.status(200).json('메뉴를 삭제하였습니다.');
   // } catch (err) {
   //   console.error(err);
-  //   res.status(500).json('삭제 오류');
+  //   res.status(500).jsoㅂn('삭제 오류');
   // }
 };

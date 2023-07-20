@@ -3,11 +3,7 @@ import 'styles/selectBox.css';
 
 const SelectBox = ({ curMenuData, subMenusData, handleLinkValue }) => {
   return (
-    <select
-      className='link_select'
-      defaultValue='selectPage'
-      onChange={handleLinkValue}
-    >
+    <select className='link_select' defaultValue='selectPage' onChange={handleLinkValue}>
       <option disabled value='selectPage'>
         링크할 페이지를 선택하세요
       </option>
@@ -29,7 +25,7 @@ const SelectBox = ({ curMenuData, subMenusData, handleLinkValue }) => {
         .filter((submenu) => submenu.parent_id === curMenuData.idx)
         .map((subMenu) => {
           return (
-            <option key={subMenu.idx} value={subMenu.title}>
+            <option key={subMenu.idx} value={subMenu.link}>
               {subMenu.title}
             </option>
           );
