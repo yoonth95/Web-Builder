@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import 'styles/mainHeader.css';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from 'redux/userSlice';
 
 const MainHeader = () => {
   const [tab, setTab] = useState('menu');
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onBtnClick = (text) => {
     setTab(text);
@@ -31,6 +34,7 @@ const MainHeader = () => {
         .then((data) => {
           console.log(data);
           navigate('/');
+          dispatch(logoutUser(null));
         })
         .catch((err) => {
           console.error(err);
@@ -40,14 +44,13 @@ const MainHeader = () => {
 
   useEffect(() => {
     const tabValue = searchParams.get('tab');
-    if (!tabValue||tabValue==="a") {
+    if (!tabValue || tabValue === 'a') {
       setTab('menu');
       setSortParams('menu');
     } else {
       setTab(tabValue === 'b' ? 'page' : 'menu');
     }
   }, [searchParams]);
-
 
   return (
     <header className='header'>
@@ -60,26 +63,10 @@ const MainHeader = () => {
         </div>
       </div>
       <div className='btn_box'>
-        <button
-          className={tab === 'menu' ? 'check' : ''}
-          onClick={() => onBtnClick('menu')}
-          style={
-            tab === 'menu'
-              ? {}
-              : { border: '0.5px solid var(--grayscale-30, #B3B3B3)' }
-          }
-        >
+        <button className={tab === 'menu' ? 'check' : ''} onClick={() => onBtnClick('menu')} style={tab === 'menu' ? {} : { border: '0.5px solid var(--grayscale-30, #B3B3B3)' }}>
           메뉴 관리
         </button>
-        <button
-          className={tab === 'page' ? 'check' : ''}
-          onClick={() => onBtnClick('page')}
-          style={
-            tab === 'page'
-              ? {}
-              : { border: '0.5px solid var(--grayscale-30, #B3B3B3)' }
-          }
-        >
+        <button className={tab === 'page' ? 'check' : ''} onClick={() => onBtnClick('page')} style={tab === 'page' ? {} : { border: '0.5px solid var(--grayscale-30, #B3B3B3)' }}>
           페이지 관리
         </button>
       </div>
