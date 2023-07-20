@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
 import { updateFirstList, updateSecondList } from 'redux/menuSlice';
 import SelectBox from './SelectBox';
+import NewMenu from './NewMenu';
+import EditForm from './EditForm';
+import SubMenu from './SubMenu';
 
-import 'styles/menu.css';
+import 'styles/Management/Management.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faGear, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -65,9 +68,9 @@ const Management = ({ setIsOpen }) => {
   };
 
   const handleLinkValue = (e) => {
-    console.log(e.target.value);
     setEditedLink(e.target.value);
   };
+
   const handleNewWindowValue = (e, menuId) => {
     const { checked } = e.target;
     setIsNewWindow((prevIsNewWindow) => ({
@@ -187,7 +190,7 @@ const Management = ({ setIsOpen }) => {
                 <div className='box'>
                   <span
                     onClick={() => {
-                      editMenu(menu.idx);
+                      editMenu(menu.idx, menu.title, menu.link);
                     }}
                   >
                     <FontAwesomeIcon icon={faGear} />
@@ -227,62 +230,22 @@ const Management = ({ setIsOpen }) => {
               )}
             </div>
             {clickId.includes(menu.idx) && (
-              <div>
-                {secondList
-                  .filter((submenu) => submenu.parent_id === menu.idx)
-                  .map((submenu) => (
-                    <div className='subMenus_wrap' key={submenu.idx}>
-                      <div className={`subMenus ${editMenuIds.includes(submenu.idx) ? 'withEdit' : ''}`}>
-                        <h1 className='sub_box'>{submenu.title}</h1>
-                        <div className='box'>
-                          <span onClick={() => editMenu(submenu.idx)}>
-                            <FontAwesomeIcon icon={faGear} />
-                          </span>
-                          <span onClick={() => deleteMenu(submenu.idx, submenu.order_num, submenu.parent_id)}>
-                            <FontAwesomeIcon icon={faXmark} />
-                          </span>
-                        </div>
-                      </div>
-                      {editMenuIds.includes(submenu.idx) && (
-                        <form className='edit_wrap' onSubmit={(e) => updateMenu(e, submenu.idx)}>
-                          <label className='subMenu_label subMenu_title_label' htmlFor='subMenu_title'>
-                            제목
-                            <input id='subMenu_title' type='text' defaultValue={submenu.title} onChange={handleTitleValue} />
-                          </label>
-                          <div className='edit_wrap_sub'>
-                            <label className='subMenu_label link_label' htmlFor='subMenu_link'>
-                              링크
-                              <SelectBox curMenuData={menu} subMenusData={secondList} handleLinkValue={handleLinkValue} />
-                            </label>
-                            <input
-                              type='checkbox'
-                              name='isNewWindow'
-                              id={`subMenu_chkBox_${submenu.idx}`}
-                              className='new_window_chkBox'
-                              checked={isNewWindow[submenu.idx] || false}
-                              onChange={(e) => handleNewWindowValue(e, submenu.idx)}
-                            />
-                            <label htmlFor={`subMenu_chkBox_${submenu.idx}`} className='txt_new_window'>
-                              새 창 열기
-                            </label>
-                            <button className='save_btn' type='submit'>
-                              저장
-                            </button>
-                          </div>
-                        </form>
-                      )}
-                    </div>
-                  ))}
-                <div
-                  className='subMenus addSubMenu'
-                  onClick={() => {
-                    setIsOpen(true);
-                    dispatch(setBtn(`추가${menu.idx}`));
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </div>
-              </div>
+              <>
+                <SubMenu
+                  isNewWindow={isNewWindow}
+                  handleNewWindowValue={handleNewWindowValue}
+                  handleTitleValue={handleTitleValue}
+                  updateMenu={updateMenu}
+                  menu={menu}
+                  handleLinkValue={handleLinkValue}
+                  secondList={secondList}
+                  idx={menu.idx}
+                  editMenuIds={editMenuIds}
+                  editMenu={editMenu}
+                  deleteMenu={deleteMenu}
+                />
+                <NewMenu setIsOpen={setIsOpen} dispatch={dispatch} setBtn={setBtn} idx={menu.idx} />
+              </>
             )}
           </div>
         ))}

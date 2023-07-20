@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
-import 'styles/login.css';
+import 'styles/Login/Login.css';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -49,43 +49,22 @@ const Signup = () => {
   return (
     <div className='login'>
       <div className='login_main'>
-        <img
-          className='logo'
-          src={logo}
-          alt='로고 이미지'
-          style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/')}
-        />
+        <img className='logo' src={logo} alt='로고 이미지' style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
         <form className='login_form' onSubmit={submitBtn}>
           <div className='inputTag'>
-            <input
-              type='text'
-              id='input_name'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <input type='text' id='input_name' value={name} onChange={(e) => setName(e.target.value)} />
             <label htmlFor='input_name'>
               Name <span style={{ color: '#EF4565' }}>*</span>
             </label>
           </div>
           <div className='inputTag'>
-            <input
-              type='text'
-              id='input_id'
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-            />
+            <input type='text' id='input_id' value={id} onChange={(e) => setId(e.target.value)} />
             <label htmlFor='input_id'>
               Email <span style={{ color: '#EF4565' }}>*</span>
             </label>
           </div>
           <div className='inputTag'>
-            <input
-              type='password'
-              id='input_pw'
-              value={pw}
-              onChange={(e) => setPw(e.target.value)}
-            />
+            <input type='password' id='input_pw' value={pw} onChange={(e) => setPw(e.target.value)} />
             <label htmlFor='input_pw'>
               Password <span style={{ color: '#EF4565' }}>*</span>
             </label>

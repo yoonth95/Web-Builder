@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import 'styles/Admin/AdminHeader.css';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import { useDispatch } from 'react-redux';
-import { logoutUser } from 'redux/userSlice';
+
 import { logoutAPI } from 'api/User/logoutAPI';
 
-const MainHeader = () => {
+const AdminHeader = () => {
   const [tab, setTab] = useState('menu');
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const MainHeader = () => {
     setSearchParams(searchParams);
   };
 
-  const logout = () => {
+  const logoutBtn = () => {
     if (window.confirm('로그아웃 하시겠습니까?')) {
       logoutAPI(dispatch);
     }
@@ -45,7 +45,7 @@ const MainHeader = () => {
         <div>
           <span onClick={() => navigate('/mypage')}>마이페이지</span>
           <span className='line'>&#124;</span>
-          <span onClick={logout}>로그아웃</span>
+          <span onClick={logoutBtn}>로그아웃</span>
         </div>
       </div>
       <div className='btn_box'>
@@ -60,4 +60,4 @@ const MainHeader = () => {
   );
 };
 
-export default MainHeader;
+export default AdminHeader;

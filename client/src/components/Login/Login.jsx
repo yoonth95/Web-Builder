@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'redux/userSlice';
 import logo from 'assets/images/logo.svg';
-import 'styles/login.css';
+import 'styles/Login/Login.css';
 
 const Login = () => {
   const [id, setId] = useState('');
@@ -60,24 +60,14 @@ const Login = () => {
         <img className='logo' src={logo} alt='로고 이미지' />
         <form className='login_form' onSubmit={submit}>
           <div className='inputTag'>
-            <input
-              type='text'
-              id='input_id'
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-            />
+            <input type='text' id='input_id' value={id} onChange={(e) => setId(e.target.value)} />
             <label htmlFor='input_id'>
               Email <span style={{ color: '#EF4565' }}>*</span>
             </label>
             {/* <span className='validation'>등록되지 않은 이메일 주소입니다.</span> */}
           </div>
           <div className='inputTag'>
-            <input
-              type='password'
-              id='input_pw'
-              value={pw}
-              onChange={(e) => setPw(e.target.value)}
-            />
+            <input type='password' id='input_pw' value={pw} onChange={(e) => setPw(e.target.value)} />
             <label htmlFor='input_pw'>
               Password <span style={{ color: '#EF4565' }}>*</span>
             </label>

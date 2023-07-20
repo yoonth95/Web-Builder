@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import 'styles/pagement.css';
+import 'styles/Pagement/Pagement.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ const Pagement = ({ setIsOpen }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
   const Page = 3;
-  
+
   const getMenu = async () => {
     try {
       const res = await fetch('/api/getMenu', {
@@ -48,24 +48,19 @@ const Pagement = ({ setIsOpen }) => {
   };
 
   const totalPages = Math.ceil(pageList.length / Page);
-  const pageNumbers = Array.from(
-    { length: totalPages },
-    (_, index) => index + 1,
-  );
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   const dateFormat = (updatedAt) => {
     const updatedAtDate = new Date(updatedAt);
     return updatedAtDate.toISOString().slice(0, 19).replace('T', ' ');
   };
   const search = () => {
-    const filteredList = pageList.filter((item) =>
-      item.title.includes(searchValue)
-    );
+    const filteredList = pageList.filter((item) => item.title.includes(searchValue));
     setPageList(filteredList);
     if (searchValue === '') {
       getMenu();
     }
-  }
+  };
   const handleInputChange = (event) => {
     setSearchValue(event.target.value);
   };
@@ -73,7 +68,7 @@ const Pagement = ({ setIsOpen }) => {
     <div className='board-wrap'>
       <div className='board-title'>
         <div id='SearchBox'>
-          <input type='text' placeholder='페이지명' id='SearchContent'  value={searchValue} onChange={handleInputChange}/>
+          <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} />
           <button id='Search-btn' onClick={() => search()}>
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
@@ -90,50 +85,43 @@ const Pagement = ({ setIsOpen }) => {
           </div>
           {getPageItems().length === 0 ? (
             <div>목록이 없습니다</div>
-          ) : getPageItems().map((menu) => {
-            return (
-              <div key={menu.idx} className='info'>
-                <div className='info_content'>{menu.title}</div>
-                <div className='info_content link'>{menu.link}</div>
-                <div className='info_content btn'>
-                  {parentList.filter((e) => e.idx === menu.parent_id)[0].title}
+          ) : (
+            getPageItems().map((menu) => {
+              return (
+                <div key={menu.idx} className='info'>
+                  <div className='info_content'>{menu.title}</div>
+                  <div className='info_content link'>{menu.link}</div>
+                  <div className='info_content btn'>{parentList.filter((e) => e.idx === menu.parent_id)[0].title}</div>
+                  <div className='info_content date'>{dateFormat(menu.updated_at)}</div>
+                  <div className='info_content' id='info_btn'>
+                    <button
+                      onClick={() => {
+                        setIsOpen(true);
+                        dispatch(setBtn('복제'));
+                      }}
+                    >
+                      복제
+                    </button>
+                    <button onClick={() => navigate(`/editor/${menu.idx}`)}>편집</button>
+                  </div>
                 </div>
-                <div className='info_content date'>
-                  {dateFormat(menu.updated_at)}
-                </div>
-                <div className='info_content' id='info_btn'>
-                  <button onClick={() => {setIsOpen(true); dispatch(setBtn('복제'));}}>복제</button>
-                  <button onClick={() => navigate('/')}>편집</button>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
       <div className='board-page'>
-            <button
-            className='back_btn'
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-            >
-            이전
-            </button>
-            {pageNumbers.map((pageNumber) => (
-            <button
-                key={pageNumber}
-                className={`back_btn ${pageNumber === currentPage ? 'active' : ''}`}
-                onClick={() => handlePageChange(pageNumber)}
-            >
-                {pageNumber}
-            </button>
-            ))}
-            <button
-            className='back_btn'
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-            >
-            다음
-            </button>
+        <button className='back_btn' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
+          이전
+        </button>
+        {pageNumbers.map((pageNumber) => (
+          <button key={pageNumber} className={`back_btn ${pageNumber === currentPage ? 'active' : ''}`} onClick={() => handlePageChange(pageNumber)}>
+            {pageNumber}
+          </button>
+        ))}
+        <button className='back_btn' disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
+          다음
+        </button>
       </div>
     </div>
   );

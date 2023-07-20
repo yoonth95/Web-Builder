@@ -1,5 +1,5 @@
 import React from 'react';
-import 'styles/selectBox.css';
+import 'styles/Management/SelectBox.css';
 
 const SelectBox = ({ curMenuData, subMenusData, handleLinkValue }) => {
   return (
@@ -23,13 +23,11 @@ const SelectBox = ({ curMenuData, subMenusData, handleLinkValue }) => {
       <option disabled>사용자 추가 페이지</option>
       {subMenusData
         .filter((submenu) => submenu.parent_id === curMenuData.idx)
-        .map((subMenu) => {
-          return (
-            <option key={subMenu.idx} value={subMenu.link}>
-              {subMenu.title}
-            </option>
-          );
-        })}
+        .map((subMenu) => (
+          <option key={subMenu.idx} value={subMenu.link}>
+            {subMenu.title}
+          </option>
+        ))}
     </select>
   );
 };
