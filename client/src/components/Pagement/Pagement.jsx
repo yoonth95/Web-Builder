@@ -15,7 +15,9 @@ const Pagement = ({ setIsOpen }) => {
   const [pageList, setPageList] = useState([]);
   const [parentList, setParentList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+
   const [searchValue, setSearchValue] = useState('');
+
   const Page = 3;
 
   const getMenu = async () => {
@@ -32,6 +34,11 @@ const Pagement = ({ setIsOpen }) => {
   useEffect(() => {
     getMenu();
   }, []);
+
+  useEffect(() => {
+    search();
+    console.log(searchValue);
+  }, [searchValue]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -51,20 +58,27 @@ const Pagement = ({ setIsOpen }) => {
     return updatedAtDate.toISOString().slice(0, 19).replace('T', ' ');
   };
   const search = () => {
-    const filteredList = pageList.filter((item) => item.title.includes(searchValue));
+    const lowercaseSearchValue = searchValue.toLowerCase();
+    const filteredList = pageList.filter((item) => item.title.toLowerCase().includes(lowercaseSearchValue));
     setPageList(filteredList);
     if (searchValue === '') {
       getMenu();
-    }
+    } 
   };
+  
   const handleInputChange = (event) => {
     setSearchValue(event.target.value);
   };
+  const handlesearchPress = (e) => {
+    if((e.key === 'Enter')){
+      search();
+    }
+  }
   return (
     <div className='board-wrap'>
       <div className='board-title'>
         <div id='SearchBox'>
-          <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} />
+          <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={handlesearchPress}/>
           <button id='Search-btn' onClick={() => search()}>
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
