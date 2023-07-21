@@ -3,12 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import 'styles/Login/Login.css';
 import { signupAPI } from 'api/User/signupAPI';
-
+import useInputValues from 'hooks/useInput'
 
 const Signup = () => {
-  const [name, setName] = useState('');
-  const [id, setId] = useState('');
-  const [pw, setPw] = useState('');
+  const { inputValues, handleChange, reset} = useInputValues({
+    name:"",
+    id:"",
+    pw:""
+
+  })
+const {name, id, pw} =inputValues
+
   const navigate = useNavigate();
 
   const submitBtn = async (e) => {
@@ -31,9 +36,7 @@ const Signup = () => {
     } catch (err) {
       console.log(err.message);
       alert("회원가입 실패");
-      setName('');
-      setId('');
-      setPw('');
+      reset();
       return;
     }
   };
@@ -44,19 +47,19 @@ const Signup = () => {
         <img className='logo' src={logo} alt='로고 이미지' style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
         <form className='login_form' onSubmit={submitBtn}>
           <div className='inputTag'>
-            <input type='text' id='input_name' value={name} onChange={(e) => setName(e.target.value)} />
+            <input type='text' id='input_name' name='name' value={name} onChange={handleChange} />
             <label htmlFor='input_name'>
               Name <span style={{ color: '#EF4565' }}>*</span>
             </label>
           </div>
           <div className='inputTag'>
-            <input type='text' id='input_id' value={id} onChange={(e) => setId(e.target.value)} />
+            <input type='text' id='input_id' name='id' value={id} onChange={handleChange} />
             <label htmlFor='input_id'>
               Email <span style={{ color: '#EF4565' }}>*</span>
             </label>
           </div>
           <div className='inputTag'>
-            <input type='password' id='input_pw' value={pw} onChange={(e) => setPw(e.target.value)} />
+            <input type='password' id='input_pw' name='pw' value={pw} onChange={handleChange} />
             <label htmlFor='input_pw'>
               Password <span style={{ color: '#EF4565' }}>*</span>
             </label>
