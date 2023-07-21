@@ -14,7 +14,7 @@ const Nav = () => {
   useEffect(() => {
     const getMenu = async () => {
       try {
-        const data = GetMenuAPI();
+        const data = await GetMenuAPI();
 
         let f_list = [];
         let s_list = [];

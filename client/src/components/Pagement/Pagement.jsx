@@ -87,7 +87,9 @@ const Pagement = ({ setIsOpen }) => {
                 <div key={menu.idx} className='info'>
                   <div className='info_content'>{menu.title}</div>
                   <div className='info_content link'>{menu.link}</div>
-                  <div className='info_content btn'>{parentList.filter((e) => e.idx === menu.parent_id)[0].title}</div>
+                  <div className='info_content btn'>
+                    <span>{parentList.filter((e) => e.idx === menu.parent_id)[0].title}</span>
+                  </div>
                   <div className='info_content date'>{dateFormat(menu.updated_at)}</div>
                   <div className='info_content' id='info_btn'>
                     <button

@@ -91,7 +91,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
               {btn !== '메뉴' && (
                 <div className='modal_page_infor'>
                   <p>{`http://localhost:3000/page/${link}`}</p>
-                  <div>
+                  <div style={{ display: btn === '복제' ? 'none' : 'block'}}>
                     <input type='checkbox' checked={window === 1} onChange={() => setWindow(window === 0 ? 1 : 0)} />
                     새창 열기
                   </div>
