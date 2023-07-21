@@ -2,6 +2,7 @@ import React from 'react';
 import EditForm from './EditForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
+import "styles/Management/SubMenu.css"
 
 const SubMenu = ({ secondList, idx, editMenuIds, editMenu, deleteMenu, updateMenu, handleTitleValue, menu, handleLinkValue, handleNewWindowValue, isNewWindow }) => {
   return (

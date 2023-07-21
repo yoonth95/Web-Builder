@@ -1,5 +1,6 @@
 import React from 'react';
 import SelectBox from './SelectBox';
+import 'styles/Management/EditForm.css'
 
 const EditForm = ({ submenu, updateMenu, handleTitleValue, menu, secondList, handleLinkValue, handleNewWindowValue, isNewWindow }) => {
   return (
