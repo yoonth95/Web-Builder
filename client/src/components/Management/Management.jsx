@@ -14,6 +14,8 @@ import SubMenu from './SubMenu';
 
 // api
 import { UpdateMenuAPI } from 'api/Admin/UpdateMenuAPI';
+import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
+import { DeleteMenuAPI } from 'api/Admin/DeleteMenuAPI';
 
 // css
 import 'styles/Management/Management.css';
@@ -36,17 +38,7 @@ const Management = ({ setIsOpen }) => {
   useEffect(() => {
     const getMenu = async () => {
       try {
-        const res = await fetch('/api/getMenu', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!res.ok) {
-          console.log('get menu fail');
-          return;
-        }
-
-        const data = await res.json();
+        const data = await GetMenuAPI();
 
         let f_list = [];
         let s_list = [];
@@ -57,10 +49,10 @@ const Management = ({ setIsOpen }) => {
         dispatch(updateFirstList(f_list));
         dispatch(updateSecondList(s_list));
       } catch (err) {
-        console.error(err);
+        alert('조회 오류');
+        console.log(err.message);
       }
     };
-
     getMenu();
   }, [dispatch]);
 
@@ -123,24 +115,15 @@ const Management = ({ setIsOpen }) => {
     const deleteMenu = async () => {
       const isParent = firstList.filter((e) => e.idx === id).length > 0 ? true : false;
       try {
-        const res = await fetch(`/api/deleteMenu/${id}_${isParent}_${order_num}_${parent_id}`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
-
-        const data = await res.json();
-
-        alert(data);
-        if (!res.ok) console.log(res.error);
-        else {
-          const newFirstList = firstList.filter((item) => item.idx !== id);
-          const newSecondList = secondList.filter((item) => item.idx !== id);
-          dispatch(updateFirstList(newFirstList));
-          dispatch(updateSecondList(newSecondList));
-        }
+        await DeleteMenuAPI(id, isParent, order_num, parent_id);
+        alert('삭제 완료');
+        const newFirstList = firstList.filter((item) => item.idx !== id);
+        const newSecondList = secondList.filter((item) => item.idx !== id);
+        dispatch(updateFirstList(newFirstList));
+        dispatch(updateSecondList(newSecondList));
       } catch (err) {
-        console.error(err);
+        alert('삭제 오류');
+        console.log(err.message);
       }
     };
 
