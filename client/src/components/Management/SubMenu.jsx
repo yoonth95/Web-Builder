@@ -2,9 +2,9 @@ import React from 'react';
 import EditForm from './EditForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
-import "styles/Management/SubMenu.css"
+import 'styles/Management/SubMenu.css';
 
-const SubMenu = ({ secondList, idx, editMenuIds, editMenu, deleteMenu, updateMenu, handleTitleValue, menu, handleLinkValue, handleNewWindowValue, isNewWindow }) => {
+const SubMenu = ({ secondList, idx, editMenuIds, editMenu, deleteMenu, updateMenu, handleTitleValue, PrimaryMenuData, handleLinkValue, handleNewWindowValue, isNewWindow }) => {
   return (
     <div>
       {secondList
@@ -14,7 +14,7 @@ const SubMenu = ({ secondList, idx, editMenuIds, editMenu, deleteMenu, updateMen
             <div className={`subMenus ${editMenuIds.includes(submenu.idx) ? 'withEdit' : ''}`}>
               <h1 className='sub_box'>{submenu.title}</h1>
               <div className='box'>
-                <span onClick={() => editMenu(submenu.idx)}>
+                <span onClick={() => editMenu(submenu.idx, submenu.title, submenu.link)}>
                   <FontAwesomeIcon icon={faGear} />
                 </span>
                 <span onClick={() => deleteMenu(submenu.idx, submenu.order_num, submenu.parent_id)}>
@@ -24,17 +24,16 @@ const SubMenu = ({ secondList, idx, editMenuIds, editMenu, deleteMenu, updateMen
             </div>
             {editMenuIds.includes(submenu.idx) && (
               <EditForm
-                submenu={submenu}
+                curMenuData={submenu}
                 updateMenu={updateMenu}
                 handleTitleValue={handleTitleValue}
-                menu={menu}
+                PrimaryMenuData={PrimaryMenuData}
                 secondList={secondList}
                 handleLinkValue={handleLinkValue}
                 handleNewWindowValue={handleNewWindowValue}
                 isNewWindow={isNewWindow}
               />
             )}
-            {/* submenu, updateMenu, handleTitleValue, menu, secondList, handleLinkValue, handleNewWindowValue, isNewWindow  */}
           </div>
         ))}
     </div>

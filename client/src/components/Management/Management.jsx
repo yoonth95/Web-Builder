@@ -90,6 +90,7 @@ const Management = ({ setIsOpen }) => {
       title: editedTitle,
       link: editedLink,
       newWindow: isNewWindow[id] || false,
+      updated_at: new Date().toISOString(),
     };
 
     const updateFetch = async () => {
@@ -97,9 +98,10 @@ const Management = ({ setIsOpen }) => {
         UpdateMenuAPI(formData);
         alert('수정 완료');
 
-        // update된 값으로 상태값 변환 필요
-        // dispatch(updateFirstList(data));
-        // dispatch(updateSecondList(data));
+        const updatedFirstList = firstList.map((item) => (item.idx === id ? { ...item, ...formData } : item));
+        dispatch(updateFirstList(updatedFirstList));
+        const updatedSecondList = secondList.map((item) => (item.idx === id ? { ...item, ...formData } : item));
+        dispatch(updateSecondList(updatedSecondList));
       } catch (err) {
         alert('수정 오류');
         console.log(err.message);
@@ -130,14 +132,13 @@ const Management = ({ setIsOpen }) => {
     if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) deleteMenu();
   };
 
-  const editMenu = (id) => {
+  const editMenu = (id, title, link) => {
     setEditMenuIds((prevIds) => {
       if (prevIds.includes(id)) {
-        // 토글 버튼 눌렀을 때 제목과 링크 값 저장된 값으로 변환하기!
-        //setEditedTitle();
-        //setEditedLink();
         return prevIds.filter((editId) => editId !== id);
       } else {
+        setEditedTitle(title);
+        setEditedLink(link);
         return [...prevIds, id];
       }
     });
@@ -163,78 +164,28 @@ const Management = ({ setIsOpen }) => {
         {firstList.map((menu) => (
           <div key={menu.idx} className='menu_list'>
             <PrimaryMenu
+              isNewWindow={isNewWindow}
+              handleNewWindowValue={handleNewWindowValue}
+              handleTitleValue={handleTitleValue}
+              handleLinkValue={handleLinkValue}
+              updateMenu={updateMenu}
+              secondList={secondList}
               editMenuIds={editMenuIds}
               menu={menu}
               toggleImage={toggleImage}
               clickId={clickId}
               editMenu={editMenu}
               deleteMenu={deleteMenu}
-              updateMenu={updateMenu}
-              handleTitleValue={handleTitleValue}
-              handleLinkValue={handleLinkValue}
-              handleNewWindowValue={handleNewWindowValue}
-              secondList={secondList}
-              isNewWindow={isNewWindow}
             />
-            {/* <div className='primaryMenus_wrap'>
-              <div className={`primaryMenus ${editMenuIds.includes(menu.idx) ? 'withEdit' : ''}`}>
-                <div className='img_wrap' onClick={() => toggleImage(menu.idx)}>
-                  <span style={{ transform: clickId.includes(menu.idx) ? 'rotate(90deg)' : 'rotate(0deg)' }}>
-                    <FontAwesomeIcon icon={faAngleRight} />
-                  </span>
-                </div>
-                <h1>{menu.title}</h1>
-                <div className='box'>
-                  <span
-                    onClick={() => {
-                      editMenu(menu.idx, menu.title, menu.link);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faGear} />
-                  </span>
-                  <span onClick={() => deleteMenu(menu.idx, menu.order_num)}>
-                    <FontAwesomeIcon icon={faXmark} />
-                  </span>
-                </div>
-              </div>
-              {editMenuIds.includes(menu.idx) && (
-                <form className='edit_wrap' onSubmit={(e) => updateMenu(e, menu.idx)}>
-                  <label className='primaryMenu_label primaryMenu_title_label' htmlFor='primaryMenu_title'>
-                    제목
-                    <input id='primaryMenu_title' type='text' defaultValue={menu.title} onChange={handleTitleValue} />
-                  </label>
-                  <div className='edit_wrap_sub'>
-                    <label className='primaryMenu_label link_label' htmlFor='primaryMenu_link'>
-                      링크
-                      <SelectBox curMenuData={menu} subMenusData={secondList} handleLinkValue={handleLinkValue} />
-                    </label>
-                    <input
-                      type='checkbox'
-                      name='isNewWindow'
-                      id={`primaryMenu_chkBox_${menu.idx}`}
-                      className='new_window_chkBox'
-                      checked={isNewWindow[menu.idx] || false}
-                      onChange={(e) => handleNewWindowValue(e, menu.idx)}
-                    />
-                    <label htmlFor={`primaryMenu_chkBox_${menu.idx}`} className='txt_new_window'>
-                      새 창 열기
-                    </label>
-                    <button className='save_btn' type='submit'>
-                      저장
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div> */}
             {clickId.includes(menu.idx) && (
               <>
                 <SubMenu
                   isNewWindow={isNewWindow}
                   handleNewWindowValue={handleNewWindowValue}
                   handleTitleValue={handleTitleValue}
-                  updateMenu={updateMenu}
-                  menu={menu}
                   handleLinkValue={handleLinkValue}
+                  updateMenu={updateMenu}
+                  PrimaryMenuData={menu}
                   secondList={secondList}
                   idx={menu.idx}
                   editMenuIds={editMenuIds}
