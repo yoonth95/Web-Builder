@@ -73,11 +73,33 @@ const Management = ({ setIsOpen }) => {
     setEditedLink(e.target.value);
   };
 
-  const handleNewWindowValue = (e, menuId) => {
+  const handleNewWindowValue = (e, menuId, parent_id) => {
     const { checked } = e.target;
+    
+    // 자식
+    if (parent_id) {
+      const newList = secondList.map(item => {
+        if (item.idx === menuId) {
+          return { ...item, new_window: checked };
+        }
+        return item;
+      });
+      dispatch(updateSecondList(newList));
+    }
+    // 부모
+    else {
+      const newList = firstList.map(item => {
+        if (item.idx === menuId) {
+          return { ...item, new_window: checked };
+        }
+        return item;
+      });
+      dispatch(updateFirstList(newList));
+    }
+
     setIsNewWindow((prevIsNewWindow) => ({
       ...prevIsNewWindow,
-      [menuId]: checked,
+      [menuId]: checked
     }));
   };
 
@@ -89,13 +111,12 @@ const Management = ({ setIsOpen }) => {
       idx: id,
       title: editedTitle,
       link: editedLink,
-      newWindow: isNewWindow[id] || false,
-      updated_at: new Date().toISOString(),
+      new_window: isNewWindow[id] ? 1 : 0
     };
 
     const updateFetch = async () => {
       try {
-        UpdateMenuAPI(formData);
+        await UpdateMenuAPI(formData);
         alert('수정 완료');
 
         const updatedFirstList = firstList.map((item) => (item.idx === id ? { ...item, ...formData } : item));
@@ -132,11 +153,12 @@ const Management = ({ setIsOpen }) => {
     if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) deleteMenu();
   };
 
-  const editMenu = (id, title, link) => {
+  const editMenu = (id, title, link, isNewWindow) => {
     setEditMenuIds((prevIds) => {
       if (prevIds.includes(id)) {
         return prevIds.filter((editId) => editId !== id);
-      } else {
+      } 
+      else {
         setEditedTitle(title);
         setEditedLink(link);
         return [...prevIds, id];

@@ -53,10 +53,10 @@ exports.insertMenu = async (req, res) => {
 };
 
 exports.updateMenu = async (req, res) => {
-  const { idx, title, link, newWindow } = req.body;
+  const { idx, title, link, new_window } = req.body;
 
   try {
-    await menuDB.updateMenu(idx, title, link, newWindow);
+    await menuDB.updateMenu(idx, title, link, new_window);
     res.status(200).json('메뉴를 수정하였습니다.');
   } catch (err) {
     console.error(err);

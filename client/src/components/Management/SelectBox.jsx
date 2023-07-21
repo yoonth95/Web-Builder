@@ -2,7 +2,6 @@ import React from 'react';
 import 'styles/Management/SelectBox.css';
 
 const SelectBox = ({ curMenuData, PrimaryMenuData, subMenusData, handleLinkValue }) => {
-  console.log('curMenuData.link', curMenuData.link);
   return (
     <select className='link_select' defaultValue={curMenuData.link || 'infoMsg'} onChange={handleLinkValue}>
       <option disabled value='infoMsg'>

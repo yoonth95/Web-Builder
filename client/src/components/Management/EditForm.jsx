@@ -3,7 +3,6 @@ import SelectBox from './SelectBox';
 import 'styles/Management/EditForm.css';
 
 const EditForm = ({ curMenuData, updateMenu, handleTitleValue, PrimaryMenuData, secondList, handleLinkValue, handleNewWindowValue, isNewWindow }) => {
-  console.log('curMenuData', curMenuData);
   return (
     <form className='edit_wrap' onSubmit={(e) => updateMenu(e, curMenuData.idx)}>
       <label className='subMenu_label subMenu_title_label' htmlFor='subMenu_title'>
@@ -20,8 +19,8 @@ const EditForm = ({ curMenuData, updateMenu, handleTitleValue, PrimaryMenuData, 
           name='isNewWindow'
           id={`subMenu_chkBox_${curMenuData.idx}`}
           className='new_window_chkBox'
-          checked={isNewWindow[curMenuData.idx] || false}
-          onChange={(e) => handleNewWindowValue(e, curMenuData.idx)}
+          checked={curMenuData.new_window || false}
+          onChange={(e) => handleNewWindowValue(e, curMenuData.idx, curMenuData.parent_id)}
         />
         <label htmlFor={`subMenu_chkBox_${curMenuData.idx}`} className='txt_new_window'>
           새 창 열기

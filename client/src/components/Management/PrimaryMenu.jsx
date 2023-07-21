@@ -16,7 +16,7 @@ const PrimaryMenu = ({ editMenuIds, menu, toggleImage, clickId, editMenu, delete
         <div className='box'>
           <span
             onClick={() => {
-              editMenu(menu.idx, menu.title, menu.link);
+              editMenu(menu.idx, menu.title, menu.link,menu.new_window);
             }}
           >
             <FontAwesomeIcon icon={faGear} />
