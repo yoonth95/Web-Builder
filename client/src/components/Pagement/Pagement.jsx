@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
 
+// api
+import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
+
 const Pagement = ({ setIsOpen }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,22 +20,15 @@ const Pagement = ({ setIsOpen }) => {
 
   const getMenu = async () => {
     try {
-      const res = await fetch('/api/getMenu', {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (!res.ok) {
-        console.log('get Page failed');
-        return;
-      }
-      const data = await res.json();
+      const data = await GetMenuAPI();
       setPageList(data.filter((e) => e.parent_id).sort((a, b) => a.parent_id - b.parent_id));
-
       setParentList(data.filter((e) => e.parent_id == null));
     } catch (err) {
-      console.error(err);
+      alert("조회 오류");
+      console.log(err.message);
     }
   };
+
   useEffect(() => {
     getMenu();
   }, []);
@@ -91,7 +87,9 @@ const Pagement = ({ setIsOpen }) => {
                 <div key={menu.idx} className='info'>
                   <div className='info_content'>{menu.title}</div>
                   <div className='info_content link'>{menu.link}</div>
-                  <div className='info_content btn'>{parentList.filter((e) => e.idx === menu.parent_id)[0].title}</div>
+                  <div className='info_content btn'>
+                    <span>{parentList.filter((e) => e.idx === menu.parent_id)[0].title}</span>
+                  </div>
                   <div className='info_content date'>{dateFormat(menu.updated_at)}</div>
                   <div className='info_content' id='info_btn'>
                     <button

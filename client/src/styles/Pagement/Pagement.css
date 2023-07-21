@@ -49,14 +49,27 @@
   font-weight: 400;
 }
 .btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
   font-weight: 700;
+  font-size: 14px;
   letter-spacing: -0.28px;
-  border-radius: 50px;
-  background: var(--grayscale-30, #b3b3b3);
-  padding: 5px 11px;
-  color: #fff;
-  width: 12%;
 }
+.btn span {
+  display: inline-block;
+  width: 100px;
+  height: 27px;
+  background-color: var(--grayscale-30, #b3b3b3);
+  color: #fff;
+  border-radius: 50px;
+  padding: 5px;
+  /* overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; */
+}
+
 /* 페이지 버튼 속성 */
 .board-page {
   margin: 30px 0;
@@ -114,8 +127,9 @@
 }
 #info_btn {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  gap: 8px;
 }
 #info_btn > button {
   border-radius: 50px;
@@ -132,6 +146,11 @@
   padding: 5px 17px;
 }
 #info_btn > button:hover {
+  background: var(--grayscale-0, #ee7d00);
+  border: 1px solid var(--grayscale-30, #ee7d00);
+  color: var(--grayscale-30, #fff);
+}
+#info_btn > button:last-child {
   background: var(--grayscale-0, #ee7d00);
   border: 1px solid var(--grayscale-30, #ee7d00);
   color: var(--grayscale-30, #fff);
