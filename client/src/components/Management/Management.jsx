@@ -21,6 +21,7 @@ import 'styles/Management/Management.css';
 // fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faGear, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
+import PrimaryMenu from './PrimaryMenu';
 
 const Management = ({ setIsOpen }) => {
   const { firstList, secondList } = useSelector((state) => state.menu);
@@ -178,7 +179,21 @@ const Management = ({ setIsOpen }) => {
       <div className='menu_list_wrap'>
         {firstList.map((menu) => (
           <div key={menu.idx} className='menu_list'>
-            <div className='primaryMenus_wrap'>
+            <PrimaryMenu
+              editMenuIds={editMenuIds}
+              menu={menu}
+              toggleImage={toggleImage}
+              clickId={clickId}
+              editMenu={editMenu}
+              deleteMenu={deleteMenu}
+              updateMenu={updateMenu}
+              handleTitleValue={handleTitleValue}
+              handleLinkValue={handleLinkValue}
+              handleNewWindowValue={handleNewWindowValue}
+              secondList={secondList}
+              isNewWindow={isNewWindow}
+            />
+            {/* <div className='primaryMenus_wrap'>
               <div className={`primaryMenus ${editMenuIds.includes(menu.idx) ? 'withEdit' : ''}`}>
                 <div className='img_wrap' onClick={() => toggleImage(menu.idx)}>
                   <span style={{ transform: clickId.includes(menu.idx) ? 'rotate(90deg)' : 'rotate(0deg)' }}>
@@ -227,7 +242,7 @@ const Management = ({ setIsOpen }) => {
                   </div>
                 </form>
               )}
-            </div>
+            </div> */}
             {clickId.includes(menu.idx) && (
               <>
                 <SubMenu
