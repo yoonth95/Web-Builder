@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React  from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'redux/userSlice';
 import { loginAPI } from 'api/User/loginAPI';
-
+import useInputValues from 'hooks/useInput'
 import logo from 'assets/images/logo.svg';
 import 'styles/Login/Login.css';
 
 const Login = () => {
-  const [id, setId] = useState('');
-  const [pw, setPw] = useState('');
+  const { inputValues, handleChange, reset} = useInputValues({
+      id:"",
+      pw:""
+    })
+ const {id, pw} =inputValues
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,8 +37,7 @@ const Login = () => {
     } catch (err) {
       alert('로그인 실패');
       console.log(err.message);
-      setId('');
-      setPw('');
+      reset();
     }
   };
 
@@ -45,14 +47,14 @@ const Login = () => {
         <img className='logo' src={logo} alt='로고 이미지' />
         <form className='login_form' onSubmit={submit}>
           <div className='inputTag'>
-            <input type='text' id='input_id' value={id} onChange={(e) => setId(e.target.value)} />
+            <input type='text' id='input_id' name='id' value={id} onChange={handleChange} />
             <label htmlFor='input_id'>
               Email <span style={{ color: '#EF4565' }}>*</span>
             </label>
             {/* <span className='validation'>등록되지 않은 이메일 주소입니다.</span> */}
           </div>
           <div className='inputTag'>
-            <input type='password' id='input_pw' value={pw} onChange={(e) => setPw(e.target.value)} />
+            <input type='password' id='input_pw' name='pw' value={pw} onChange={handleChange} />
             <label htmlFor='input_pw'>
               Password <span style={{ color: '#EF4565' }}>*</span>
             </label>

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-// import { setBtn } from 'redux/buttonSlice';
+import useInputValues from 'hooks/useInput'
 import { updateFirstList, updateSecondList } from 'redux/menuSlice';
 import 'styles/Modal/Modal.css';
 
@@ -11,21 +11,22 @@ import { InsertMenuAPI } from 'api/Admin/InsertMenuAPI';
 const Modal = ({ isOpen, setIsOpen }) => {
   const { btn } = useSelector((state) => state.btn);
   const { firstList, secondList } = useSelector((state) => state.menu);
+  const { inputValues, handleChange, reset}= useInputValues({
+    title:"",
+    link:"",
+    new_window: 0
+  })
+  const {title,link,new_window} = inputValues
 
-  const [title, setTitle] = useState('');
-  const [link, setLink] = useState('');
-  const [window, setWindow] = useState(0);
   const parent_id = btn ? Number(btn.slice(2)) : null;
   const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다.
 
   const closeModal = () => {
     if (btn === '메뉴') {
-      setTitle('');
+      reset();
       setIsOpen(false);
     } else {
-      setTitle('');
-      setLink('');
-      setWindow(0);
+      reset();
       setIsOpen(false);
     }
   };
@@ -45,7 +46,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
         const data = await InsertMenuAPI(title);
         alert('메뉴를 추가하였습니다.');
         setIsOpen(false);
-        setTitle('');
+        reset();
         dispatch(updateFirstList([...firstList, data]));
       } catch (err) {
         alert('수정 오류');
@@ -59,12 +60,10 @@ const Modal = ({ isOpen, setIsOpen }) => {
         return;
       }
       try {
-        const data = await InsertMenuAPI(title, link, parent_id, window);
+        const data = await InsertMenuAPI(title, link, parent_id, new_window);
         alert('메뉴를 추가하였습니다.');
         setIsOpen(false);
-        setTitle('');
-        setLink('');
-        setWindow(0);
+        reset();
         dispatch(updateSecondList([...secondList, data]));
       } catch (err) {
         alert('수정 오류');
@@ -86,13 +85,13 @@ const Modal = ({ isOpen, setIsOpen }) => {
           <div className='modal-content' onClick={handleModalContentClick}>
             <div className='modal_infor_box'>
               <span>{btn !== '메뉴' && btn !== '복제' ? '메뉴 항목 추가' : `페이지 ${btn}`}</span>
-              <input type='text' className='pageInput' name='title' placeholder={btn === '메뉴' ? '메뉴 항목' : `페이지 명`} value={title} onChange={(e) => setTitle(e.target.value)} />
-              {btn !== '메뉴' && <input type='text' className='pageInput' name='link' placeholder='페이지 주소' value={link} onChange={(e) => setLink(e.target.value)} />}
+              <input type='text' className='pageInput' name='title' placeholder={btn === '메뉴' ? '메뉴 항목' : `페이지 명`} value={title} onChange={handleChange} />
+              {btn !== '메뉴' && <input type='text' className='pageInput' name='link' placeholder='페이지 주소' value={link} onChange={handleChange} />}
               {btn !== '메뉴' && (
                 <div className='modal_page_infor'>
                   <p>{`http://localhost:3000/page/${link}`}</p>
                   <div style={{ display: btn === '복제' ? 'none' : 'block'}}>
-                    <input type='checkbox' checked={window === 1} onChange={() => setWindow(window === 0 ? 1 : 0)} />
+                    <input type='checkbox' name='new_window' checked={new_window} onChange={handleChange} />
                     새창 열기
                   </div>
                 </div>
@@ -110,3 +109,4 @@ const Modal = ({ isOpen, setIsOpen }) => {
 };
 
 export default Modal;
+
