@@ -1,34 +1,26 @@
-// import { setUser } from 'redux/userSlice';
-// import { useDispatch } from 'react-redux';
+export const loginAPI = async (id, pw) => {
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ userID: id, userPW: pw }),
+    });
 
-// export const loginAPI = async (id, pw) => {
-//   const dispatch = useDispatch();
-//   try {
-//     const res = await fetch('/api/login', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       credentials: 'include',
-//       body: JSON.stringify({ userID: id, userPW: pw }),
-//     });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data);
+    }
 
-//     const data = await res.json();
+    const data = await res.json();
+    const userInfo = {
+      user_id: data.user_id,
+      user_name: data.user_name,
+    };
 
-//     if (!res.ok) {
-//       alert(data);
-//       setId('');
-//       setPw('');
-//       return;
-//     }
-
-//     const userInfo = {
-//       user_id: data.user_id,
-//       user_name: data.user_name,
-//     };
-
-//     dispatch(setUser(userInfo));
-//     alert('로그인 성공');
-//     navigate('/admin');
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
+    return userInfo;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};

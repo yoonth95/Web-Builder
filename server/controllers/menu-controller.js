@@ -53,17 +53,13 @@ exports.insertMenu = async (req, res) => {
 };
 
 exports.updateMenu = async (req, res) => {
-  console.log('업데이트');
-  console.log(req.body);
+  const { idx, title, link, newWindow } = req.body;
 
-  const { title, link, newWindow } = req.body;
-  console.log(title, link, newWindow);
-
-  // try {
-  //   await menuDB.updateMenu(id);
-  //   res.status(200).json('메뉴를 삭제하였습니다.');
-  // } catch (err) {
-  //   console.error(err);
-  //   res.status(500).jsoㅂn('삭제 오류');
-  // }
+  try {
+    await menuDB.updateMenu(idx, title, link, newWindow);
+    res.status(200).json('메뉴를 삭제하였습니다.');
+  } catch (err) {
+    console.error(err);
+    res.status(500).jsoㅂn('삭제 오류');
+  }
 };

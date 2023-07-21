@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import 'styles/Login/Login.css';
+import { signupAPI } from 'api/User/signupAPI';
+
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -23,26 +25,16 @@ const Signup = () => {
     }
 
     try {
-      const res = await fetch('/api/signup', {
-        method: 'POST',
-        body: JSON.stringify({ userName: name, userID: id, userPW: pw }),
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data);
-        setName('');
-        setId('');
-        setPw('');
-        return;
-      }
-
+      await signupAPI(name, id, pw);
       alert('회원가입 성공');
       navigate('/');
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
+      alert("회원가입 실패");
+      setName('');
+      setId('');
+      setPw('');
+      return;
     }
   };
 

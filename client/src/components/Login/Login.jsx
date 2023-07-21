@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'redux/userSlice';
+import { loginAPI } from 'api/User/loginAPI';
+
 import logo from 'assets/images/logo.svg';
 import 'styles/Login/Login.css';
 
@@ -25,32 +27,15 @@ const Login = () => {
     }
 
     try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ userID: id, userPW: pw }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data);
-        setId('');
-        setPw('');
-        return;
-      }
-
-      const userInfo = {
-        user_id: data.user_id,
-        user_name: data.user_name,
-      };
-
+      const userInfo = await loginAPI(id, pw);
       dispatch(setUser(userInfo));
       alert('로그인 성공');
       navigate('/admin');
     } catch (err) {
-      console.error(err);
+      alert('로그인 실패');
+      console.log(err.message);
+      setId('');
+      setPw('');
     }
   };
 

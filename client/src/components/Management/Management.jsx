@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 // import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import React, { useEffect, useState } from 'react';
+
+// redux
+import { useDispatch, useSelector } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
 import { updateFirstList, updateSecondList } from 'redux/menuSlice';
+
+// 컴포넌트
 import SelectBox from './SelectBox';
 import NewMenu from './NewMenu';
 import EditForm from './EditForm';
 import SubMenu from './SubMenu';
 
+// api
+import { UpdateMenuAPI } from 'api/Admin/UpdateMenuAPI';
+
+// css
 import 'styles/Management/Management.css';
 
+// fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faGear, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -80,10 +89,11 @@ const Management = ({ setIsOpen }) => {
   };
 
   // 메뉴 수정
-  const updateMenu = (e, id) => {
+  const updateMenu = async (e, id) => {
     e.preventDefault();
 
     const formData = {
+      idx: id,
       title: editedTitle,
       link: editedLink,
       newWindow: isNewWindow[id] || false,
@@ -91,26 +101,15 @@ const Management = ({ setIsOpen }) => {
 
     const updateFetch = async () => {
       try {
-        const res = await fetch(`/api/updateMenu`, {
-          method: 'PUT',
-          body: JSON.stringify(formData),
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
+        UpdateMenuAPI(formData);
+        alert('수정 완료');
 
-        const data = await res.json();
-        if (!res.ok) {
-          alert('수정 오류');
-          console.log(res.error);
-        } else {
-          alert('수정 완료');
-          // update된 값으로 상태값 변환 필요
-          // dispatch(updateFirstList(data));
-          // dispatch(updateSecondList(data));
-        }
+        // update된 값으로 상태값 변환 필요
+        // dispatch(updateFirstList(data));
+        // dispatch(updateSecondList(data));
       } catch (err) {
         alert('수정 오류');
-        console.error(err);
+        console.log(err.message);
       }
     };
     if (window.confirm('해당 메뉴를 수정 하시겠습니까?')) updateFetch();

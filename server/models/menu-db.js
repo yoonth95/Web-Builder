@@ -77,11 +77,11 @@ exports.insertMenu = async (data) => {
   }
 };
 
-exports.updateMenu = async (idx) => {
-  // try {
-  //   const result = await query(`DELETE FROM menus where idx = ?`, idx);
-  //   return result;
-  // } catch (err) {
-  //   throw err;
-  // }
+exports.updateMenu = async (idx, title, link, newWindow) => {
+  try {
+    const result = await query(`UPDATE menus SET title=?, link=?, new_window=? where idx = ?`, [title, link, newWindow, idx]);
+    return result;
+  } catch (err) {
+    throw err;
+  }
 };
