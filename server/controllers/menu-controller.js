@@ -57,9 +57,9 @@ exports.updateMenu = async (req, res) => {
 
   try {
     await menuDB.updateMenu(idx, title, link, newWindow);
-    res.status(200).json('메뉴를 삭제하였습니다.');
+    res.status(200).json('메뉴를 수정하였습니다.');
   } catch (err) {
     console.error(err);
-    res.status(500).jsoㅂn('삭제 오류');
+    res.status(500).jsoㅂn('수정 오류');
   }
 };

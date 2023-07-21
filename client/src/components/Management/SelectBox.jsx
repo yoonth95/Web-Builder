@@ -1,10 +1,11 @@
 import React from 'react';
 import 'styles/Management/SelectBox.css';
 
-const SelectBox = ({ curMenuData, subMenusData, handleLinkValue }) => {
+const SelectBox = ({ curMenuData, PrimaryMenuData, subMenusData, handleLinkValue }) => {
+  console.log('curMenuData.link', curMenuData.link);
   return (
-    <select className='link_select' defaultValue='selectPage' onChange={handleLinkValue}>
-      <option disabled value='selectPage'>
+    <select className='link_select' defaultValue={curMenuData.link || 'infoMsg'} onChange={handleLinkValue}>
+      <option disabled value='infoMsg'>
         링크할 페이지를 선택하세요
       </option>
       <option disabled>공통 페이지</option>
@@ -22,7 +23,7 @@ const SelectBox = ({ curMenuData, subMenusData, handleLinkValue }) => {
       </option>
       <option disabled>사용자 추가 페이지</option>
       {subMenusData
-        .filter((submenu) => submenu.parent_id === curMenuData.idx)
+        .filter((submenu) => submenu.parent_id === PrimaryMenuData.idx)
         .map((subMenu) => (
           <option key={subMenu.idx} value={subMenu.link}>
             {subMenu.title}
