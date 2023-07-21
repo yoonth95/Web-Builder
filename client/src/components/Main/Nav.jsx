@@ -4,6 +4,9 @@ import { updateFirstList, updateSecondList } from 'redux/menuSlice';
 import logo from 'assets/images/logo.svg';
 import { useSelector } from 'react-redux';
 
+// api
+import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
+
 const Nav = () => {
   const { firstList, secondList } = useSelector((state) => state.menu);
   const dispatch = useDispatch();
@@ -11,17 +14,7 @@ const Nav = () => {
   useEffect(() => {
     const getMenu = async () => {
       try {
-        const res = await fetch('/api/getMenu', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!res.ok) {
-          console.log('get menu fail');
-          return;
-        }
-
-        const data = await res.json();
+        const data = GetMenuAPI();
 
         let f_list = [];
         let s_list = [];
@@ -32,7 +25,8 @@ const Nav = () => {
         dispatch(updateFirstList(f_list));
         dispatch(updateSecondList(s_list));
       } catch (err) {
-        console.error(err);
+        alert("조회 오류")
+        console.log(err.message);
       }
     };
 

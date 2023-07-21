@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 import { updateFirstList, updateSecondList } from 'redux/menuSlice';
 import 'styles/Modal/Modal.css';
 
+// api
+import { InsertMenuAPI } from 'api/Admin/InsertMenuAPI';
+
 const Modal = ({ isOpen, setIsOpen }) => {
   const { btn } = useSelector((state) => state.btn);
   const { firstList, secondList } = useSelector((state) => state.menu);
@@ -37,25 +40,16 @@ const Modal = ({ isOpen, setIsOpen }) => {
         alert('페이지 명을 정해 주세요');
         return;
       }
-      try {
-        const res = await fetch('/api/insertMenu', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ title }),
-        });
-        const data = await res.json();
 
-        if (!res.ok) {
-          alert('오류입니다. 다시 시도해 주세요');
-          return;
-        }
+      try {
+        const data = await InsertMenuAPI(title);
         alert('메뉴를 추가하였습니다.');
         setIsOpen(false);
         setTitle('');
         dispatch(updateFirstList([...firstList, data]));
       } catch (err) {
-        console.error(err);
+        alert('수정 오류');
+        console.log(err.message);
       }
     };
 
@@ -65,19 +59,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
         return;
       }
       try {
-        const res = await fetch('/api/insertMenu', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ title, link, parent_id, new_window: window }),
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          alert(data);
-          return;
-        }
+        const data = await InsertMenuAPI(title, link, parent_id, window);
         alert('메뉴를 추가하였습니다.');
         setIsOpen(false);
         setTitle('');
@@ -85,7 +67,8 @@ const Modal = ({ isOpen, setIsOpen }) => {
         setWindow(0);
         dispatch(updateSecondList([...secondList, data]));
       } catch (err) {
-        console.error(err);
+        alert('수정 오류');
+        console.log(err.message);
       }
     };
 
