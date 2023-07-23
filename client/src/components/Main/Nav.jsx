@@ -1,37 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { updateFirstList, updateSecondList } from 'redux/menuSlice';
+import React, { useEffect } from 'react';
+import { useMenuActions } from 'hooks/useMenu';
 import logo from 'assets/images/logo.svg';
 import { useSelector } from 'react-redux';
 
-// api
-import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
-
 const Nav = () => {
+  const { getMenuAction } = useMenuActions();
   const { firstList, secondList } = useSelector((state) => state.menu);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    const getMenu = async () => {
-      try {
-        const data = await GetMenuAPI();
-
-        let f_list = [];
-        let s_list = [];
-        data.forEach((item) => {
-          !item.parent_id ? f_list.push(item) : s_list.push(item);
-        });
-
-        dispatch(updateFirstList(f_list));
-        dispatch(updateSecondList(s_list));
-      } catch (err) {
-        alert("조회 오류")
-        console.log(err.message);
-      }
-    };
-
-    getMenu();
-  }, [dispatch]);
+    getMenuAction();
+  }, []);
 
   console.log(secondList);
   return (

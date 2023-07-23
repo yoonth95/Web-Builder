@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'redux/userSlice';
+import { verifyTokenAPI } from 'api/User';
 
 const useAuth = () => {
   const [loading, setLoading] = useState(true);
@@ -9,21 +10,7 @@ const useAuth = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch('/api/verifyToken', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!res.ok) {
-          console.log('no token');
-          return;
-        }
-
-        const data = await res.json();
-        const userInfo = {
-          user_id: data.user.userID,
-          user_name: data.user.userName,
-        };
+        const userInfo = await verifyTokenAPI(); // Modify this line
         dispatch(setUser(userInfo));
         setLoading(false);
       } catch (err) {

@@ -8,14 +8,12 @@ export const menuSlice = createSlice({
         secondList: []
     },
     reducers: {
-        updateFirstList: (state, action) => {
-            state.firstList = action.payload;
-        },
-        updateSecondList: (state, action) => {
-            state.secondList = action.payload;
-        },
+        updateList: (state, action) => {
+            const { listName, newList } = action.payload;
+            state[listName] = newList;
+        }
     },
 });
 
-export const { updateFirstList, updateSecondList } = menuSlice.actions;
+export const { updateList } = menuSlice.actions;
 export default menuSlice.reducer;

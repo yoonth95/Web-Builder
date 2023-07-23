@@ -1,60 +1,30 @@
-// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import React, { useEffect, useState } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
-import { updateFirstList, updateSecondList } from 'redux/menuSlice';
+import { useMenuActions } from 'hooks/useMenu';
 
 // 컴포넌트
-import SelectBox from './SelectBox';
 import NewMenu from './NewMenu';
-import EditForm from './EditForm';
 import SubMenu from './SubMenu';
-
-// api
-import { UpdateMenuAPI } from 'api/Admin/UpdateMenuAPI';
-import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
-import { DeleteMenuAPI } from 'api/Admin/DeleteMenuAPI';
+import PrimaryMenu from './PrimaryMenu';
 
 // css
 import 'styles/Management/Management.css';
 
-// fontawesome
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight, faGear, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
-import PrimaryMenu from './PrimaryMenu';
 
 const Management = ({ setIsOpen }) => {
   const { firstList, secondList } = useSelector((state) => state.menu);
-
   const [clickId, setClickId] = useState([]);
   const [editMenuIds, setEditMenuIds] = useState([]);
-  const [editedTitle, setEditedTitle] = useState('');
-  const [editedLink, setEditedLink] = useState('');
-  const [isNewWindow, setIsNewWindow] = useState({});
+  const { getMenuAction, deleteMenuAction, orderMenuAction } = useMenuActions();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const getMenu = async () => {
-      try {
-        const data = await GetMenuAPI();
-
-        let f_list = [];
-        let s_list = [];
-        data.forEach((item) => {
-          !item.parent_id ? f_list.push(item) : s_list.push(item);
-        });
-
-        dispatch(updateFirstList(f_list));
-        dispatch(updateSecondList(s_list));
-      } catch (err) {
-        alert('조회 오류');
-        console.log(err.message);
-      }
-    };
-    getMenu();
-  }, [dispatch]);
+    getMenuAction();  // 메뉴 조회
+  }, []);
 
   // 메뉴 drop down
   const toggleImage = (id) => {
@@ -65,161 +35,115 @@ const Management = ({ setIsOpen }) => {
     }
   };
 
-  const handleTitleValue = (e) => {
-    setEditedTitle(e.target.value);
-  };
-
-  const handleLinkValue = (e) => {
-    setEditedLink(e.target.value);
-  };
-
-  const handleNewWindowValue = (e, menuId, parent_id) => {
-    const { checked } = e.target;
-    
-    // 자식
-    if (parent_id) {
-      const newList = secondList.map(item => {
-        if (item.idx === menuId) {
-          return { ...item, new_window: checked };
-        }
-        return item;
-      });
-      dispatch(updateSecondList(newList));
-    }
-    // 부모
-    else {
-      const newList = firstList.map(item => {
-        if (item.idx === menuId) {
-          return { ...item, new_window: checked };
-        }
-        return item;
-      });
-      dispatch(updateFirstList(newList));
-    }
-
-    setIsNewWindow((prevIsNewWindow) => ({
-      ...prevIsNewWindow,
-      [menuId]: checked
-    }));
-  };
-
-  // 메뉴 수정
-  const updateMenu = async (e, id) => {
-    e.preventDefault();
-
-    const formData = {
-      idx: id,
-      title: editedTitle,
-      link: editedLink,
-      new_window: isNewWindow[id] ? 1 : 0
-    };
-
-    const updateFetch = async () => {
-      try {
-        await UpdateMenuAPI(formData);
-        alert('수정 완료');
-
-        const updatedFirstList = firstList.map((item) => (item.idx === id ? { ...item, ...formData } : item));
-        dispatch(updateFirstList(updatedFirstList));
-        const updatedSecondList = secondList.map((item) => (item.idx === id ? { ...item, ...formData } : item));
-        dispatch(updateSecondList(updatedSecondList));
-      } catch (err) {
-        alert('수정 오류');
-        console.log(err.message);
-      }
-    };
-    if (window.confirm('해당 메뉴를 수정 하시겠습니까?')) updateFetch();
-
-    console.log(formData);
-  };
-
-  // 메뉴 삭제
-  const deleteMenu = (id, order_num, parent_id) => {
-    const deleteMenu = async () => {
-      const isParent = firstList.filter((e) => e.idx === id).length > 0 ? true : false;
-      try {
-        await DeleteMenuAPI(id, isParent, order_num, parent_id);
-        alert('삭제 완료');
-        const newFirstList = firstList.filter((item) => item.idx !== id);
-        const newSecondList = secondList.filter((item) => item.idx !== id);
-        dispatch(updateFirstList(newFirstList));
-        dispatch(updateSecondList(newSecondList));
-      } catch (err) {
-        alert('삭제 오류');
-        console.log(err.message);
-      }
-    };
-
-    if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) deleteMenu();
-  };
-
-  const editMenu = (id, title, link, isNewWindow) => {
+  // 메뉴 항목 drop down
+  const editMenu = (id) => {
     setEditMenuIds((prevIds) => {
       if (prevIds.includes(id)) {
         return prevIds.filter((editId) => editId !== id);
       } 
       else {
-        setEditedTitle(title);
-        setEditedLink(link);
         return [...prevIds, id];
       }
     });
   };
 
+  // 메뉴 삭제
+  const deleteMenu = async (id, order_num, parent_id) => {
+    if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) await deleteMenuAction(id, order_num, parent_id);
+  };
+
+  // 메뉴 drag and drop
+  const handleDragAndDrop = (results) => {
+    const { source, destination, type } = results;
+      
+    // 목적지가 없을 경우 return
+    if (!destination) return;
+  
+    // 시작지의 index와 id가 도착지의 index와 id가 같으면 return
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+  
+    // 상위 메뉴만 움직이기
+    if (type === 'group') {
+      const reorderedList = [...firstList];
+      
+      const storeSourceIndex = source.index;  // 시작 index
+      const storeDestinationIndex = destination.index; // 도착 index
+  
+      const [removedStore] = reorderedList.splice(storeSourceIndex, 1)  // 시작 index에 있는 항목 지우기
+      reorderedList.splice(storeDestinationIndex, 0, removedStore); // 도착 index에 시작 index 항목 넣기
+
+      return orderMenuAction(type, reorderedList);
+    } 
+    // 상위 메뉴에 속한 하위 메뉴만 움직이기
+    else {
+      const parent_id = parseInt(type.split('-')[1]);
+      const reorderedList = secondList.filter(item => item.parent_id === parent_id);
+  
+      const itemSourceIndex = source.index;
+      const itemDestinationIndex = destination.index;
+  
+      const [removedItem] = reorderedList.splice(itemSourceIndex, 1);
+      reorderedList.splice(itemDestinationIndex, 0, removedItem);
+
+      // 다른 하위 메뉴들
+      const otherItems = secondList.filter(item => item.parent_id !== parent_id);
+  
+      return orderMenuAction(type, reorderedList, otherItems);
+    }
+  };
+
   return (
-    <div className='wrap'>
-      <div className='memu_title_wrap'>
-        <div className='menu_title'>
+    <div className="wrap">
+      <div className="memu_title_wrap">
+        <div className="menu_title">
           <p>메뉴 설정</p>
           <p>메뉴 항목과 구조를 설정해주세요.</p>
         </div>
-        <button
-          onClick={() => {
-            setIsOpen(true);
-            dispatch(setBtn('메뉴'));
-          }}
-        >
-          메뉴 항목 추가
-        </button>
+        <button onClick={() => {setIsOpen(true); dispatch(setBtn("메뉴"));}}>메뉴 항목 추가</button>
       </div>
-      <div className='menu_list_wrap'>
-        {firstList.map((menu) => (
-          <div key={menu.idx} className='menu_list'>
-            <PrimaryMenu
-              isNewWindow={isNewWindow}
-              handleNewWindowValue={handleNewWindowValue}
-              handleTitleValue={handleTitleValue}
-              handleLinkValue={handleLinkValue}
-              updateMenu={updateMenu}
-              secondList={secondList}
-              editMenuIds={editMenuIds}
-              menu={menu}
-              toggleImage={toggleImage}
-              clickId={clickId}
-              editMenu={editMenu}
-              deleteMenu={deleteMenu}
-            />
-            {clickId.includes(menu.idx) && (
-              <>
-                <SubMenu
-                  isNewWindow={isNewWindow}
-                  handleNewWindowValue={handleNewWindowValue}
-                  handleTitleValue={handleTitleValue}
-                  handleLinkValue={handleLinkValue}
-                  updateMenu={updateMenu}
-                  PrimaryMenuData={menu}
-                  secondList={secondList}
-                  idx={menu.idx}
-                  editMenuIds={editMenuIds}
-                  editMenu={editMenu}
-                  deleteMenu={deleteMenu}
-                />
-                <NewMenu setIsOpen={setIsOpen} dispatch={dispatch} setBtn={setBtn} idx={menu.idx} />
-              </>
-            )}
-          </div>
-        ))}
-      </div>
+      <DragDropContext onDragEnd={handleDragAndDrop}>
+        <Droppable droppableId='ROOT' type="group">
+          {(provided) => (
+            <div className="menu_list_wrap" {...provided.droppableProps} ref={provided.innerRef}>
+              {firstList.map((menu, index) => (
+                <Draggable draggableId={`${menu.idx}`} key={`${menu.idx}`} index={index}>
+                  {(provided) => (
+                    <div className="menu_list" {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+                      <PrimaryMenu
+                        toggleImage={toggleImage}
+                        clickId={clickId}
+                        editMenuIds={editMenuIds}
+                        editMenu={editMenu}
+                        deleteMenu={deleteMenu}
+                        menu={menu}
+                        firstList={firstList}
+                        secondList={secondList}
+                      />
+                      {clickId.includes(menu.idx) && (
+                        <>
+                          <SubMenu
+                            Droppable={Droppable}
+                            Draggable={Draggable}
+                            parentID={menu.idx}
+                            editMenuIds={editMenuIds}
+                            editMenu={editMenu}
+                            deleteMenu={deleteMenu}
+                            subMenus={secondList.filter(e => e.parent_id === menu.idx)}
+                            firstList={firstList}
+                            secondList={secondList}
+                          />
+                          <NewMenu setIsOpen={setIsOpen} dispatch={dispatch} setBtn={setBtn} idx={menu.idx} />
+                        </>
+                      )}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };

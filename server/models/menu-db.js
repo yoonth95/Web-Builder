@@ -29,15 +29,14 @@ exports.getMenuLastOrder = async (data) => {
 };
 
 // 메뉴 삭제하기 (부모 메뉴 삭제 시 자식 메뉴까지 다 삭제)
-exports.deleteMenu = async (idx, isParent, order_num, parent_id) => {
-  
+exports.deleteMenu = async (idx, order_num, parent_id) => {
   try {
     await beginTransaction(); // 트랜잭션 시작
 
     await query(`DELETE FROM menus where idx = ?`, idx);
 
     let result2;
-    if (isParent === 'true') {
+    if (parent_id === "undefined") {
       result2 = await query(`UPDATE menus SET order_num = order_num - 1 WHERE parent_id is null and order_num > ?`, order_num)
     } else {
       result2 = await query(`UPDATE menus SET order_num = order_num - 1 WHERE parent_id = ? and order_num > ?`, [parent_id, order_num])
@@ -85,3 +84,28 @@ exports.updateMenu = async (idx, title, link, newWindow) => {
     throw err;
   }
 };
+
+exports.orderMenu = async (listData) => {
+  try {
+    console.time('순서 변경 db 업데이트 시간');
+
+    await beginTransaction(); // 트랜잭션 시작 
+
+    let updates = [];
+    let placeholders = [];
+    listData.forEach((item, index) => {
+      updates.push(`WHEN ? THEN ?`);
+      placeholders.push(item.idx, item.order_num);
+    });
+
+    let sql = `UPDATE menus SET order_num = CASE idx ${updates.join(' ')} END WHERE idx IN (?)`;
+    await query(sql, [...placeholders, listData.map(item => item.idx)]);
+
+    await commit();   // 트랜잭션 수행 
+
+    console.timeEnd('순서 변경 db 업데이트 시간');
+  } catch (error) {
+    await rollback(); // 중간에서 에러 발생 시 rollback으로 트랜잭션 시작 지점으로 돌아가기
+    throw error; // 오류
+  }
+}

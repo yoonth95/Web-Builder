@@ -12,10 +12,10 @@ exports.getMenu = async (req, res) => {
 
 exports.deleteMenu = async (req, res) => {
   const { id } = req.params;
-  const [idx, isParent, order_num, parent_id] = id.split("_");
+  const [idx, order_num, parent_id] = id.split("_");
 
   try {
-    await menuDB.deleteMenu(idx, isParent, order_num, parent_id);
+    await menuDB.deleteMenu(idx, order_num, parent_id);
     res.status(200).json('메뉴를 삭제하였습니다.');
   } catch (err) {
     console.error(err);
@@ -60,6 +60,18 @@ exports.updateMenu = async (req, res) => {
     res.status(200).json('메뉴를 수정하였습니다.');
   } catch (err) {
     console.error(err);
-    res.status(500).jsoㅂn('수정 오류');
+    res.status(500).json('수정 오류');
   }
 };
+
+exports.orderMenu = async (req, res) => {
+  const { listData } = req.body;
+
+  try {
+    await menuDB.orderMenu(listData);
+    res.status(200).json('순서 변경 완료');
+  } catch (err) { 
+    console.error(err);
+    res.status(500).json('순서 변경 오류');
+  }
+}

@@ -1,7 +1,8 @@
-export const DeleteMenuAPI = async (id, order_num, parent_id) => {
+export const OrderMenuAPI = async (listData) => {
   try {
-    const res = await fetch(`/api/deleteMenu/${id}_${order_num}_${parent_id}`, {
-      method: 'DELETE',
+    const res = await fetch('/api/orderMenu', {
+      method: 'PUT',
+      body: JSON.stringify({listData}),
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     });

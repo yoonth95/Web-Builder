@@ -1,25 +1,22 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import useInputValues from 'hooks/useInput'
-import { updateFirstList, updateSecondList } from 'redux/menuSlice';
-import 'styles/Modal/Modal.css';
+import { useMenuActions } from 'hooks/useMenu';
 
-// api
-import { InsertMenuAPI } from 'api/Admin/InsertMenuAPI';
+import useInputValues from 'hooks/useInput'
+import 'styles/Modal/Modal.css';
 
 const Modal = ({ isOpen, setIsOpen }) => {
   const { btn } = useSelector((state) => state.btn);
-  const { firstList, secondList } = useSelector((state) => state.menu);
+  const inputRef = useRef(null);
+  const { insertMenuAction } = useMenuActions();
   const { inputValues, handleChange, reset}= useInputValues({
     title:"",
     link:"",
     new_window: 0
   })
-  const {title,link,new_window} = inputValues
+  const {title, link, new_window} = inputValues;
 
   const parent_id = btn ? Number(btn.slice(2)) : null;
-  const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다.
 
   const closeModal = () => {
     if (btn === '메뉴') {
@@ -31,6 +28,12 @@ const Modal = ({ isOpen, setIsOpen }) => {
     }
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
+
   const handleModalContentClick = (event) => {
     event.stopPropagation();
   };
@@ -41,17 +44,8 @@ const Modal = ({ isOpen, setIsOpen }) => {
         alert('페이지 명을 정해 주세요');
         return;
       }
-
-      try {
-        const data = await InsertMenuAPI(title);
-        alert('메뉴를 추가하였습니다.');
-        setIsOpen(false);
-        reset();
-        dispatch(updateFirstList([...firstList, data]));
-      } catch (err) {
-        alert('수정 오류');
-        console.log(err.message);
-      }
+      await insertMenuAction(title, link, parent_id, new_window, setIsOpen, reset);
+      window.scrollTo(0, document.body.scrollHeight);
     };
 
     const saveMenu = async () => {
@@ -59,16 +53,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
         alert('페이지 명 또는 링크를 적어주세요');
         return;
       }
-      try {
-        const data = await InsertMenuAPI(title, link, parent_id, new_window);
-        alert('메뉴를 추가하였습니다.');
-        setIsOpen(false);
-        reset();
-        dispatch(updateSecondList([...secondList, data]));
-      } catch (err) {
-        alert('수정 오류');
-        console.log(err.message);
-      }
+      await insertMenuAction(title, link, parent_id, new_window, setIsOpen, reset);
     };
 
     if (btn === '메뉴') {
@@ -85,7 +70,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
           <div className='modal-content' onClick={handleModalContentClick}>
             <div className='modal_infor_box'>
               <span>{btn !== '메뉴' && btn !== '복제' ? '메뉴 항목 추가' : `페이지 ${btn}`}</span>
-              <input type='text' className='pageInput' name='title' placeholder={btn === '메뉴' ? '메뉴 항목' : `페이지 명`} value={title} onChange={handleChange} />
+              <input ref={inputRef} type='text' className='pageInput' name='title' placeholder={btn === '메뉴' ? '메뉴 항목' : `페이지 명`} value={title} onChange={handleChange} />
               {btn !== '메뉴' && <input type='text' className='pageInput' name='link' placeholder='페이지 주소' value={link} onChange={handleChange} />}
               {btn !== '메뉴' && (
                 <div className='modal_page_infor'>
