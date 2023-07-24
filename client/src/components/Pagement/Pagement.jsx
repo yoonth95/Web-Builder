@@ -5,6 +5,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
+import logo from 'assets/images/logo.svg';
 
 // api
 import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
@@ -18,7 +19,7 @@ const Pagement = ({ setIsOpen }) => {
 
   const [searchValue, setSearchValue] = useState('');
 
-  const Page = 3;
+  const Page = 5;
 
   const getMenu = async () => {
     try {
@@ -26,7 +27,7 @@ const Pagement = ({ setIsOpen }) => {
       setPageList(data.filter((e) => e.parent_id).sort((a, b) => a.parent_id - b.parent_id));
       setParentList(data.filter((e) => e.parent_id == null));
     } catch (err) {
-      alert("조회 오류");
+      alert('조회 오류');
       console.log(err.message);
     }
   };
@@ -55,7 +56,9 @@ const Pagement = ({ setIsOpen }) => {
 
   const dateFormat = (updatedAt) => {
     const updatedAtDate = new Date(updatedAt);
-    return updatedAtDate.toISOString().slice(0, 19).replace('T', ' ');
+    const koreanTimezoneOffset = 9 * 60;
+    const koreanTime = new Date(updatedAtDate.getTime() + koreanTimezoneOffset * 60000);
+    return koreanTime.toISOString().slice(0, 19).replace('T', ' ');
   };
   const search = () => {
     const lowercaseSearchValue = searchValue.toLowerCase();
@@ -63,22 +66,22 @@ const Pagement = ({ setIsOpen }) => {
     setPageList(filteredList);
     if (searchValue === '') {
       getMenu();
-    } 
+    }
   };
-  
+
   const handleInputChange = (event) => {
     setSearchValue(event.target.value);
   };
   const handlesearchPress = (e) => {
-    if((e.key === 'Enter')){
+    if (e.key === 'Enter') {
       search();
     }
-  }
+  };
   return (
     <div className='board-wrap'>
       <div className='board-title'>
         <div id='SearchBox'>
-          <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={handlesearchPress}/>
+          <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={handlesearchPress} />
           <button id='Search-btn' onClick={() => search()}>
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
@@ -94,15 +97,25 @@ const Pagement = ({ setIsOpen }) => {
             <div className='top_content'>관리</div>
           </div>
           {getPageItems().length === 0 ? (
-            <div>목록이 없습니다</div>
+            <div className='not_found_wrap'>
+              <p className='not_found_text'>
+                <h1>{searchValue}</h1> 페이지는 목록에 없습니다.
+              </p>
+            </div>
           ) : (
             getPageItems().map((menu) => {
               return (
                 <div key={menu.idx} className='info'>
-                  <div className='info_content'>{menu.title}</div>
-                  <div className='info_content link'>{menu.link}</div>
+                  <div className='info_content title' title={menu.title}>
+                    {menu.title}
+                  </div>
+                  <div className='info_content link' title={`/page/${menu.link}`}>
+                    /page/{menu.link}
+                  </div>
                   <div className='info_content btn'>
-                    <span>{parentList.filter((e) => e.idx === menu.parent_id)[0].title}</span>
+                    <span className='txt_info_content_btn' title={parentList.filter((e) => e.idx === menu.parent_id)[0].title}>
+                      {parentList.filter((e) => e.idx === menu.parent_id)[0].title}
+                    </span>
                   </div>
                   <div className='info_content date'>{dateFormat(menu.updated_at)}</div>
                   <div className='info_content' id='info_btn'>

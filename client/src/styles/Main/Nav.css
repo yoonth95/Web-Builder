@@ -1,0 +1,113 @@
+.header_wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px auto;
+  padding-bottom: 16px;
+}
+.header_wrap img:hover {
+  cursor: pointer;
+}
+.header_right {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header_right img {
+  margin-right: 30px;
+}
+.header_right_btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 148px;
+}
+.header_right button {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  color: #222;
+  border-radius: 50px;
+  background: #efefef;
+  flex-shrink: 0;
+  padding: 5px 12px;
+}
+.header_right button:hover {
+  background-color: #ee7d00;
+  color: #fff;
+}
+.gnb_wrap {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.gnb {
+  width: calc(100% - 120px);
+  font-size: 15px;
+  line-height: 1.6em;
+  font-weight: normal;
+  color: #454545;
+  border-top: 2px solid #f1f1f1;
+  border-bottom: 2px solid #f1f1f1;
+}
+.gnb ul {
+  display: flex;
+  justify-content: space-around;
+}
+.gnb li {
+  padding: 18px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
+  letter-spacing: -1px;
+  text-align: center;
+  flex: 1;
+}
+.gnb li:hover {
+  background-color: #ee7d00;
+  color: #fff;
+  cursor: pointer;
+}
+
+.option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.option button {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  width: 60px;
+  height: 64px;
+  display: block;
+  cursor: pointer;
+  color: #f3f3f3;
+}
+.option button:nth-child(1):hover,
+.option button:nth-child(2):hover {
+  background-color: #ee7d00;
+}
+.option button:nth-child(1) {
+  background-color: #c7c7c7;
+}
+.option button:nth-child(2) {
+  background-color: #979797;
+}
+.icon {
+  width: 35px;
+  height: 35px;
+}
+.gnb_info_wrap {
+  display: none;
+  width: 100%;
+}
+.gnb_info_wrap.on {
+  display: block;
+  width: 100%;
+}

@@ -58,7 +58,7 @@ exports.insertMenu = async (data) => {
 
     let result;
     if (!data[0]) {
-      result = await query("INSERT INTO menus (parent_id, title, link, new_window, order_num) VALUES (?, ?, ?, ?, ?)", [data[1], data[2], data[3], data[4], data[5]])
+      result = await query("INSERT INTO menus (parent_id, title, link, origin_link, new_window, order_num) VALUES (?, ?, ?, ?, ?, ?)", [data[1], data[2], data[3], data[3], data[4], data[5]])
     } else {
       result = await query("INSERT INTO menus (title, order_num) VALUES (?, ?)", [data[1], data[2]]);
     }

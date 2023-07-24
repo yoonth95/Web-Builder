@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import "styles/Management/NewMenu.css"
+import 'styles/Management/NewMenu.css';
 
 const NewMenu = ({ setIsOpen, dispatch, setBtn, idx }) => {
   return (

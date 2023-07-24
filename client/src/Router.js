@@ -12,6 +12,7 @@ import Login from 'components/Login/Login';
 import Signup from 'components/Login/Signup';
 import Nav from 'components/Main/Nav';
 import Modal from 'components/Modal/Modal';
+import Editor from 'components/Editor/Editor';
 import PrivateRoute from './PrivateRoute';
 
 const Router = () => {
@@ -39,7 +40,7 @@ const Router = () => {
           </PrivateRoute>
         } />
         <Route path='/nav' element={<Nav />} />
-        {/* <Route path='/editor:idx' element={<Modify />}/> */}
+        <Route path='/editor/:idx' element={<Editor />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>
     </BrowserRouter>

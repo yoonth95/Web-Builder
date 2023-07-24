@@ -70,7 +70,7 @@ exports.orderMenu = async (req, res) => {
   try {
     await menuDB.orderMenu(listData);
     res.status(200).json('순서 변경 완료');
-  } catch (err) { 
+  } catch (err) {
     console.error(err);
     res.status(500).json('순서 변경 오류');
   }
