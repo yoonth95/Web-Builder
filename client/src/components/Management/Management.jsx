@@ -10,12 +10,13 @@ import { useMenuActions } from 'hooks/useMenu';
 import NewMenu from './NewMenu';
 import SubMenu from './SubMenu';
 import PrimaryMenu from './PrimaryMenu';
+import Spinner from 'components/Spinner/Spinner';
 
 // css
 import 'styles/Management/Management.css';
 
 
-const Management = ({ setIsOpen }) => {
+const Management = ({ setIsOpen, isLoading }) => {
   const { firstList, secondList } = useSelector((state) => state.menu);
   const [clickId, setClickId] = useState([]);
   const [editMenuIds, setEditMenuIds] = useState([]);
@@ -101,7 +102,11 @@ const Management = ({ setIsOpen }) => {
         </div>
         <button onClick={() => {setIsOpen(true); dispatch(setBtn("메뉴"));}}>메뉴 항목 추가</button>
       </div>
+
       <DragDropContext onDragEnd={handleDragAndDrop}>
+      {isLoading ? (
+        <Spinner />
+      ) : (
         <Droppable droppableId='ROOT' type="group">
           {(provided) => (
             <div className="menu_list_wrap" {...provided.droppableProps} ref={provided.innerRef}>
@@ -143,6 +148,7 @@ const Management = ({ setIsOpen }) => {
             </div>
           )}
         </Droppable>
+              )}
       </DragDropContext>
     </div>
   );

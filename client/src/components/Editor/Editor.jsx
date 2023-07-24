@@ -5,9 +5,9 @@ import { useParams } from 'react-router-dom';
 import 'styles/Editor/Editor.css';
 
 const Editor = () => {
-  const { editorId } = useParams();
+  const { idx } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  console.log(editorId);
+  console.log(idx);
 
   return (
     <>
