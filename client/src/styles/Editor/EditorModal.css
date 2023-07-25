@@ -8,7 +8,6 @@
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  letter-spacing: -0.48px;
 }
 
 .editModal-overlay {
@@ -75,10 +74,23 @@
   flex: 6;
   display: grid;
   grid-template-columns: repeat(2, 450px);
-  grid-template-rows: repeat(auto-fill, 160px);
+  /* grid-template-rows: repeat(auto-fill, 160px); */
+  grid-auto-rows: minmax(160px, 160px);
   gap: 15px;
   height: 500px;
   overflow: auto;
+}
+
+.editModal-right::-webkit-scrollbar {
+  width: 6px;
+}
+.editModal-right::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 10px;
+}
+.editModal-right::-webkit-scrollbar-track {
+  background-color: #CCC;
+  border-radius: 10px;
 }
 
 .designSelect {
@@ -114,4 +126,127 @@
   background-color: var(--grayscale-20, #ccc);
   font-size: 50px;
   color: #fff;
+}
+
+.listBox {
+  width: 100%;
+  text-align: center;
+}
+
+.listBox p {
+  width: 70%;
+  margin: auto;
+}
+
+.listImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  background-color: #eaeaea;
+}
+
+.circle {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+}
+
+.rectangle {
+  width: 125px;
+  height: 65px;
+}
+
+.square {
+  width: 70px;
+  height: 70px;
+}
+
+.wideRectangle {
+  width: 150px;
+  height: 60px;
+}
+
+.listBox .title {
+  margin: 5px auto;
+  font-size: 10px;
+  color: #333;
+}
+
+.listBox .titleColor {
+  margin: 2px auto;
+  color: #EE7D00;
+  font-family: Noto Sans;
+  font-size: 10px;
+  font-weight: 350;
+}
+
+.listBox .subtitle {
+  margin: 4px auto 9px;
+  font-size: 10px;
+  transform: translate(0%, -25%) scale(0.5);  /* font-size는 최소 10px이기 때문에 더 작게 표현하기 위해 작성 본문에는 더 크게 보여줄 예정 */
+  font-family: Noto Sans;
+}
+
+.listBox .details {
+  font-family: Noto Sans;
+  font-size: 10px;
+  transform: translate(0%, -15%) scale(0.6);
+  font-weight: 350;
+  color: #666;
+}
+
+.listBox .content {
+  font-family: Noto Sans;
+  font-size: 10px;
+  transform: translate(0%, -10%) scale(0.8);
+  font-weight: 350;
+}
+
+.listBox .text {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #333;
+}
+
+.listBox .tinyText {
+  font-family: Noto Sans;
+  font-size: 10px;
+  transform: translate(0%, -50%) scale(0.7);
+  font-weight: 350;
+  color: #666;
+}
+
+.textBox {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.textBox p {
+  word-wrap: break-word;
+}
+
+.textBoxBtn, .textBoxBtn2 {
+  display: block;
+  width: 80px;
+  height: 20px;
+  background-color: #666;
+  color: #fff;
+  font-size: 12px;
+}
+
+.textBoxBtn {
+  margin: auto;
+}
+
+.textBoxBtn {
+  border-radius: 10px;
+}
+
+.layoutBox {
+  border: 1px dashed #333;
+  background-color: #F3F3F3;
 }
