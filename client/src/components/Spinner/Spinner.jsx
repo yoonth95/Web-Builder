@@ -4,9 +4,9 @@ import 'styles/Spinner/Spinner.css';
 
 const Spinner = () => {
   return (
-  <div class="loading-spinner">
-    <img src={logo} alt="로고"/>
-  </div>
+    <div className='loading-spinner'>
+      <img src={logo} alt='로고' />
+    </div>
   );
 };
 

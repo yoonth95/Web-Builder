@@ -176,3 +176,10 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@media (max-width: 1024px) {
+  #root {
+    margin: 0 10%;
+    padding: 0;
+  }
+}

@@ -12,10 +12,10 @@ const SubMenu = ({ Droppable, Draggable, parentID, editMenuIds, editMenu, delete
           {subMenus.map((subMenu, index) => (
             <Draggable key={subMenu.idx} draggableId={`item-${subMenu.idx}`} index={index}>
               {(provided) => (
-                <div className="subMenus_wrap" {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
-                  <div className={`subMenus ${editMenuIds.includes(subMenu.idx) ? "withEdit" : ""}`}>
-                    <h1 className="sub_box">{subMenu.title}</h1>
-                    <div className="box">
+                <div className='subMenus_wrap' {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+                  <div className={`subMenus ${editMenuIds.includes(subMenu.idx) ? 'withEdit' : ''}`}>
+                    <h1 className='sub_box'>{subMenu.title}</h1>
+                    <div className='box'>
                       <span onClick={() => editMenu(subMenu.idx)}>
                         <FontAwesomeIcon icon={faGear} />
                       </span>
@@ -24,9 +24,7 @@ const SubMenu = ({ Droppable, Draggable, parentID, editMenuIds, editMenu, delete
                       </span>
                     </div>
                   </div>
-                  {editMenuIds.includes(subMenu.idx) && (
-                    <EditForm curMenuData={subMenu} firstList={firstList} secondList={secondList}/>
-                  )}
+                  {editMenuIds.includes(subMenu.idx) && <EditForm editMenu={editMenu} curMenuData={subMenu} firstList={firstList} secondList={secondList} />}
                 </div>
               )}
             </Draggable>

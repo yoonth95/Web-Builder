@@ -5,10 +5,9 @@ import { useState } from 'react';
 export const useMenuActions = () => {
   const dispatch = useDispatch();
   const { firstList, secondList } = useSelector((state) => state.menu);
-  const [isLoading, setIsLoading] = useState(true);
+
   // 메뉴 조회
-  const getMenuAction = async () => {
-    setIsLoading(true); 
+  const getMenuAction = async (setIsLoading) => {
     try {
       const data = await GetMenuAPI();
       let f_list = [];
@@ -18,11 +17,11 @@ export const useMenuActions = () => {
       });
       dispatch(updateList({ listName: 'firstList', newList: f_list }));
       dispatch(updateList({ listName: 'secondList', newList: s_list }));
-      setIsLoading(false); 
+      setIsLoading(false);
     } catch (err) {
-      setIsLoading(false); 
       console.error(err.message);
       alert('조회 오류');
+      setIsLoading(true);
     }
   };
 

@@ -10,13 +10,11 @@ import { useMenuActions } from 'hooks/useMenu';
 import NewMenu from './NewMenu';
 import SubMenu from './SubMenu';
 import PrimaryMenu from './PrimaryMenu';
-import Spinner from 'components/Spinner/Spinner';
 
 // css
 import 'styles/Management/Management.css';
 
-
-const Management = ({ setIsOpen, isLoading }) => {
+const Management = ({ setIsOpen, setIsLoading, isLoading }) => {
   const { firstList, secondList } = useSelector((state) => state.menu);
   const [clickId, setClickId] = useState([]);
   const [editMenuIds, setEditMenuIds] = useState([]);
@@ -24,7 +22,7 @@ const Management = ({ setIsOpen, isLoading }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getMenuAction();  // 메뉴 조회
+    getMenuAction(setIsLoading); // 메뉴 조회
   }, []);
 
   // 메뉴 drop down
@@ -41,8 +39,7 @@ const Management = ({ setIsOpen, isLoading }) => {
     setEditMenuIds((prevIds) => {
       if (prevIds.includes(id)) {
         return prevIds.filter((editId) => editId !== id);
-      } 
-      else {
+      } else {
         return [...prevIds, id];
       }
     });
@@ -56,64 +53,67 @@ const Management = ({ setIsOpen, isLoading }) => {
   // 메뉴 drag and drop
   const handleDragAndDrop = (results) => {
     const { source, destination, type } = results;
-      
+
     // 목적지가 없을 경우 return
     if (!destination) return;
-  
+
     // 시작지의 index와 id가 도착지의 index와 id가 같으면 return
     if (source.droppableId === destination.droppableId && source.index === destination.index) return;
-  
+
     // 상위 메뉴만 움직이기
     if (type === 'group') {
       const reorderedList = [...firstList];
-      
-      const storeSourceIndex = source.index;  // 시작 index
+
+      const storeSourceIndex = source.index; // 시작 index
       const storeDestinationIndex = destination.index; // 도착 index
-  
-      const [removedStore] = reorderedList.splice(storeSourceIndex, 1)  // 시작 index에 있는 항목 지우기
+
+      const [removedStore] = reorderedList.splice(storeSourceIndex, 1); // 시작 index에 있는 항목 지우기
       reorderedList.splice(storeDestinationIndex, 0, removedStore); // 도착 index에 시작 index 항목 넣기
 
       return orderMenuAction(type, reorderedList);
-    } 
+    }
     // 상위 메뉴에 속한 하위 메뉴만 움직이기
     else {
       const parent_id = parseInt(type.split('-')[1]);
-      const reorderedList = secondList.filter(item => item.parent_id === parent_id);
-  
+      const reorderedList = secondList.filter((item) => item.parent_id === parent_id);
+
       const itemSourceIndex = source.index;
       const itemDestinationIndex = destination.index;
-  
+
       const [removedItem] = reorderedList.splice(itemSourceIndex, 1);
       reorderedList.splice(itemDestinationIndex, 0, removedItem);
 
       // 다른 하위 메뉴들
-      const otherItems = secondList.filter(item => item.parent_id !== parent_id);
-  
+      const otherItems = secondList.filter((item) => item.parent_id !== parent_id);
+
       return orderMenuAction(type, reorderedList, otherItems);
     }
   };
 
   return (
-    <div className="wrap">
-      <div className="memu_title_wrap">
-        <div className="menu_title">
+    <div className='wrap'>
+      <div className='memu_title_wrap'>
+        <div className='menu_title'>
           <p>메뉴 설정</p>
           <p>메뉴 항목과 구조를 설정해주세요.</p>
         </div>
-        <button onClick={() => {setIsOpen(true); dispatch(setBtn("메뉴"));}}>메뉴 항목 추가</button>
+        <button
+          onClick={() => {
+            setIsOpen(true);
+            dispatch(setBtn('메뉴'));
+          }}
+        >
+          메뉴 항목 추가
+        </button>
       </div>
-
       <DragDropContext onDragEnd={handleDragAndDrop}>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <Droppable droppableId='ROOT' type="group">
+        <Droppable droppableId='ROOT' type='group'>
           {(provided) => (
-            <div className="menu_list_wrap" {...provided.droppableProps} ref={provided.innerRef}>
+            <div className='menu_list_wrap' {...provided.droppableProps} ref={provided.innerRef}>
               {firstList.map((menu, index) => (
                 <Draggable draggableId={`${menu.idx}`} key={`${menu.idx}`} index={index}>
                   {(provided) => (
-                    <div className="menu_list" {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+                    <div className='menu_list' {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
                       <PrimaryMenu
                         toggleImage={toggleImage}
                         clickId={clickId}
@@ -133,7 +133,7 @@ const Management = ({ setIsOpen, isLoading }) => {
                             editMenuIds={editMenuIds}
                             editMenu={editMenu}
                             deleteMenu={deleteMenu}
-                            subMenus={secondList.filter(e => e.parent_id === menu.idx)}
+                            subMenus={secondList.filter((e) => e.parent_id === menu.idx)}
                             firstList={firstList}
                             secondList={secondList}
                           />
@@ -148,7 +148,6 @@ const Management = ({ setIsOpen, isLoading }) => {
             </div>
           )}
         </Droppable>
-              )}
       </DragDropContext>
     </div>
   );

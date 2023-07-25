@@ -4,7 +4,7 @@ import useInputValues from 'hooks/useInput';
 import SelectBox from './SelectBox';
 import 'styles/Management/EditForm.css';
 
-const EditForm = ({ curMenuData, secondList }) => {
+const EditForm = ({ curMenuData, secondList, editMenu }) => {
   const { inputValues, handleChange } = useInputValues({
     editedTitle: curMenuData.title,
     editedLink: curMenuData.link,
@@ -29,6 +29,7 @@ const EditForm = ({ curMenuData, secondList }) => {
     };
 
     if (window.confirm('해당 메뉴를 수정 하시겠습니까?')) updateFetch();
+    editMenu(idx);
   };
 
   return (
