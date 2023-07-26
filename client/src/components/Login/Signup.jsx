@@ -3,16 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import 'styles/Login/Login.css';
 import { signupAPI } from 'api/User/signupAPI';
-import useInputValues from 'hooks/useInput'
+import useInputValues from 'hooks/useInput';
 
 const Signup = () => {
-  const { inputValues, handleChange, reset} = useInputValues({
-    name:"",
-    id:"",
-    pw:""
-
-  })
-const {name, id, pw} =inputValues
+  const { inputValues, handleChange, reset } = useInputValues({
+    name: '',
+    id: '',
+    pw: '',
+  });
+  const { name, id, pw } = inputValues;
 
   const navigate = useNavigate();
 
@@ -35,39 +34,41 @@ const {name, id, pw} =inputValues
       navigate('/');
     } catch (err) {
       console.log(err.message);
-      alert("회원가입 실패");
+      alert('회원가입 실패');
       reset();
       return;
     }
   };
 
   return (
-    <div className='login'>
-      <div className='login_main'>
-        <img className='logo' src={logo} alt='로고 이미지' style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
-        <form className='login_form' onSubmit={submitBtn}>
-          <div className='inputTag'>
-            <input type='text' id='input_name' name='name' value={name} onChange={handleChange} />
-            <label htmlFor='input_name'>
-              Name <span style={{ color: '#EF4565' }}>*</span>
-            </label>
-          </div>
-          <div className='inputTag'>
-            <input type='text' id='input_id' name='id' value={id} onChange={handleChange} />
-            <label htmlFor='input_id'>
-              Email <span style={{ color: '#EF4565' }}>*</span>
-            </label>
-          </div>
-          <div className='inputTag'>
-            <input type='password' id='input_pw' name='pw' value={pw} onChange={handleChange} />
-            <label htmlFor='input_pw'>
-              Password <span style={{ color: '#EF4565' }}>*</span>
-            </label>
-          </div>
-          <button id='login_btn' type='submit'>
-            회원가입
-          </button>
-        </form>
+    <div className='admin'>
+      <div className='login'>
+        <div className='login_main'>
+          <img className='logo' src={logo} alt='로고 이미지' style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
+          <form className='login_form' onSubmit={submitBtn}>
+            <div className='inputTag'>
+              <input type='text' id='input_name' name='name' value={name} onChange={handleChange} />
+              <label htmlFor='input_name'>
+                Name <span style={{ color: '#EF4565' }}>*</span>
+              </label>
+            </div>
+            <div className='inputTag'>
+              <input type='text' id='input_id' name='id' value={id} onChange={handleChange} />
+              <label htmlFor='input_id'>
+                Email <span style={{ color: '#EF4565' }}>*</span>
+              </label>
+            </div>
+            <div className='inputTag'>
+              <input type='password' id='input_pw' name='pw' value={pw} onChange={handleChange} />
+              <label htmlFor='input_pw'>
+                Password <span style={{ color: '#EF4565' }}>*</span>
+              </label>
+            </div>
+            <button id='login_btn' type='submit'>
+              회원가입
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

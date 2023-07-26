@@ -13,10 +13,10 @@ const Admin = ({ setIsOpen, isLoading, setIsLoading }) => {
   // if (isLoading) return null;
 
   return (
-    <>
+    <div className='admin'>
       <AdminHeader />
       {tab === 'a' ? <Management setIsOpen={setIsOpen} setIsLoading={setIsLoading} isLoading={isLoading} /> : <Pagement setIsOpen={setIsOpen} setIsLoading={setIsLoading} isLoading={isLoading} />}
-    </>
+    </div>
   );
 };
 

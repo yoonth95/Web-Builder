@@ -49,9 +49,9 @@ const Nav = ({ isLoading, setIsLoading }) => {
       <header className='header_wrap'>
         <img src={logo} alt='로고' />
         <div className='header_right'>
-          <img src={Link1} alt='로고' />
-          <img src={Link2} alt='로고' />
-          <img src={Link3} alt='로고' />
+          {logoList.map(({ id, src }) => (
+            <img key={id} src={src} alt='로고' />
+          ))}
           <div className='header_right_btn'>
             <button>회사소개</button>
             <button>인재채용</button>
@@ -114,3 +114,9 @@ const Nav = ({ isLoading, setIsLoading }) => {
 };
 
 export default Nav;
+
+const logoList = [
+  { id: '1', src: Link1 },
+  { id: '2', src: Link2 },
+  { id: '3', src: Link3 },
+];

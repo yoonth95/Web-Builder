@@ -26,7 +26,7 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
   return (
     <ul className='list_select_option' onClick={toggle}>
       <li className={`selected_option ${isToggle ? 'open' : ''}`}>{resultTitle}</li>
-      <div className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
+      <ul className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
         <li className='disabled_option'>공통 페이지</li>
         {common.map((list) => (
           <li className='select_option' key={list.id} onClick={(e) => handleButtonClick(e, list.link)}>
@@ -47,7 +47,7 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
                   {subMenu.title}
                 </li>
               ))}
-      </div>
+      </ul>
     </ul>
   );
 };

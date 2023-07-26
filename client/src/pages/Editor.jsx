@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import EditorModal from 'components/Modal/EditorModal';
 import { useParams } from 'react-router-dom';
+
+import Block from 'components/Main/Block';
+import Nav from 'components/Main/Nav';
 
 import 'styles/Editor/Editor.css';
 
-const Editor = () => {
+const Editor = ({ isLoading, setIsLoading }) => {
   const { idx } = useParams();
-  const [isOpen, setIsOpen] = useState(false);
   console.log(idx);
 
   return (
     <>
-      <div>
-        <button onClick={() => setIsOpen(!isOpen)}>모달 클릭</button>
-      </div>
-      <EditorModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Nav isLoading={isLoading} setIsLoading={setIsLoading} />
+      <Block />
     </>
   );
 };

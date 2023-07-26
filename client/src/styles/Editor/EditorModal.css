@@ -21,7 +21,7 @@
   justify-content: center;
   align-items: center;
   overscroll-behavior-y: contain;
-  z-index: 1;
+  z-index: 11;
 }
 
 .editModal-container {
@@ -37,7 +37,7 @@
   border: 1px solid var(--grayscale-30, #b3b3b3);
   background-color: var(--grayscale-5, #f3f3f3);
   box-shadow: 4px 4px 21px 0px rgba(0, 0, 0, 0.3);
-  z-index: 2;
+  z-index: 12;
 }
 
 .editModal-header {
@@ -69,7 +69,24 @@
 .editModal-left p {
   cursor: pointer;
 }
-
+.editModal_table {
+  flex: 6;
+  display: grid;
+  height: 500px;
+  overflow: auto;
+}
+.editModal_table Table {
+  border-collapse: separate;
+  border-spacing: 10px;
+}
+.editModal_table td {
+  border: 1px dashed black;
+  width: 105px;
+  height: 70px;
+}
+.editModal_table td:hover {
+  border: 1px solid var(--primary-100, #ee7d00);
+}
 .editModal-right {
   flex: 6;
   display: grid;
@@ -89,7 +106,7 @@
   border-radius: 10px;
 }
 .editModal-right::-webkit-scrollbar-track {
-  background-color: #CCC;
+  background-color: #ccc;
   border-radius: 10px;
 }
 
@@ -175,7 +192,7 @@
 
 .listBox .titleColor {
   margin: 2px auto;
-  color: #EE7D00;
+  color: #ee7d00;
   font-family: Noto Sans;
   font-size: 10px;
   font-weight: 350;
@@ -184,7 +201,7 @@
 .listBox .subtitle {
   margin: 4px auto 9px;
   font-size: 10px;
-  transform: translate(0%, -25%) scale(0.5);  /* font-size는 최소 10px이기 때문에 더 작게 표현하기 위해 작성 본문에는 더 크게 보여줄 예정 */
+  transform: translate(0%, -25%) scale(0.5); /* font-size는 최소 10px이기 때문에 더 작게 표현하기 위해 작성 본문에는 더 크게 보여줄 예정 */
   font-family: Noto Sans;
 }
 
@@ -229,7 +246,8 @@
   word-wrap: break-word;
 }
 
-.textBoxBtn, .textBoxBtn2 {
+.textBoxBtn,
+.textBoxBtn2 {
   display: block;
   width: 80px;
   height: 20px;
@@ -242,11 +260,11 @@
   margin: auto;
 }
 
-.textBoxBtn {
+.textBoxBtn2 {
   border-radius: 10px;
 }
 
 .layoutBox {
   border: 1px dashed #333;
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
 }

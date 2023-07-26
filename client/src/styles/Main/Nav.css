@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px auto;
+  margin: 10px 20px;
   padding-bottom: 16px;
 }
 .header_wrap img:hover {
@@ -115,7 +115,7 @@
 }
 .gnb_info_wrap.on {
   display: flex;
-  width: 64%;
+  width: 100%;
   border-bottom: 2px solid #f1f1f1;
   position: absolute;
   top: 185px;
@@ -176,7 +176,7 @@
   align-items: center;
   z-index: 1;
   top: 560px;
-  left: 428px;
+  left: 19%;
   width: 150px;
   background-color: rgba(0, 0, 0, 0.1);
   padding: 10px;

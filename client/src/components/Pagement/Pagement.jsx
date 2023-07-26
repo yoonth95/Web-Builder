@@ -9,8 +9,6 @@ import Spinner from 'components/Spinner/Spinner';
 
 import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
 
-
-
 const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,14 +19,14 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   const Page = 5;
 
   const getMenu = async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const data = await GetMenuAPI();
       setPageList(data.filter((e) => e.parent_id).sort((a, b) => a.parent_id - b.parent_id));
       setParentList(data.filter((e) => e.parent_id == null));
-      setIsLoading(false); 
+      setIsLoading(false);
     } catch (err) {
-      setIsLoading(false); 
+      setIsLoading(false);
       alert('조회 오류');
       console.log(err.message);
     }
@@ -83,11 +81,11 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   };
 
   return (
-    <div className="board-wrap">
-      <div className="board-title">
-        <div id="SearchBox">
-          <input type="text" placeholder="페이지명" id="SearchContent" value={searchValue} onChange={handleInputChange} onKeyPress={handlesearchPress} />
-          <button id="Search-btn" onClick={() => search()}>
+    <div className='board-wrap'>
+      <div className='board-title'>
+        <div id='SearchBox'>
+          <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={handlesearchPress} />
+          <button id='Search-btn' onClick={() => search()}>
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
         </div>
@@ -95,38 +93,38 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <div className="board-list-wrap">
-          <div className="board-list">
-            <div className="top">
-              <div className="top_content">페이지명</div>
-              <div className="top_content">페이지 경로</div>
-              <div className="top_content">메뉴</div>
-              <div className="top_content">업데이트 일시</div>
-              <div className="top_content">관리</div>
+        <div className='board-list-wrap'>
+          <div className='board-list'>
+            <div className='top'>
+              <div className='top_content'>페이지명</div>
+              <div className='top_content'>페이지 경로</div>
+              <div className='top_content'>메뉴</div>
+              <div className='top_content'>업데이트 일시</div>
+              <div className='top_content'>관리</div>
             </div>
             {getPageItems().length === 0 ? (
-              <div className="not_found_wrap">
-                <p className="not_found_text">
+              <div className='not_found_wrap'>
+                <p className='not_found_text'>
                   <h1>{searchValue}</h1> 페이지는 목록에 없습니다.
                 </p>
               </div>
             ) : (
               getPageItems().map((menu) => {
                 return (
-                  <div key={menu.idx} className="info">
-                    <div className="info_content title" title={menu.title}>
+                  <div key={menu.idx} className='info'>
+                    <div className='info_content title' title={menu.title}>
                       {menu.title}
                     </div>
-                    <div className="info_content link" title={`/page/${menu.link}`}>
+                    <div className='info_content link' title={`/page/${menu.link}`}>
                       /page/{menu.link}
                     </div>
-                    <div className="info_content btn">
-                      <span className="txt_info_content_btn" title={parentList.filter((e) => e.idx === menu.parent_id)[0].title}>
+                    <div className='info_content btn'>
+                      <span className='txt_info_content_btn' title={parentList.filter((e) => e.idx === menu.parent_id)[0].title}>
                         {parentList.filter((e) => e.idx === menu.parent_id)[0].title}
                       </span>
                     </div>
-                    <div className="info_content date">{dateFormat(menu.updated_at)}</div>
-                    <div className="info_content" id="info_btn">
+                    <div className='info_content date'>{dateFormat(menu.updated_at)}</div>
+                    <div className='info_content' id='info_btn'>
                       <button
                         onClick={() => {
                           setIsOpen(true);
@@ -144,19 +142,19 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
           </div>
         </div>
       )}
-        <div className="board-page">
-          <button className="back_btn" disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-            이전
+      <div className='board-page'>
+        <button className='back_btn' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
+          이전
+        </button>
+        {pageNumbers.map((pageNumber) => (
+          <button key={pageNumber} className={`back_btn ${pageNumber === currentPage ? 'active' : ''}`} onClick={() => handlePageChange(pageNumber)}>
+            {pageNumber}
           </button>
-          {pageNumbers.map((pageNumber) => (
-            <button key={pageNumber} className={`back_btn ${pageNumber === currentPage ? 'active' : ''}`} onClick={() => handlePageChange(pageNumber)}>
-              {pageNumber}
-            </button>
-          ))}
-          <button className="back_btn" disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
-            다음
-          </button>
-        </div>
+        ))}
+        <button className='back_btn' disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
+          다음
+        </button>
+      </div>
     </div>
   );
 };

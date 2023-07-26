@@ -1,0 +1,54 @@
+.block_wrap {
+  min-height: 1000px;
+  /* position: relative;
+  border: 1px dashed black;
+  width: 100%; */
+}
+
+.block_container {
+  position: relative;
+  border: 1px dashed black;
+  min-height: 393px;
+  width: 100%;
+}
+
+.block_correction_btn {
+  position: absolute;
+  top: 32px;
+  right: 5%;
+  display: none;
+  justify-content: space-evenly;
+  width: 246px;
+  height: 54px;
+  border-radius: 42px;
+  background-color: #565656;
+}
+
+.block_add {
+  display: none;
+  position: absolute;
+  left: 50%;
+  margin: auto;
+  width: 246px;
+  height: 54px;
+  background-color: #565656;
+  border-radius: 42px;
+  color: #fff;
+  font-size: 20px;
+  z-index: 10;
+}
+
+.btn_top {
+  top: 0;
+  transform: translate(-50%, -50%);
+}
+
+.btn_bottom {
+  bottom: 0;
+  transform: translate(-50%, 50%);
+}
+
+.block_function_btn {
+  font-size: 30px;
+  color: #fff;
+}

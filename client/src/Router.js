@@ -13,6 +13,7 @@ import Login from 'components/Login/Login';
 import Signup from 'components/Login/Signup';
 import Nav from 'components/Main/Nav';
 import Modal from 'components/Modal/Modal';
+import Main from 'pages/Main';
 import PrivateRoute from './PrivateRoute';
 
 const Router = () => {
@@ -41,7 +42,8 @@ const Router = () => {
           </PrivateRoute>
         } />
         <Route path='/nav' element={<Nav isLoading={isLoading} setIsLoading={setIsLoading} />} />
-        <Route path='/editor/:idx' element={<Editor />} />
+        <Route path='/editor/:idx' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
+        <Route path='/main' element={<Main />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>
     </BrowserRouter>

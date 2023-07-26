@@ -1,26 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const TableCell = ({ initialColor }) => {
-  const [color, setColor] = useState(initialColor);
+const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, clicked }) => {
+  const [color, setColor] = useState('white');
+  const [borderColor, setBorderColor] = useState('black');
+  const [borderStyle, setBorderStyle] = useState('dashed');
 
-  const handleClick = () => {
-    setColor(color === 'white' ? 'blue' : 'white');
-  };
+  useEffect(() => {
+    if (clicked) {
+      if (row <= tableRange[0] && col <= tableRange[1]) {
+        setColor('#FFEBD6');
+        setBorderColor('#EE7D00');
+        setBorderStyle('solid');
+      } else {
+        setColor('white');
+      }
+    } else if (row <= previewRange[0] && col <= previewRange[1]) {
+      setColor('#FFEBD6');
+      setBorderColor('#EE7D00');
+      setBorderStyle('solid');
+    } else {
+      setColor('white');
+      setBorderColor('black');
+      setBorderStyle('dashed');
+    }
+  }, [tableRange, previewRange, clicked]);
 
-  return <td style={{ backgroundColor: color }} onClick={handleClick} />;
+  return <td style={{ backgroundColor: color, borderColor: borderColor, borderStyle: borderStyle }} onClick={onClick} onMouseEnter={onMouseEnter} />;
 };
 
 const Table = ({ rows, cols }) => {
+  const [tableRange, setTableRange] = useState([0, 0]);
+  const [previewRange, setPreviewRange] = useState([0, 0]);
+  const [clicked, setClicked] = useState(false);
+
+  const onCellMouseEnter = (i, j) => {
+    setPreviewRange([i, j]);
+    setClicked(false);
+  };
+
+  const onCellClick = (i, j) => {
+    console.log(`Row: ${i}, Col: ${j}`);
+    setTableRange([i, j]);
+    setClicked(true);
+  };
+  console.log('tableRange', tableRange);
+  const handleTableLeave = () => {
+    setTableRange([0, 0]);
+    setPreviewRange([0, 0]);
+  };
+
   return (
-    <table>
+    <table onMouseLeave={handleTableLeave}>
       <tbody>
-        {Array(rows).fill().map((_, i) => (
-          <tr key={i}>
-            {Array(cols).fill().map((_, j) => (
-              <TableCell key={j} initialColor="white" />
-            ))}
-          </tr>
-        ))}
+        {Array(rows)
+          .fill()
+          .map((_, i) => (
+            <tr key={i}>
+              {Array(cols)
+                .fill()
+                .map((_, j) => (
+                  <TableCell
+                    key={j}
+                    onClick={() => onCellClick(i, j)}
+                    row={i}
+                    col={j}
+                    onMouseEnter={() => onCellMouseEnter(i, j)}
+                    tableRange={tableRange}
+                    previewRange={previewRange}
+                    clicked={clicked}
+                  />
+                ))}
+            </tr>
+          ))}
       </tbody>
     </table>
   );
