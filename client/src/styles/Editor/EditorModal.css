@@ -82,7 +82,7 @@
 .editModal_table td {
   border: 1px dashed black;
   width: 105px;
-  height: 70px;
+  height: 68px;
 }
 .editModal_table td:hover {
   border: 1px solid var(--primary-100, #ee7d00);

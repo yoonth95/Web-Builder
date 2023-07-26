@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import 'styles/Editor/Table.css';
 
 const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, clicked }) => {
   const [color, setColor] = useState('white');
@@ -25,13 +26,14 @@ const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, 
     }
   }, [tableRange, previewRange, clicked]);
 
-  return <td style={{ backgroundColor: color, borderColor: borderColor, borderStyle: borderStyle }} onClick={onClick} onMouseEnter={onMouseEnter} />;
+  return <td style={{ backgroundColor: color, borderColor: borderColor, borderStyle: borderStyle, cursor: 'pointer' }} onClick={onClick} onMouseEnter={onMouseEnter} />;
 };
 
 const Table = ({ rows, cols }) => {
   const [tableRange, setTableRange] = useState([0, 0]);
   const [previewRange, setPreviewRange] = useState([0, 0]);
   const [clicked, setClicked] = useState(false);
+  
 
   const onCellMouseEnter = (i, j) => {
     setPreviewRange([i, j]);
@@ -43,37 +45,40 @@ const Table = ({ rows, cols }) => {
     setTableRange([i, j]);
     setClicked(true);
   };
-  console.log('tableRange', tableRange);
+  
   const handleTableLeave = () => {
     setTableRange([0, 0]);
     setPreviewRange([0, 0]);
   };
 
   return (
-    <table onMouseLeave={handleTableLeave}>
-      <tbody>
-        {Array(rows)
-          .fill()
-          .map((_, i) => (
-            <tr key={i}>
-              {Array(cols)
-                .fill()
-                .map((_, j) => (
-                  <TableCell
-                    key={j}
-                    onClick={() => onCellClick(i, j)}
-                    row={i}
-                    col={j}
-                    onMouseEnter={() => onCellMouseEnter(i, j)}
-                    tableRange={tableRange}
-                    previewRange={previewRange}
-                    clicked={clicked}
-                  />
-                ))}
-            </tr>
-          ))}
-      </tbody>
-    </table>
+    <div className='table_wrap'>
+      <p>{previewRange[0] + 1} X {previewRange[1] + 1} 표</p>
+      <table onMouseLeave={handleTableLeave}>
+        <tbody>
+          {Array(rows)
+            .fill()
+            .map((_, i) => (
+              <tr key={i}>
+                {Array(cols)
+                  .fill()
+                  .map((_, j) => (
+                    <TableCell
+                      key={j}
+                      onClick={() => onCellClick(i, j)}
+                      row={i}
+                      col={j}
+                      onMouseEnter={() => onCellMouseEnter(i, j)}
+                      tableRange={tableRange}
+                      previewRange={previewRange}
+                      clicked={clicked}
+                    />
+                  ))}
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
