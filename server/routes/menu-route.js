@@ -7,5 +7,6 @@ router.delete("/deleteMenu/:id", menuController.deleteMenu);
 router.post("/insertMenu", menuController.insertMenu);
 router.put("/updateMenu", menuController.updateMenu);
 router.put("/orderMenu", menuController.orderMenu);
+router.put("/editMenu", menuController.editMenu);
 
 module.exports = router;

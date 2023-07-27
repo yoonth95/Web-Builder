@@ -75,3 +75,15 @@ exports.orderMenu = async (req, res) => {
     res.status(500).json('순서 변경 오류');
   }
 }
+
+exports.editMenu = async (req, res) => {
+  const { idx } = req.body;
+
+  try {
+    const editMenu = await menuDB.editMenu(idx);
+    res.status(200).json(editMenu);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
+};

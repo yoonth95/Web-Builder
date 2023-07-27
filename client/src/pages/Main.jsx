@@ -1,31 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Nav from 'components/Main/Nav';
 import MainCon from 'components/Main/MainCon';
 import 'styles/Main/Main.css';
 
 const Main = () => {
+  const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
+
+  const nextImage = () => {
+    setCurrentCarouselIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  // 이전 이미지로 이동
+  const prevImage = () => {
+    setCurrentCarouselIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(nextImage, 3000); // 3초마다 다음 이미지로 넘어가도록 설정
+
+    return () => {
+      clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머를 정리(cleanup)
+    };
+  }, [currentCarouselIndex]);
+
   return (
-    <>
+    <div className='main_wrap'>
       <Nav />
-      {conList.map((item) => (
-        <MainCon item={item} />
-      ))}
-      <div className='foot'>
-        <div className='footList1'>
-          <p>무료신청</p>
+      <div className='carousel'>
+        <div className='carousel-slider' style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}>
+          {images.map((image, index) => (
+            <img key={index} src={image} alt={`Image ${index + 1}`} />
+          ))}
         </div>
-        <div className='footList2'>
-          <p>상담신청</p>
+        <div className='carousel_btn'>
+          <div>
+            {currentCarouselIndex + 1} / {images.length}
+          </div>
+          <button onClick={prevImage}>&lt;</button>
+          <button onClick={nextImage}>&gt;</button>
         </div>
       </div>
-    </>
+      {conLists.map((item) => (
+        <MainCon item={item} />
+      ))}
+      <div className='btn_flooting'>
+        <div className='flooting trialSection'>
+          <p className='flootText trialText'>무료체험</p>
+          <img className='flootImg trialImage' src='https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting1.png' alt='로고' />
+        </div>
+        <div className='flooting consultationSection'>
+          <p className='flootText consultationText'>상담신청</p>
+          <img className='flootImg consultationImage' src='https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting2.png' alt='로고' />
+        </div>
+      </div>
+    </div>
   );
 };
 
 export default Main;
 
 const baseUrl = 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/main_v2023/v2023_pd_list_';
-const conList = [
+const conLists = [
   {
     id: 1,
     title: '웅진 씽크빅',
@@ -37,7 +72,6 @@ const conList = [
       { contitle: 'AI바로셈', src: `${baseUrl}03.png` },
     ],
   },
-  // 스마트올 올백
   {
     id: 2,
     title: '웅진 스마트',
@@ -61,3 +95,15 @@ const conList = [
     ],
   },
 ];
+
+const images = [
+  'https://online-cloud.wjthinkbig.com/contents/banner/6a3dda1d-d71a-418f-b685-87d677196e5e.jpg',
+  'https://online-cloud.wjthinkbig.com/contents/banner/bcfd27f3-844e-44ff-87ed-25abea584c7a.png',
+  'https://online-cloud.wjthinkbig.com/contents/banner/7aa76954-01ad-4bb9-b194-c07995a967d2.png',
+  'https://online-cloud.wjthinkbig.com/contents/banner/95d4f82a-1ddf-46d9-ba7f-d570354af95d.jpg',
+];
+
+// const flootingLists = [
+//   { id: 10, title: 'trial', text: '무료체험', src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting1.png' },
+//   { id: 20, title: 'consultation', text: '상담신청', src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting2.png' },
+// ];

@@ -38,6 +38,7 @@ const BlockModal = ({ isOpen, setIsOpen }) => {
                     {item.text}
                   </p>
                 ))}
+                <button className='editMenu-select-btn'>가져오기</button>
               </div>
               {design === 'table' ? (
                 <div className='editModal_table'>

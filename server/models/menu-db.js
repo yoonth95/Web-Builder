@@ -109,3 +109,13 @@ exports.orderMenu = async (listData) => {
     throw error; // 오류
   }
 }
+
+// 에디터 블록 가져오기
+exports.editMenu = async (idx) => {
+  try {
+    const result = await query(`SELECT * FROM blocks where idx = ?`, [idx]);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};

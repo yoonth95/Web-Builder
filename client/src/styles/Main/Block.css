@@ -4,13 +4,13 @@
   border: 1px dashed black;
   width: 100%; */
 }
-
+/* 
 .block_container {
   position: relative;
   border: 1px dashed black;
   min-height: 393px;
   width: 100%;
-}
+} */
 
 .block_correction_btn {
   position: absolute;
@@ -51,4 +51,11 @@
 .block_function_btn {
   font-size: 30px;
   color: #fff;
+}
+/* 수정 */
+.block_container {
+  position: relative;
+  width: 100%;
+  background: #f3f3f3;
+  outline: 1px dashed #333;
 }

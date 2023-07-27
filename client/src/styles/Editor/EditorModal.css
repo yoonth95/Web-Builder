@@ -268,3 +268,19 @@
   border: 1px dashed #333;
   background-color: #f3f3f3;
 }
+.editMenu-select-btn {
+  width: 80%;
+  background-color: #ee7d00;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 5px;
+  color: #f3f3f3;
+  margin-top: auto;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.editMenu-select-btn:active {
+  transform: scale(0.95);
+}
