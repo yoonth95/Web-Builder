@@ -10,6 +10,18 @@ exports.getMenu = async (req, res) => {
   }
 };
 
+exports.getMenuWithId = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const getMenu = await menuDB.getMenuWithId(id);
+    res.status(200).json(getMenu);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
+};
+
 exports.deleteMenu = async (req, res) => {
   const { id } = req.params;
   const [idx, order_num, parent_id] = id.split("_");

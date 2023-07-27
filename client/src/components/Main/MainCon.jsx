@@ -11,7 +11,7 @@ const MainCon = ({ item }) => {
       </p>
       <ul className='main_con_list_wrap '>
         {list.map(({ contitle, src }) => (
-          <li className='main_con_list'>
+          <li key={contitle} className='main_con_list'>
             <h2 className='main_con_list_title'>{contitle}</h2>
             <img className='main_con_list_img' src={src} alt={`${contitle} 로고`} loading='lazy' />
           </li>

@@ -5,6 +5,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
+import AdminHeader from 'components/Admin/AdminHeader';
 import Spinner from 'components/Spinner/Spinner';
 
 import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
@@ -80,19 +81,21 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
     }
   };
 
+  if (isLoading) return <Spinner />;
+
   return (
-    <div className='board-wrap'>
-      <div className='board-title'>
-        <div id='SearchBox'>
-          <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={handlesearchPress} />
-          <button id='Search-btn' onClick={() => search()}>
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </button>
+    <>
+      <AdminHeader />
+      <div className='board-wrap'>
+        <div className='board-title'>
+          <div id='SearchBox'>
+            <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={handlesearchPress} />
+            <button id='Search-btn' onClick={() => search()}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            </button>
+          </div>
         </div>
-      </div>
-      {isLoading ? (
-        <Spinner />
-      ) : (
+
         <div className='board-list-wrap'>
           <div className='board-list'>
             <div className='top'>
@@ -141,21 +144,22 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
             )}
           </div>
         </div>
-      )}
-      <div className='board-page'>
-        <button className='back_btn' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
-          이전
-        </button>
-        {pageNumbers.map((pageNumber) => (
-          <button key={pageNumber} className={`back_btn ${pageNumber === currentPage ? 'active' : ''}`} onClick={() => handlePageChange(pageNumber)}>
-            {pageNumber}
+
+        <div className='board-page'>
+          <button className='back_btn' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
+            이전
           </button>
-        ))}
-        <button className='back_btn' disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
-          다음
-        </button>
+          {pageNumbers.map((pageNumber) => (
+            <button key={pageNumber} className={`back_btn ${pageNumber === currentPage ? 'active' : ''}`} onClick={() => handlePageChange(pageNumber)}>
+              {pageNumber}
+            </button>
+          ))}
+          <button className='back_btn' disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
+            다음
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

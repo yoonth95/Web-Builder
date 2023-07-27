@@ -1,14 +1,9 @@
-#root {
-  margin: 0;
-  padding: 0;
-}
-
 .wrap_btn {
   position: relative;
 }
 
 .btn_add_block {
-  /* display: none; */
+  display: none;
   position: absolute;
   left: 50%;
   margin: auto;
@@ -21,4 +16,8 @@
   z-index: 10;
   top: 0;
   transform: translate(-50%, -50%);
+}
+
+.show_btn {
+  display: block;
 }

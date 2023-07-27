@@ -1,8 +1,9 @@
-// import React, { useState } from 'react';
+import React, { useState } from 'react';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faArrowUp, faArrowDown, faEdit, faTrash, faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
 // import EditorModal from 'components/Modal/EditorModal';
-import 'styles/Main/Block.css';
+import design_select from 'assets/images/design_select.svg';
+import 'styles/Editor/Block.css';
 
 // const Block = () => {
 //   const [isOpen, setIsOpen] = useState(false);
@@ -54,19 +55,22 @@ import 'styles/Main/Block.css';
 // ];
 
 function Block({ idx, design, isOpen, setIsOpen, addBlock }) {
+  const [showAddBlockBtn, setShowAddBlockBtn] = useState(false);
+
   return (
-    <div className='block_container'>
-      <p>Block ID: {idx}</p>
-      <p>Block Design: {design}</p>
-      <button
+    <div className='block_container' onMouseOver={() => setShowAddBlockBtn(true)} onMouseLeave={() => setShowAddBlockBtn(false)}>
+      <div
+        className='wrap_design_select'
         onClick={() => {
           setIsOpen(!isOpen);
         }}
       >
-        원하는 디자인을 선택해주세요!
-      </button>
+        <img className='img_design_select' src={design_select} alt='마법지팡이 이미지' />
+        <p>idx:{idx}</p>
+        <p className='txt_design_select'>디자인을 선택하세요</p>
+      </div>
       <div className='wrap_btn'>
-        <button className='btn_add_block' onClick={addBlock}>
+        <button className={`btn_add_block ${showAddBlockBtn ? 'show_btn' : ''}`} onClick={() => addBlock(idx)}>
           + 여기에 블록 추가
         </button>
       </div>

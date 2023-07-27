@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import EditorModal from 'components/Modal/EditorModal';
+import Spinner from 'components/Spinner/Spinner';
 
 // 나중에 redux를 사용하게 된다면 useEditor.js 수정 필요
 import { GetBlocksAPI } from '../api/Editor';
@@ -11,49 +12,60 @@ import Nav from 'components/Main/Nav';
 import 'styles/Editor/Editor.css';
 
 const Editor = ({ isLoading, setIsLoading }) => {
-  const { idx } = useParams();
+  const { page_idx } = useParams();
   const [error, setError] = useState(null);
   const [blocks, setBlocks] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const blocks = await GetBlocksAPI(idx);
+  console.log('blocks', blocks);
 
-  //       if (blocks === null) {
-  //         navigate('/notfound');
-  //       } else {
-  //         setBlocks(blocks);
-  //       }
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError(err.message);
-  //     }
-  //   };
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchData = async () => {
+      try {
+        const fetchedBlocks = await GetBlocksAPI(page_idx);
 
-  //   fetchData();
-  // }, [idx, navigate]);
+        if (fetchedBlocks === null) {
+          navigate('/notfound');
+        } else {
+          fetchedBlocks.length === 0 ? setBlocks([{ design: 'default' }]) : setBlocks(fetchedBlocks);
+        }
+        setIsLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+        setIsLoading(false);
+      }
+    };
 
-  const addBlock = () => {
-    const newBlock = { design: 'default' };
-    setBlocks([...blocks, newBlock]);
+    fetchData();
+  }, [page_idx, navigate, setIsLoading]);
+
+  if (isLoading) return <Spinner />;
+
+  if (error) {
+    alert('에러', error);
+    navigate(-1);
+  }
+
+  const addBlock = (index) => {
+    const newBlock = { id: Math.random(), design: 'default' }; // add unique id
+    setBlocks((prevBlocks) => {
+      const newBlocks = [...prevBlocks];
+      newBlocks.splice(index + 1, 0, newBlock);
+      return newBlocks;
+    });
   };
+
+  console.log(blocks, 'blocks');
+
   return (
     <>
-      <Nav isLoading={isLoading} setIsLoading={setIsLoading} />
-      {/* <Block /> */}
-
-      <div className='wrap_btn'>
-        <button className='btn_add_block' onClick={addBlock}>
-          + 여기에 블록 추가
-        </button>
-      </div>
-
-      {/* 블록 추가 버튼 클릭하면 생성되는 블록 */}
-      {blocks.map((block, idx) => (
-        <Block key={idx} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
+      <Nav isLoading={isLoading} setIsLoading={setIsLoading} type='편집' />
+      {blocks?.map((block) => (
+        // <Block key={idx} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
+        <Block key={`${page_idx}_${new Date().getTime()}`} idx={`${page_idx}_${new Date().getTime()}`} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
       ))}
       <EditorModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>

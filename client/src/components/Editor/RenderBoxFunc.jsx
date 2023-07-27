@@ -2,9 +2,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 
 export const RenderBoxFunctions = {
-  image: (box, index) => {
+  image: (box, index, BtnToggle, selectedId) => {
+    const isSelected = selectedId === box.id;
     return (
-      <div key={index} className='typeBox'>
+      <div key={index} className='typeBox' onClick={() => BtnToggle(box.id)} style={{ border: isSelected ? '2px solid #ee7d00' : '' }}>
         <div className='parentBox' style={box.layout}>
           {[...Array(box.numImages)].map((_, i) => (
             <div key={i} style={box.style} className='imageBox'>
@@ -15,10 +16,16 @@ export const RenderBoxFunctions = {
       </div>
     );
   },
-  line: (box, index) => {
+  line: (box, index, BtnToggle, selectedId) => {
     const isDotted = box.style === 'dotted';
+    const isSelected = selectedId === box.id;
     return (
-      <div key={index} className='typeBox' style={{ height: '96px', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0' }}>
+      <div
+        key={index}
+        className='typeBox'
+        style={{ height: '96px', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0', border: isSelected ? '2px solid #ee7d00' : '' }}
+        onClick={() => BtnToggle(box.id)}
+      >
         <div
           style={{
             borderTop: isDotted ? 'none' : `${box.thickness} ${box.style} #B3B3B3`,
@@ -32,9 +39,10 @@ export const RenderBoxFunctions = {
       </div>
     );
   },
-  list: (box, index) => {
+  list: (box, index, BtnToggle, selectedId) => {
+    const isSelected = selectedId === box.id;
     return (
-      <div key={index} className='typeBox listBox font-style'>
+      <div key={index} className='typeBox listBox font-style' onClick={() => BtnToggle(box.id)} style={{ border: isSelected ? '2px solid #ee7d00' : '' }}>
         <div className={`listImage ${box.shape}`}>
           <FontAwesomeIcon icon={faImage} />
         </div>
@@ -60,9 +68,10 @@ export const RenderBoxFunctions = {
       </div>
     );
   },
-  text: (box, index) => {
+  text: (box, index, BtnToggle, selectedId) => {
+    const isSelected = selectedId === box.id;
     return (
-      <div key={index} className='typeBox'>
+      <div key={index} className='typeBox' onClick={() => BtnToggle(box.id)} style={{ border: isSelected ? '2px solid #ee7d00' : '' }}>
         <div className='textBox' style={{ textAlign: `${box.alignments}` }}>
           {box.lines.map((line, i) => (
             <p key={i} style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}>
@@ -75,9 +84,10 @@ export const RenderBoxFunctions = {
     );
   },
   table: null,
-  layout: (box, index) => {
+  layout: (box, index, BtnToggle, selectedId) => {
+    const isSelected = selectedId === box.id;
     return (
-      <div key={index} className='typeBox' style={{ ...box.style, gap: '10px' }}>
+      <div key={index} className='typeBox' style={{ ...box.style, gap: '10px', border: isSelected ? '2px solid #ee7d00' : '' }} onClick={() => BtnToggle(box.id)}>
         {box.elements.map((element, i) => (
           <div key={i} className={element.children ? '' : 'layoutBox'} style={element.style}>
             {element.children ? element.children.map((child, j) => <div key={j} className='layoutBox' style={child.style}></div>) : null}

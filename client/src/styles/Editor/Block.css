@@ -1,16 +1,6 @@
 .block_wrap {
   min-height: 1000px;
-  /* position: relative;
-  border: 1px dashed black;
-  width: 100%; */
 }
-/* 
-.block_container {
-  position: relative;
-  border: 1px dashed black;
-  min-height: 393px;
-  width: 100%;
-} */
 
 .block_correction_btn {
   position: absolute;
@@ -52,10 +42,31 @@
   font-size: 30px;
   color: #fff;
 }
-/* 수정 */
 .block_container {
   position: relative;
   width: 100%;
   background: #f3f3f3;
   outline: 1px dashed #333;
+  height: 160px;
+  cursor: pointer;
+}
+
+.wrap_design_select {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  margin: auto;
+  height: 100%;
+  justify-content: center;
+}
+
+.img_design_select {
+  width: 20px;
+}
+
+.txt_design_select {
+  font-size: 20px;
+  font-weight: 400;
+  color: #989898;
 }

@@ -10,6 +10,8 @@ import { useMenuActions } from 'hooks/useMenu';
 import NewMenu from './NewMenu';
 import SubMenu from './SubMenu';
 import PrimaryMenu from './PrimaryMenu';
+import AdminHeader from 'components/Admin/AdminHeader';
+import Spinner from 'components/Spinner/Spinner';
 
 // css
 import 'styles/Management/Management.css';
@@ -90,66 +92,71 @@ const Management = ({ setIsOpen, setIsLoading, isLoading }) => {
     }
   };
 
+  if (isLoading) return <Spinner />;
+
   return (
-    <div className='wrap'>
-      <div className='memu_title_wrap'>
-        <div className='menu_title'>
-          <p>메뉴 설정</p>
-          <p>메뉴 항목과 구조를 설정해주세요.</p>
+    <>
+      <AdminHeader />
+      <div className='wrap'>
+        <div className='memu_title_wrap'>
+          <div className='menu_title'>
+            <p>메뉴 설정</p>
+            <p>메뉴 항목과 구조를 설정해주세요.</p>
+          </div>
+          <button
+            onClick={() => {
+              setIsOpen(true);
+              dispatch(setBtn('메뉴'));
+            }}
+          >
+            메뉴 항목 추가
+          </button>
         </div>
-        <button
-          onClick={() => {
-            setIsOpen(true);
-            dispatch(setBtn('메뉴'));
-          }}
-        >
-          메뉴 항목 추가
-        </button>
+        <DragDropContext onDragEnd={handleDragAndDrop}>
+          <Droppable droppableId='ROOT' type='group'>
+            {(provided) => (
+              <div className='menu_list_wrap' {...provided.droppableProps} ref={provided.innerRef}>
+                {firstList.map((menu, index) => (
+                  <Draggable draggableId={`${menu.idx}`} key={`${menu.idx}`} index={index}>
+                    {(provided) => (
+                      <div className='menu_list' {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+                        <PrimaryMenu
+                          toggleImage={toggleImage}
+                          clickId={clickId}
+                          editMenuIds={editMenuIds}
+                          editMenu={editMenu}
+                          deleteMenu={deleteMenu}
+                          menu={menu}
+                          firstList={firstList}
+                          secondList={secondList}
+                        />
+                        {clickId.includes(menu.idx) && (
+                          <>
+                            <SubMenu
+                              Droppable={Droppable}
+                              Draggable={Draggable}
+                              parentID={menu.idx}
+                              editMenuIds={editMenuIds}
+                              editMenu={editMenu}
+                              deleteMenu={deleteMenu}
+                              subMenus={secondList.filter((e) => e.parent_id === menu.idx)}
+                              firstList={firstList}
+                              secondList={secondList}
+                            />
+                            <NewMenu setIsOpen={setIsOpen} dispatch={dispatch} setBtn={setBtn} idx={menu.idx} />
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
-      <DragDropContext onDragEnd={handleDragAndDrop}>
-        <Droppable droppableId='ROOT' type='group'>
-          {(provided) => (
-            <div className='menu_list_wrap' {...provided.droppableProps} ref={provided.innerRef}>
-              {firstList.map((menu, index) => (
-                <Draggable draggableId={`${menu.idx}`} key={`${menu.idx}`} index={index}>
-                  {(provided) => (
-                    <div className='menu_list' {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
-                      <PrimaryMenu
-                        toggleImage={toggleImage}
-                        clickId={clickId}
-                        editMenuIds={editMenuIds}
-                        editMenu={editMenu}
-                        deleteMenu={deleteMenu}
-                        menu={menu}
-                        firstList={firstList}
-                        secondList={secondList}
-                      />
-                      {clickId.includes(menu.idx) && (
-                        <>
-                          <SubMenu
-                            Droppable={Droppable}
-                            Draggable={Draggable}
-                            parentID={menu.idx}
-                            editMenuIds={editMenuIds}
-                            editMenu={editMenu}
-                            deleteMenu={deleteMenu}
-                            subMenus={secondList.filter((e) => e.parent_id === menu.idx)}
-                            firstList={firstList}
-                            secondList={secondList}
-                          />
-                          <NewMenu setIsOpen={setIsOpen} dispatch={dispatch} setBtn={setBtn} idx={menu.idx} />
-                        </>
-                      )}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
+    </>
   );
 };
 

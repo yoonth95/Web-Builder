@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Main/Nav.css';
 
-const Nav = ({ isLoading, setIsLoading }) => {
+const Nav = ({ isLoading, setIsLoading, type }) => {
   const { getMenuAction } = useMenuActions();
   const { firstList, secondList } = useSelector((state) => state.menu);
   const [currentMenuIdx, setCurrentMenuIdx] = useState(null);
@@ -41,33 +41,35 @@ const Nav = ({ isLoading, setIsLoading }) => {
               </li>
             ))}
           </ul>
+          <div className='option'>
+            <button>
+              <FontAwesomeIcon icon={faBars} className='icon' />
+            </button>
+            <button>
+              <FontAwesomeIcon icon={faMagnifyingGlass} className='icon' />
+            </button>
+          </div>
         </div>
-        <div className='option'>
-          <button>
-            <FontAwesomeIcon icon={faBars} className='icon' />
-          </button>
-          <button>
-            <FontAwesomeIcon icon={faMagnifyingGlass} className='icon' />
-          </button>
-        </div>
-        <div className={`gnb_info_wrap ${currentMenuIdx !== null ? 'on' : ''}`} onMouseLeave={() => setCurrentMenuIdx(null)}>
-          {firstList
-            .filter((menu) => menu.idx === currentMenuIdx)
-            .map((menu) => (
-              <div className='firstList_info' key={menu.idx} onMouseEnter={() => setCurrentMenuIdx(menu.idx)}>
-                {menu.title}
-              </div>
-            ))}
-          <div className='secondList_info_wrap'>
-            {secondList
-              .filter((menu) => menu.parent_id === currentMenuIdx)
+        {type !== '편집' && (
+          <div className={`gnb_info_wrap ${currentMenuIdx !== null ? 'on' : ''}`} onMouseLeave={() => setCurrentMenuIdx(null)}>
+            {firstList
+              .filter((menu) => menu.idx === currentMenuIdx)
               .map((menu) => (
-                <div className='secondList_info' key={menu.idx} onMouseEnter={() => setCurrentMenuIdx(menu.parent_id)}>
+                <div className='firstList_info' key={menu.idx} onMouseEnter={() => setCurrentMenuIdx(menu.idx)}>
                   {menu.title}
                 </div>
               ))}
+            <div className='secondList_info_wrap'>
+              {secondList
+                .filter((menu) => menu.parent_id === currentMenuIdx)
+                .map((menu) => (
+                  <div className='secondList_info' key={menu.idx} onMouseEnter={() => setCurrentMenuIdx(menu.parent_id)}>
+                    {menu.title}
+                  </div>
+                ))}
+            </div>
           </div>
-        </div>
+        )}
       </nav>
     </div>
   );

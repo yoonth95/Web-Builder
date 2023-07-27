@@ -16,6 +16,15 @@ exports.getMenu = async () => {
   }
 };
 
+exports.getMenuWithId = async (id) => {
+  try {
+    const result = await query(`SELECT * FROM menus WHERE idx = ?`, id);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 // 메뉴의 마지막 순서 가져오기
 exports.getMenuLastOrder = async (data) => {
   try {

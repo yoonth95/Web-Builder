@@ -3,7 +3,7 @@ import Nav from 'components/Main/Nav';
 import MainCon from 'components/Main/MainCon';
 import 'styles/Main/Main.css';
 
-const Main = () => {
+const Main = ({ isLoading, setIsLoading }) => {
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
 
   const nextImage = () => {
@@ -25,7 +25,7 @@ const Main = () => {
 
   return (
     <div className='main_wrap'>
-      <Nav />
+      <Nav isLoading={isLoading} setIsLoading={setIsLoading} />
       <div className='carousel'>
         <div className='carousel-slider' style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}>
           {images.map((image, index) => (
@@ -41,16 +41,16 @@ const Main = () => {
         </div>
       </div>
       {conLists.map((item) => (
-        <MainCon item={item} />
+        <MainCon key={item.id} item={item} />
       ))}
       <div className='btn_flooting'>
-        <div className='flooting trialSection'>
-          <p className='flootText trialText'>무료체험</p>
-          <img className='flootImg trialImage' src='https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting1.png' alt='로고' />
-        </div>
-        <div className='flooting consultationSection'>
-          <p className='flootText consultationText'>상담신청</p>
-          <img className='flootImg consultationImage' src='https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting2.png' alt='로고' />
+        <div className='btn_flooting'>
+          {flootingLists.map((flooting) => (
+            <div className={`flooting ${flooting.title}Section`} key={flooting.id}>
+              <p className={`flootText ${flooting.title}Text`}>{flooting.text}</p>
+              <img className={`flootImg ${flooting.title}Image`} src={flooting.src} alt='로고' />
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -62,7 +62,7 @@ export default Main;
 const baseUrl = 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/main_v2023/v2023_pd_list_';
 const conLists = [
   {
-    id: 1,
+    id: '01',
     title: '웅진 씽크빅',
     subtitle: '아이수준에 맞춰 선택과 조합이 가능한 맞춤형 학습지',
     list: [
@@ -73,7 +73,7 @@ const conLists = [
     ],
   },
   {
-    id: 2,
+    id: '02',
     title: '웅진 스마트',
     subtitle: '유아부터 초등, 중학까지 전과목 AI 스마트 학습',
     list: [
@@ -84,7 +84,7 @@ const conLists = [
     ],
   },
   {
-    id: 3,
+    id: '03',
     title: '웅진북클럽',
     subtitle: '2만여 개 콘텐츠를 보유한 세상에서 가장 큰 도서관',
     list: [
@@ -103,7 +103,7 @@ const images = [
   'https://online-cloud.wjthinkbig.com/contents/banner/95d4f82a-1ddf-46d9-ba7f-d570354af95d.jpg',
 ];
 
-// const flootingLists = [
-//   { id: 10, title: 'trial', text: '무료체험', src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting1.png' },
-//   { id: 20, title: 'consultation', text: '상담신청', src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting2.png' },
-// ];
+const flootingLists = [
+  { id: 10, title: 'trial', text: '무료체험', src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting1.png' },
+  { id: 20, title: 'consultation', text: '상담신청', src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting2.png' },
+];

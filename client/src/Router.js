@@ -41,9 +41,8 @@ const Router = () => {
             <Admin setIsOpen={setIsOpen} isLoading={isLoading} setIsLoading={setIsLoading} />
           </PrivateRoute>
         } />
-        <Route path='/nav' element={<Nav isLoading={isLoading} setIsLoading={setIsLoading} />} />
-        <Route path='/editor/:idx' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
-        <Route path='/main' element={<Main />} />
+        <Route path='/editor/:page_idx' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
+        <Route path='/main' element={<Main isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>
     </BrowserRouter>

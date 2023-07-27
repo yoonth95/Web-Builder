@@ -5,7 +5,9 @@
     "text": "이미지",
     "boxes": [
       {
+        "id": 1,
         "numImages": 1,
+        "src": "",
         "style": {
           "width": "100%",
           "height": "100%",
@@ -17,7 +19,9 @@
         }
       },
       {
+        "id": 2,
         "numImages": 2,
+        "src": "",
         "style": {
           "width": "100%",
           "height": "100%",
@@ -30,7 +34,9 @@
         }
       },
       {
+        "id": 3,
         "numImages": 3,
+        "src": "",
         "style": {
           "width": "100%",
           "height": "100%",
@@ -43,7 +49,9 @@
         }
       },
       {
+        "id": 4,
         "numImages": 4,
+        "src": "",
         "style": {
           "width": "100%",
           "height": "100%",
@@ -56,7 +64,9 @@
         }
       },
       {
+        "id": 5,
         "numImages": 4,
+        "src": "",
         "style": {
           "width": "90px",
           "height": "90px",
@@ -70,7 +80,9 @@
         }
       },
       {
+        "id": 6,
         "numImages": 5,
+        "src": "",
         "style": {
           "width": "70px",
           "height": "70px",
@@ -91,60 +103,70 @@
     "text": "구분선",
     "boxes": [
       {
+        "id": 1,
         "thickness": "1px",
         "style": "solid",
         "length": "long",
         "direction": "horizontal"
       },
       {
+        "id": 2,
         "thickness": "1px",
         "style": "dashed",
         "length": "long",
         "direction": "horizontal"
       },
       {
+        "id": 3,
         "thickness": "2px",
         "style": "solid",
         "length": "long",
         "direction": "horizontal"
       },
       {
+        "id": 4,
         "thickness": "2px",
         "style": "dashed",
         "length": "long",
         "direction": "horizontal"
       },
       {
+        "id": 5,
         "thickness": "3px",
         "style": "solid",
         "length": "long",
         "direction": "horizontal"
       },
       {
+        "id": 6,
         "thickness": "3px",
         "style": "dashed",
         "length": "long",
         "direction": "horizontal"
       },
       {
+        "id": 7,
         "thickness": "1px",
         "style": "solid",
         "length": "short",
         "direction": "horizontal"
       },
       {
+        "id": 8,
         "thickness": "3px",
         "style": "dotted",
         "length": "long",
         "direction": "horizontal"
       },
       {
+        "id": 9,
         "thickness": "1px",
         "style": "solid",
         "length": "short",
         "direction": "diagonal"
       },
       {
+        "id": 10,
         "thickness": "1px",
         "style": "solid",
         "length": "short",
@@ -158,22 +180,30 @@
     "text": "목록",
     "boxes": [
       {
+        "id": 1,
         "shape": "circle",
+        "src": "",
         "hasText": true
       },
       {
+        "id": 2,
         "shape": "rectangle",
+        "src": "",
         "hasTitle": true,
         "hasDetails": true
       },
       {
+        "id": 3,
         "shape": "square",
+        "src": "",
         "hasTitleColor": true,
         "hasSubtitle": true,
         "hasTinyText": true
       },
       {
+        "id": 4,
         "shape": "wideRectangle",
+        "src": "",
         "hasTitle": true,
         "hasContent": true
       }
@@ -185,6 +215,7 @@
     "text": "텍스트",
     "boxes": [
       {
+        "id": 1,
         "alignments": "center",
         "lines": [
           {
@@ -209,6 +240,7 @@
         ]
       },
       {
+        "id": 2,
         "alignments": "center",
         "lines": [
           {
@@ -227,6 +259,7 @@
         ]
       },
       {
+        "id": 3,
         "alignments": "center",
         "lines": [
           {
@@ -238,6 +271,7 @@
         ]
       },
       {
+        "id": 4,
         "alignments": "center",
         "lines": [
           {
@@ -263,6 +297,7 @@
         ]
       },
       {
+        "id": 5,
         "alignments": "center",
         "lines": [
           {
@@ -274,6 +309,7 @@
         ]
       },
       {
+        "id": 6,
         "alignments": "left",
         "lines": [
           {
@@ -311,6 +347,7 @@
     "text": "레이아웃",
     "boxes": [
       {
+        "id": 1,
         "layout": "2 elements, same size",
         "style": {
           "display": "flex",
@@ -331,6 +368,7 @@
         ]
       },
       {
+        "id": 2,
         "layout": "2 elements, 1.5:1 ratio",
         "style": {
           "display": "flex",
@@ -351,6 +389,7 @@
         ]
       },
       {
+        "id": 3,
         "layout": "3 elements, same size",
         "style": {
           "display": "flex",
@@ -376,6 +415,7 @@
         ]
       },
       {
+        "id": 4,
         "layout": "1:1.5 row split",
         "style": {
           "display": "flex",
@@ -412,6 +452,7 @@
         ]
       },
       {
+        "id": 5,
         "layout": "4 elements, same size",
         "style": {
           "display": "flex",
@@ -442,6 +483,7 @@
         ]
       },
       {
+        "id": 6,
         "layout": "1:1:1 split, middle split into 2",
         "style": {
           "display": "flex",
@@ -483,6 +525,7 @@
         ]
       },
       {
+        "id": 7,
         "layout": "3 vertical elements, same size",
         "style": {
           "display": "flex",
@@ -508,6 +551,7 @@
         ]
       },
       {
+        "id": 8,
         "layout": "2x2 grid",
         "style": {
           "display": "grid",

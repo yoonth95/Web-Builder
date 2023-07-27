@@ -1,7 +1,7 @@
 .loading-spinner {
   background-color: #fff;
   width: 200px;
-  height: 200px;
+  height: 95vh;
   display: flex;
   align-items: center;
   margin: 0 auto;

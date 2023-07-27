@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBtnToggle } from 'redux/selectBoxSlice';
 import 'styles/Editor/Table.css';
 
-const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, clicked }) => {
+const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, clicked, onReleaseClick }) => {
   const [color, setColor] = useState('white');
   const [borderColor, setBorderColor] = useState('black');
   const [borderStyle, setBorderStyle] = useState('dashed');
+  const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
     if (clicked) {
@@ -26,14 +29,38 @@ const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, 
     }
   }, [tableRange, previewRange, clicked]);
 
-  return <td style={{ backgroundColor: color, borderColor: borderColor, borderStyle: borderStyle, cursor: 'pointer' }} onClick={onClick} onMouseEnter={onMouseEnter} />;
+  const handleButtonClick = (e) => {
+    e.stopPropagation();
+    console.log('버튼 클릭');
+    onReleaseClick();
+  };
+
+  return (
+    <td
+      style={{ backgroundColor: color, borderColor: borderColor, borderStyle: borderStyle, cursor: 'pointer', verticalAlign: 'middle', textAlign: 'center' }}
+      onClick={() => {
+        onClick();
+        if (clicked) {
+          setShowButton(true);
+        }
+      }}
+      onMouseLeave={() => {
+        if (clicked) {
+          setShowButton(false);
+        }
+      }}
+      onMouseEnter={onMouseEnter}
+    >
+      {showButton && <button style={{ border: '1px solid #EE7D00', padding: '5px', fontSize: '15px', borderRadius: '50%', backgroundColor: '#EE7D00', color: '#f3f3f3' }}>해제</button>}
+    </td>
+  );
 };
 
 const Table = ({ rows, cols }) => {
   const [tableRange, setTableRange] = useState([0, 0]);
   const [previewRange, setPreviewRange] = useState([0, 0]);
   const [clicked, setClicked] = useState(false);
-  
+  const dispatch = useDispatch();
 
   const onCellMouseEnter = (i, j) => {
     setPreviewRange([i, j]);
@@ -44,16 +71,22 @@ const Table = ({ rows, cols }) => {
     console.log(`Row: ${i}, Col: ${j}`);
     setTableRange([i, j]);
     setClicked(true);
+    dispatch(setBtnToggle(true));
   };
-  
+
   const handleTableLeave = () => {
     setTableRange([0, 0]);
     setPreviewRange([0, 0]);
   };
-
+  const handleReleaseClick = () => {
+    setClicked(false);
+    setTableRange([0, 0]);
+  };
   return (
     <div className='table_wrap'>
-      <p>{previewRange[0] + 1} X {previewRange[1] + 1} 표</p>
+      <p>
+        {previewRange[0] + 1} X {previewRange[1] + 1} 표
+      </p>
       <table onMouseLeave={handleTableLeave}>
         <tbody>
           {Array(rows)
@@ -72,6 +105,7 @@ const Table = ({ rows, cols }) => {
                       tableRange={tableRange}
                       previewRange={previewRange}
                       clicked={clicked}
+                      onReleaseClick={handleReleaseClick}
                     />
                   ))}
               </tr>
