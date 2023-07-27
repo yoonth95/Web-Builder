@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
 import AdminHeader from 'components/Admin/AdminHeader';
-import Spinner from 'components/Spinner/Spinner';
 
 import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
 
@@ -80,8 +79,6 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
       search();
     }
   };
-
-  if (isLoading) return <Spinner />;
 
   return (
     <>
