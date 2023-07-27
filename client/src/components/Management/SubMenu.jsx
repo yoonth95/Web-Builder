@@ -8,7 +8,7 @@ const SubMenu = ({ Droppable, Draggable, parentID, editMenuIds, editMenu, delete
   return (
     <Droppable droppableId={`store-${parentID}`} type={`type-${parentID}`}>
       {(provided) => (
-        <div {...provided.droppableProps} ref={provided.innerRef}>
+        <div {...provided.droppableProps} ref={provided.innerRef} style={{marginTop: '-10px'}}>
           {subMenus.map((subMenu, index) => (
             <Draggable key={subMenu.idx} draggableId={`item-${subMenu.idx}`} index={index}>
               {(provided) => (

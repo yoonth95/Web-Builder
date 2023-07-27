@@ -100,8 +100,8 @@ const Management = ({ setIsOpen, setIsLoading, isLoading }) => {
       <div className='wrap'>
         <div className='memu_title_wrap'>
           <div className='menu_title'>
-            <p>메뉴 설정</p>
-            <p>메뉴 항목과 구조를 설정해주세요.</p>
+            <p>페이지 설정</p>
+            <p>메뉴 항목과 페이지 설정해주세요.</p>
           </div>
           <button
             onClick={() => {

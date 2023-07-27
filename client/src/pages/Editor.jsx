@@ -18,8 +18,6 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  console.log('blocks', blocks);
-
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
@@ -29,7 +27,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
         if (fetchedBlocks === null) {
           navigate('/notfound');
         } else {
-          fetchedBlocks.length === 0 ? setBlocks([{ design: 'default' }]) : setBlocks(fetchedBlocks);
+          fetchedBlocks.length === 0 ? setBlocks([{id: `${page_idx}_${new Date().getTime()}`, design: 'default' }]) : setBlocks(fetchedBlocks);
         }
         setIsLoading(false);
       } catch (err) {
@@ -50,7 +48,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
   }
 
   const addBlock = (index) => {
-    const newBlock = { id: Math.random(), design: 'default' }; // add unique id
+    const newBlock = { id: `${page_idx}_${new Date().getTime()}`, design: 'default' };
     setBlocks((prevBlocks) => {
       const newBlocks = [...prevBlocks];
       newBlocks.splice(index + 1, 0, newBlock);
@@ -58,14 +56,12 @@ const Editor = ({ isLoading, setIsLoading }) => {
     });
   };
 
-  console.log(blocks, 'blocks');
 
   return (
     <>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} type='편집' />
-      {blocks?.map((block) => (
-        // <Block key={idx} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
-        <Block key={`${page_idx}_${new Date().getTime()}`} idx={`${page_idx}_${new Date().getTime()}`} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
+      {blocks?.map((block,idx) => (
+        <Block key={block.id} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
       ))}
       <EditorModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
