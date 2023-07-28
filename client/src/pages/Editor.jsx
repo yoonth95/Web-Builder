@@ -9,8 +9,6 @@ import { GetBlocksAPI } from '../api/Editor';
 import Block from 'components/Editor/Block';
 import Nav from 'components/Main/Nav';
 
-import 'styles/Editor/Editor.css';
-
 const Editor = ({ isLoading, setIsLoading }) => {
   const { page_idx } = useParams();
   const [error, setError] = useState(null);

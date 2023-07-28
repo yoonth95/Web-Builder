@@ -1,20 +1,17 @@
-.block_wrap {
-  min-height: 1000px;
+.block_container {
+  position: relative;
+  width: 100%;
+  background: #f3f3f3;
+  outline: 1px dashed #333;
+  height: 160px;
+  cursor: pointer;
 }
 
-.block_correction_btn {
-  position: absolute;
-  top: 32px;
-  right: 5%;
-  display: none;
-  justify-content: space-evenly;
-  width: 246px;
-  height: 54px;
-  border-radius: 42px;
-  background-color: #565656;
+.wrap_btn {
+  position: relative;
 }
 
-.block_add {
+.btn_add_block {
   display: none;
   position: absolute;
   left: 50%;
@@ -26,29 +23,25 @@
   color: #fff;
   font-size: 20px;
   z-index: 10;
-}
-
-.btn_top {
   top: 0;
   transform: translate(-50%, -50%);
 }
 
-.btn_bottom {
-  bottom: 0;
-  transform: translate(-50%, 50%);
+.wrap_edit_btn {
+  position: absolute;
+  top: 10px;
+  right: 5%;
+  display: none;
+  justify-content: space-evenly;
+  width: 200px;
+  height: 40px;
+  border-radius: 42px;
+  background-color: #565656;
 }
 
-.block_function_btn {
-  font-size: 30px;
+.btn_edit_function {
+  font-size: 25px;
   color: #fff;
-}
-.block_container {
-  position: relative;
-  width: 100%;
-  background: #f3f3f3;
-  outline: 1px dashed #333;
-  height: 160px;
-  cursor: pointer;
 }
 
 .wrap_design_select {
@@ -69,4 +62,12 @@
   font-size: 20px;
   font-weight: 400;
   color: #989898;
+}
+
+.show_add_btn {
+  display: block;
+}
+
+.show_edit_btn {
+  display: flex;
 }
