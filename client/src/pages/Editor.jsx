@@ -27,7 +27,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
         if (fetchedBlocks === null) {
           navigate('/notfound');
         } else {
-          fetchedBlocks.length === 0 ? setBlocks([{id: `${page_idx}_${new Date().getTime()}`, design: 'default' }]) : setBlocks(fetchedBlocks);
+          fetchedBlocks.length === 0 ? setBlocks([{ id: `${page_idx}_${new Date().getTime()}`, design: 'default' }]) : setBlocks(fetchedBlocks);
         }
         setIsLoading(false);
       } catch (err) {
@@ -47,20 +47,24 @@ const Editor = ({ isLoading, setIsLoading }) => {
     navigate(-1);
   }
 
-  const addBlock = (index) => {
+  const addBlock = (index, direction) => {
     const newBlock = { id: `${page_idx}_${new Date().getTime()}`, design: 'default' };
+
     setBlocks((prevBlocks) => {
       const newBlocks = [...prevBlocks];
-      newBlocks.splice(index + 1, 0, newBlock);
+      if (direction === 'before') {
+        newBlocks.splice(index, 0, newBlock);
+      } else {
+        newBlocks.splice(index + 1, 0, newBlock);
+      }
       return newBlocks;
     });
   };
 
-
   return (
     <>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} type='편집' />
-      {blocks?.map((block,idx) => (
+      {blocks?.map((block, idx) => (
         <Block key={block.id} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
       ))}
       <EditorModal isOpen={isOpen} setIsOpen={setIsOpen} />

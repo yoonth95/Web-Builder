@@ -59,6 +59,11 @@ function Block({ idx, design, isOpen, setIsOpen, addBlock }) {
 
   return (
     <div className='block_container' onMouseOver={() => setShowAddBlockBtn(true)} onMouseLeave={() => setShowAddBlockBtn(false)}>
+      <div className='wrap_btn'>
+        <button className={`btn_add_block ${showAddBlockBtn ? 'show_btn' : ''}`} onClick={() => addBlock(idx, 'before')}>
+          + 여기에 블록 추가
+        </button>
+      </div>
       <div
         className='wrap_design_select'
         onClick={() => {
@@ -70,7 +75,7 @@ function Block({ idx, design, isOpen, setIsOpen, addBlock }) {
         <p className='txt_design_select'>디자인을 선택하세요</p>
       </div>
       <div className='wrap_btn'>
-        <button className={`btn_add_block ${showAddBlockBtn ? 'show_btn' : ''}`} onClick={() => addBlock(idx)}>
+        <button className={`btn_add_block ${showAddBlockBtn ? 'show_btn' : ''}`} onClick={() => addBlock(idx, 'after')}>
           + 여기에 블록 추가
         </button>
       </div>
