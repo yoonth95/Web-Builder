@@ -10,7 +10,7 @@ import { ModalRenderBox } from 'components/Editor/ModalRenderBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import 'styles/Editor/EditorModal.css';
+import 'styles/Modal/EditorModal.css';
 
 const EditorModal = ({ block_id, design_type, design_id, setIsOpen }) => {
   const defaultType = design_type === 'default' ? 'image' : design_type;
