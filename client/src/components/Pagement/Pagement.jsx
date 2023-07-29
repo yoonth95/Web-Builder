@@ -38,7 +38,6 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
 
   useEffect(() => {
     search();
-    console.log(searchValue);
   }, [searchValue]);
 
   const handlePageChange = (pageNumber) => {
@@ -104,9 +103,9 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
             </div>
             {getPageItems().length === 0 ? (
               <div className='not_found_wrap'>
-                <p className='not_found_text'>
+                <div className='not_found_text'>
                   <h1>{searchValue}</h1> 페이지는 목록에 없습니다.
-                </p>
+                </div>
               </div>
             ) : (
               getPageItems().map((menu) => {

@@ -14,6 +14,7 @@
           "fontSize": "50px"
         },
         "layout": {
+          "display": "flex",
           "flexDirection": "row",
           "justifyContent": "space-between"
         }
@@ -28,6 +29,7 @@
           "fontSize": "50px"
         },
         "layout": {
+          "display": "flex",
           "flexDirection": "row",
           "justifyContent": "space-between",
           "gap": "10px"
@@ -43,6 +45,7 @@
           "fontSize": "50px"
         },
         "layout": {
+          "display": "flex",
           "flexDirection": "row",
           "justifyContent": "space-between",
           "gap": "10px"
@@ -58,6 +61,7 @@
           "fontSize": "50px"
         },
         "layout": {
+          "display": "flex",
           "flexDirection": "row",
           "justifyContent": "space-between",
           "gap": "10px"
@@ -74,6 +78,7 @@
           "fontSize": "50px"
         },
         "layout": {
+          "display": "flex",
           "flexDirection": "row",
           "justifyContent": "space-between",
           "gap": "10px"
@@ -90,6 +95,7 @@
           "fontSize": "25px"
         },
         "layout": {
+          "display": "flex",
           "flexDirection": "row",
           "justifyContent": "space-between",
           "gap": "10px"

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setBtnToggle } from 'redux/selectBoxSlice';
 import 'styles/Editor/Table.css';
 
 const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, clicked, onReleaseClick }) => {
@@ -60,7 +58,6 @@ const Table = ({ rows, cols }) => {
   const [tableRange, setTableRange] = useState([0, 0]);
   const [previewRange, setPreviewRange] = useState([0, 0]);
   const [clicked, setClicked] = useState(false);
-  const dispatch = useDispatch();
 
   const onCellMouseEnter = (i, j) => {
     setPreviewRange([i, j]);
@@ -71,7 +68,6 @@ const Table = ({ rows, cols }) => {
     console.log(`Row: ${i}, Col: ${j}`);
     setTableRange([i, j]);
     setClicked(true);
-    dispatch(setBtnToggle(true));
   };
 
   const handleTableLeave = () => {
