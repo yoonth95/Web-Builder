@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUp, faArrowDown, faEdit, faTrash, faArrowRotateRight, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/Block.css';
 
-function Block({ idx, isOpen, setIsOpen, handleAddBlock, handleDeleteBlock }) {
+function Block({ idx, isOpen, setIsOpen, handleAddBlock, handleDeleteBlock, handleChangeBlockOrder }) {
   const [showBlockBtn, setShowBlockBtn] = useState(false);
   const handleShowBlockBtn = (e) => {
     if (e.type === 'mouseover') {
@@ -16,8 +16,8 @@ function Block({ idx, isOpen, setIsOpen, handleAddBlock, handleDeleteBlock }) {
   const editBtn = [
     { icon: faEdit, func: () => handleDeleteBlock(idx) },
     { icon: faArrowRotateRight, func: () => handleDeleteBlock(idx) },
-    { icon: faArrowUp, func: () => handleDeleteBlock(idx) },
-    { icon: faArrowDown, func: () => handleDeleteBlock(idx) },
+    { icon: faArrowUp, func: () => handleChangeBlockOrder(idx, 'up') },
+    { icon: faArrowDown, func: () => handleChangeBlockOrder(idx, 'down') },
     { icon: faTrash, func: () => handleDeleteBlock(idx) },
   ];
 

@@ -60,12 +60,41 @@ const Editor = ({ isLoading, setIsLoading }) => {
   };
 
   const handleDeleteBlock = (index) => {
+    if (window.confirm('선택한 블록을 삭제하시겠습니까?')) {
+      if (blocks.length !== 1) {
+        setBlocks((prevBlocks) => {
+          const newBlocks = [...prevBlocks];
+          newBlocks.splice(index, 1);
+          return newBlocks;
+        });
+      }
+    }
+  };
+
+  const handleChangeBlockOrder = (index, direction) => {
+    console.log(index);
     if (blocks.length !== 1) {
-      setBlocks((prevBlocks) => {
-        const newBlocks = [...prevBlocks];
-        newBlocks.splice(index, 1);
-        return newBlocks;
-      });
+      if (direction === 'up' && index !== 0) {
+        setBlocks((prevBlocks) => {
+          const newBlocks = [...prevBlocks];
+          const curBlock = prevBlocks[index];
+          const prevBlock = prevBlocks[index - 1];
+          newBlocks.splice(index - 1, 1, curBlock);
+          newBlocks.splice(index, 1, prevBlock);
+
+          return newBlocks;
+        });
+      } else if (direction === 'down' && index !== blocks.length - 1) {
+        setBlocks((prevBlocks) => {
+          const newBlocks = [...prevBlocks];
+          const curBlock = prevBlocks[index];
+          const nextBlock = prevBlocks[index + 1];
+          newBlocks.splice(index, 1, nextBlock);
+          newBlocks.splice(index + 1, 1, curBlock);
+
+          return newBlocks;
+        });
+      }
     }
   };
 
@@ -73,7 +102,16 @@ const Editor = ({ isLoading, setIsLoading }) => {
     <>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} type='편집' />
       {blocks?.map((block, idx) => (
-        <Block key={block.id} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} handleAddBlock={handleAddBlock} handleDeleteBlock={handleDeleteBlock} />
+        <Block
+          key={block.id}
+          idx={idx}
+          design={block.design}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          handleAddBlock={handleAddBlock}
+          handleDeleteBlock={handleDeleteBlock}
+          handleChangeBlockOrder={handleChangeBlockOrder}
+        />
       ))}
       <EditorModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
