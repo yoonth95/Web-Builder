@@ -9,8 +9,6 @@ import { GetBlocksAPI } from '../api/Editor';
 import Block from 'components/Editor/Block';
 import Nav from 'components/Main/Nav';
 
-import 'styles/Editor/Editor.css';
-
 const Editor = ({ isLoading, setIsLoading }) => {
   const { page_idx } = useParams();
   const [error, setError] = useState(null);
@@ -27,7 +25,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
         if (fetchedBlocks === null) {
           navigate('/notfound');
         } else {
-          fetchedBlocks.length === 0 ? setBlocks([{id: `${page_idx}_${new Date().getTime()}`, design: 'default' }]) : setBlocks(fetchedBlocks);
+          fetchedBlocks.length === 0 ? setBlocks([{ id: `${page_idx}_${new Date().getTime()}`, design: 'default' }]) : setBlocks(fetchedBlocks);
         }
         setIsLoading(false);
       } catch (err) {
@@ -47,21 +45,59 @@ const Editor = ({ isLoading, setIsLoading }) => {
     navigate(-1);
   }
 
-  const addBlock = (index) => {
+  const handleAddBlock = (index, direction) => {
     const newBlock = { id: `${page_idx}_${new Date().getTime()}`, design: 'default' };
+
     setBlocks((prevBlocks) => {
       const newBlocks = [...prevBlocks];
-      newBlocks.splice(index + 1, 0, newBlock);
+      if (direction === 'before') {
+        newBlocks.splice(index, 0, newBlock);
+      } else {
+        newBlocks.splice(index + 1, 0, newBlock);
+      }
       return newBlocks;
     });
   };
 
+  const handleDeleteBlock = (index) => {
+    if (window.confirm('선택한 블록을 삭제하시겠습니까?')) {
+      if (blocks.length !== 1) {
+        setBlocks((prevBlocks) => {
+          const newBlocks = [...prevBlocks];
+          newBlocks.splice(index, 1);
+          return newBlocks;
+        });
+      }
+    }
+  };
+
+  const handleChangeBlockOrder = (index, direction) => {
+    setBlocks((prevBlocks) => {
+      const newBlocks = [...prevBlocks];
+      const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+      if (targetIndex >= 0 && targetIndex < blocks.length) {
+        [newBlocks[index], newBlocks[targetIndex]] = [newBlocks[targetIndex], newBlocks[index]];
+      }
+
+      return newBlocks;
+    });
+  };
 
   return (
     <>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} type='편집' />
-      {blocks?.map((block,idx) => (
-        <Block key={block.id} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
+      {blocks?.map((block, idx) => (
+        <Block
+          key={block.id}
+          idx={idx}
+          design={block.design}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          handleAddBlock={handleAddBlock}
+          handleDeleteBlock={handleDeleteBlock}
+          handleChangeBlockOrder={handleChangeBlockOrder}
+        />
       ))}
       <EditorModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
