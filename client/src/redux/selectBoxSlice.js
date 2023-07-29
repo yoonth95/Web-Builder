@@ -21,15 +21,15 @@ export const selectBoxSlice = createSlice({
             state.splice(newBlock.block_order - 1, 0, newBlock);
         },
         removeBlockAction: (state, action) => {
-            const blockToRemove = state.find(block => block.block_id === action.payload.block_id);
-            if (!blockToRemove) return;
+            const block = state.find(block => block.block_id === action.payload.id);
+            if(!block) return;
 
-            const removedOrder = blockToRemove.block_order;
+            const index = state.indexOf(block);
+            state.splice(index, 1);
+
             state.forEach(block => {
-                if (block.block_order > removedOrder) block.block_order -= 1;
+                if (block.block_order > index + 1) block.block_order -= 1;
             });
-    
-            state.filter(block => block.block_id !== action.payload.block_id);
         },
         setDesignType: (state, action) => {
             const block = state.find(block => block.block_id === action.payload.block_id);
@@ -40,8 +40,22 @@ export const selectBoxSlice = createSlice({
             if(block) block.design_id = action.payload.design_id;
         },
         setBlockOrder: (state, action) => {
-            const block = state.find(block => block.block_id === action.payload.block_id);
-            if(block) block.block_order = action.payload.block_order;
+            const block = state.find(block => block.block_id === action.payload.id);
+            if(!block) return; 
+
+            const targetIndex = action.payload.order;
+            const offset = action.payload.dir === 'up' ? -1 : 1;
+
+            if (targetIndex + offset <= 0 || targetIndex + offset > state.length) return;
+
+            const targetBlock = state[targetIndex + offset - 1];
+            if(!targetBlock) return;
+
+            const temp = block.block_order;
+            block.block_order = targetBlock.block_order;
+            targetBlock.block_order = temp;
+
+            state.sort((a, b) => a.block_order - b.block_order);
         },
         resetState: () => initialState,
     },

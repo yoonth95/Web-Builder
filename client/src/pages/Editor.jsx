@@ -3,19 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from 'components/Spinner/Spinner';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addBlockAction, removeBlockAction } from 'redux/selectBoxSlice';
+import { addBlockAction, removeBlockAction, setBlockOrder } from 'redux/selectBoxSlice';
 
 import { GetBlocksAPI } from '../api/Editor';
 
 import Block from 'components/Editor/Block';
 import Nav from 'components/Main/Nav';
 
-import 'styles/Editor/Editor.css';
-
 const Editor = ({ isLoading, setIsLoading }) => {
   const { page_idx } = useParams();
   const navigate = useNavigate();
-  const blocks = useSelector(state => state.selectBox); // Redux에서 blocks 상태를 가져옵니다.
+  const blocks = useSelector(state => state.selectBox);
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
 
@@ -50,32 +48,31 @@ const Editor = ({ isLoading, setIsLoading }) => {
     navigate(-1);
   }
 
-  // const addBlock = (index) => {
-  //   const newBlock = { block_id: `${page_idx}_${new Date().getTime()}`, design_type: 'default', design_id: 0, design_order: 1 };
-  //   setBlocks((prevBlocks) => {
-  //     const newBlocks = [...prevBlocks];
-  //     newBlocks.splice(index + 1, 0, newBlock);
-  //     return newBlocks;
-  //   });
-  // };
-
-  const addBlock = (order) => {
-    const newBlock = { block_id: `${page_idx}_${new Date().getTime()}`, design_type: 'default', design_id: 0, block_order: order+1 };
+  // 블록 추가
+  const addBlock = (order, dir) => {
+    const newOrder = dir === 'before' ? order : order+1;
+    const newBlock = { block_id: `${page_idx}_${new Date().getTime()}`, design_type: 'default', design_id: 0, block_order: newOrder };
     dispatch(addBlockAction(newBlock));
   };
 
-  const deleteBlock = (block_id) => {
+  // 블록 삭제
+  const deleteBlock = (id) => {
     if (blocks.length === 1) {
       alert('최소 한 개의 블록은 있어야 합니다.');
       return;
     }
-    if (window.confirm('정말로 삭제하시겠습니까?')) dispatch(removeBlockAction(block_id));
+    if (window.confirm('정말로 삭제하시겠습니까?')) dispatch(removeBlockAction({ id }));
   };
+
+  // 블록 순서 변경
+  const handleChangeBlockOrder = (order, id, dir) => {
+    dispatch(setBlockOrder({ order, id, dir }));
+  }
 
   return (
     <>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} type='편집' />
-      {blocks?.map(block => (
+      {blocks.map(block => (
         <div key={block.block_id}>
           <Block 
             block_id={block.block_id}
@@ -84,6 +81,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
             block_order={block.block_order}
             addBlock={addBlock}
             deleteBlock={deleteBlock}
+            handleChangeBlockOrder={handleChangeBlockOrder}
           />
         </div>
       ))}
