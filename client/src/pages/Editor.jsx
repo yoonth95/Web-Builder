@@ -72,30 +72,16 @@ const Editor = ({ isLoading, setIsLoading }) => {
   };
 
   const handleChangeBlockOrder = (index, direction) => {
-    console.log(index);
-    if (blocks.length !== 1) {
-      if (direction === 'up' && index !== 0) {
-        setBlocks((prevBlocks) => {
-          const newBlocks = [...prevBlocks];
-          const curBlock = prevBlocks[index];
-          const prevBlock = prevBlocks[index - 1];
-          newBlocks.splice(index - 1, 1, curBlock);
-          newBlocks.splice(index, 1, prevBlock);
+    setBlocks((prevBlocks) => {
+      const newBlocks = [...prevBlocks];
+      const targetIndex = direction === 'up' ? index - 1 : index + 1;
 
-          return newBlocks;
-        });
-      } else if (direction === 'down' && index !== blocks.length - 1) {
-        setBlocks((prevBlocks) => {
-          const newBlocks = [...prevBlocks];
-          const curBlock = prevBlocks[index];
-          const nextBlock = prevBlocks[index + 1];
-          newBlocks.splice(index, 1, nextBlock);
-          newBlocks.splice(index + 1, 1, curBlock);
-
-          return newBlocks;
-        });
+      if (targetIndex >= 0 && targetIndex < blocks.length) {
+        [newBlocks[index], newBlocks[targetIndex]] = [newBlocks[targetIndex], newBlocks[index]];
       }
-    }
+
+      return newBlocks;
+    });
   };
 
   return (
