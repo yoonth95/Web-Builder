@@ -45,7 +45,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
     navigate(-1);
   }
 
-  const addBlock = (index, direction) => {
+  const handleAddBlock = (index, direction) => {
     const newBlock = { id: `${page_idx}_${new Date().getTime()}`, design: 'default' };
 
     setBlocks((prevBlocks) => {
@@ -59,11 +59,21 @@ const Editor = ({ isLoading, setIsLoading }) => {
     });
   };
 
+  const handleDeleteBlock = (index) => {
+    if (blocks.length !== 1) {
+      setBlocks((prevBlocks) => {
+        const newBlocks = [...prevBlocks];
+        newBlocks.splice(index, 1);
+        return newBlocks;
+      });
+    }
+  };
+
   return (
     <>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} type='편집' />
       {blocks?.map((block, idx) => (
-        <Block key={block.id} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} addBlock={addBlock} />
+        <Block key={block.id} idx={idx} design={block.design} isOpen={isOpen} setIsOpen={setIsOpen} handleAddBlock={handleAddBlock} handleDeleteBlock={handleDeleteBlock} />
       ))}
       <EditorModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
