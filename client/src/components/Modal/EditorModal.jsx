@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setDesignType, setDesignId, setBlockOrder } from 'redux/selectBoxSlice';
 
-import Table from 'components/Editor/Table';
+// hooks
+import { useEditorActions } from 'hooks/useEditor';
 
+// 컴포넌트 및 데이터
 import designType from 'data/designType';
 import { ModalRenderBox } from 'components/Editor/ModalRenderBox';
+import Table from 'components/Editor/Table';
 
+// icon 및 css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-
 import 'styles/Modal/EditorModal.css';
+
 
 const EditorModal = ({ block_id, design_type, design_id, setIsOpen }) => {
   const defaultType = design_type === 'default' ? 'image' : design_type;
 
   const [selectedDesignId, setSelectedDesignId] = useState(0);
   const [selectedDesignType, setSelectedDesignType] = useState(defaultType);
-  const dispatch = useDispatch();
+
+  const { updateBlockDesignAction } = useEditorActions();  // 커스텀 훅
 
   const designSelectType = (type) => {
     setSelectedDesignType(type);
@@ -28,14 +31,13 @@ const EditorModal = ({ block_id, design_type, design_id, setIsOpen }) => {
     setSelectedDesignId(id);
   };
 
-  const handleGetBlock = () => {
+  const handleGetBlock = async () => {
     if (selectedDesignId === 0) {
       alert('디자인을 선택해주세요.');
       return;
     }
-    dispatch(setDesignType({ block_id, design_type: selectedDesignType }));
-    dispatch(setDesignId({ block_id, design_id: selectedDesignId }));
-    setIsOpen(false);
+    await updateBlockDesignAction(block_id, selectedDesignType, selectedDesignId)
+    setIsOpen(false)
   }
 
   const renderBox = (box, index) => ModalRenderBox[selectedDesignType](box, index, designSelectId, selectedDesignId);

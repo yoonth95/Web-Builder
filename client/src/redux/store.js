@@ -3,14 +3,16 @@ import { configureStore } from '@reduxjs/toolkit';
 import UserSlice from './userSlice';
 import ButtonSlice from './buttonSlice';
 import menuSlice from './menuSlice';
-import selectBoxSlice from './selectBoxSlice';
+// import selectBoxSlice from './selectBoxSlice';
+import editorSlice from './editorSlice';
 
 const store = configureStore({
   reducer: {
     user: UserSlice,
     btn: ButtonSlice,
     menu: menuSlice,
-    selectBox: selectBoxSlice
+    // selectBox: selectBoxSlice,
+    editor: editorSlice
   },
   // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
 });

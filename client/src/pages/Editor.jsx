@@ -1,45 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Spinner from 'components/Spinner/Spinner';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { addBlockAction, removeBlockAction, setBlockOrder } from 'redux/selectBoxSlice';
+// redux
+import { useSelector } from 'react-redux';
 
-import { GetBlocksAPI } from '../api/Editor';
+// hooks
+import { useEditorActions } from 'hooks/useEditor';
 
+// 컴포넌트
 import Block from 'components/Editor/Block';
 import Nav from 'components/Main/Nav';
+import Spinner from 'components/Spinner/Spinner';
+
 
 const Editor = ({ isLoading, setIsLoading }) => {
   const { page_idx } = useParams();
   const navigate = useNavigate();
-  const blocks = useSelector(state => state.selectBox);
-  const dispatch = useDispatch();
   const [error, setError] = useState(null);
+  const blocks = useSelector(state => state.editor.blockList);
+  const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction } = useEditorActions();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const fetchedBlocks = await GetBlocksAPI(page_idx);
+    // 블록 조회
+    getBlocksAction(Number(page_idx), setIsLoading, setError);
+  }, []);
 
-        if (fetchedBlocks === null) {
-          navigate('/notfound');
-        } else {
-          fetchedBlocks.length === 0 
-            ? dispatch(addBlockAction({ block_id: `${page_idx}_${new Date().getTime()}`, design_type: 'default', design_id: 0, block_order: 1 }))
-            : fetchedBlocks.forEach(block => dispatch(addBlockAction(block)));
-        }
-      } catch (err) {
-        console.error(err);
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    fetchData();
-  }, [page_idx, navigate, setIsLoading, dispatch]);
+  // 블록 추가
+  const addBlock = (order, dir) => {
+    insertBlockAction(Number(page_idx), order, dir, setIsLoading, setError);
+  };
+
+  // 블록 삭제, 순서 변경 아직 못함
+  // 블록 삭제
+  const deleteBlock = (id) => {
+    if (blocks.length === 1) {
+      alert('최소 한 개의 블록은 있어야 합니다.');
+      return;
+    }
+    if (window.confirm('해당 블록을 삭제하시겠습니까?')) deleteBlockAction(id, setIsLoading, setError);
+  };
+
+  // 블록 순서 변경
+  const handleChangeBlockOrder = async (block_id, dir) => {
+    await updateBlockOrderAction(block_id, dir, setIsLoading, setError);
+  }
 
   if (isLoading) return <Spinner />;
 
@@ -48,31 +52,10 @@ const Editor = ({ isLoading, setIsLoading }) => {
     navigate(-1);
   }
 
-  // 블록 추가
-  const addBlock = (order, dir) => {
-    const newOrder = dir === 'before' ? order : order+1;
-    const newBlock = { block_id: `${page_idx}_${new Date().getTime()}`, design_type: 'default', design_id: 0, block_order: newOrder };
-    dispatch(addBlockAction(newBlock));
-  };
-
-  // 블록 삭제
-  const deleteBlock = (id) => {
-    if (blocks.length === 1) {
-      alert('최소 한 개의 블록은 있어야 합니다.');
-      return;
-    }
-    if (window.confirm('정말로 삭제하시겠습니까?')) dispatch(removeBlockAction({ id }));
-  };
-
-  // 블록 순서 변경
-  const handleChangeBlockOrder = (order, id, dir) => {
-    dispatch(setBlockOrder({ order, id, dir }));
-  }
-
   return (
     <>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} type='편집' />
-      {blocks.map(block => (
+      {[...blocks].sort((a, b) => a.block_order - b.block_order).map(block => (
         <div key={block.block_id}>
           <Block 
             block_id={block.block_id}

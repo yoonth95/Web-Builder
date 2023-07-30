@@ -3,8 +3,6 @@
   width: 100%;
   background: #f3f3f3;
   outline: 1px dashed #333;
-  height: 160px;
-  cursor: pointer;
 }
 
 .block_correction_btn {
@@ -59,13 +57,6 @@
   font-size: 25px;
   color: #fff;
 }
-.block_container {
-  position: relative;
-  width: 100%;
-  background: #f3f3f3;
-  outline: 1px dashed #333;
-  min-height: 160px;
-}
 
 .wrap_design_select {
   display: flex;
@@ -87,39 +78,6 @@
   color: #989898;
 }
 
-.module_wrap {
-  max-width: 1280px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.module_container {
-  transition: padding 0.4s;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
-.module_imageBox {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-.module_imageBox img {
-  width: 100%;
-  height: 100%;
-}
-
 .show_add_btn {
   display: block;
 }
@@ -134,4 +92,125 @@
 
 .block_function_btn span {
   cursor: pointer;
+}
+
+/* 블록 공통 css */
+.module_wrap {
+  max-width: 1280px;
+  padding: 0 10px;
+  margin: auto;
+}
+.module_container {
+  transition: padding 0.4s;
+  padding: 20px 0;
+}
+.imgHover {
+  cursor: pointer;
+}
+.imgHover:hover {
+  outline: 2px #3a7fd0 solid;
+  z-index: 500;
+}
+.imgHover:hover img {
+  filter: brightness(70%);
+}
+
+/* 이미지 블록 css */
+.module_imageBox {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.module_imageBox img {
+  width: 100%;
+  height: 100%;
+}
+
+/* 구분선 블록 css */
+.module_container_line {
+  transition: padding 0.4s;
+  padding: 50px 0;
+}
+
+/* 목록 블록 css */
+.module_container_list {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: auto;
+  transition: padding 0.4s;
+  padding: 20px 0;
+}
+.module_list_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.module_list_item div {
+  text-align: center;
+}
+.module_circle {
+  width: 205px;
+  height: 205px;
+  border-radius: 50%;
+  border: 1px solid #c0c0c0;
+}
+.module_rectangle {
+  width: 350px;
+  height: 200px;
+  border: 1px solid #c0c0c0;
+}
+.module_square {
+  width: 300px;
+  height: 300px;
+  border: 1px solid #c0c0c0;
+}
+.module_wideRectangle {
+  width: 500px;
+  height: 200px;
+  border: 1px solid #c0c0c0;
+}
+.module_wrap_list img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 텍스트 블록 css */
+.module_text_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+.module_text_line {
+  max-width: 1280px;
+  padding: 5px;
+}
+
+/* 레이아웃 블록 css */
+.module_layout_item {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  min-height: 200px;
+}
+.module_layoutBox {
+  border: 1px dashed #333;
+  background-color: #f3f3f3;
+  min-height: 200px;
+  margin: 0 10px;
 }

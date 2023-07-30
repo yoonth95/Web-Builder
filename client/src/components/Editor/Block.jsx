@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { setDesignType, setDesignId, setBlockOrder } from 'redux/selectBoxSlice';
-
+// 컴포넌트 및 데이터
 import designType from 'data/designType';
 import { EditorRenderBox } from 'components/Editor/EditorRenderBox';
 import EditorModal from 'components/Modal/EditorModal';
 
+// icon 및 css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRotateRight, faArrowUp, faEdit, faTrash, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/Block.css';
@@ -24,9 +23,9 @@ function Block({ block_id, design_type, design_id, block_order, addBlock, delete
   const correctionBtn = [
     { icon: faEdit, clickFunc: () => console.log('edit') },
     { icon: faArrowRotateRight, clickFunc: () => console.log('rotate') },
-    { icon: faArrowUp, clickFunc: (order, id) => handleChangeBlockOrder(order, id, 'up') },
-    { icon: faArrowDown, clickFunc: (order, id) => handleChangeBlockOrder(order, id, 'down') },
-    { icon: faTrash, clickFunc: (order, id) => deleteBlock(id) },
+    { icon: faArrowUp, clickFunc: (id) => handleChangeBlockOrder(id, 'up') },
+    { icon: faArrowDown, clickFunc: (id) => handleChangeBlockOrder(id, 'down') },
+    { icon: faTrash, clickFunc: (id) => deleteBlock(id) },
   ];
 
   return (
@@ -43,7 +42,7 @@ function Block({ block_id, design_type, design_id, block_order, addBlock, delete
         {isDefault ? 
           <div className='wrap_design_select' onClick={() => setIsOpen(!isOpen)}>
             <FontAwesomeIcon className='icon_design_select' icon={faWandMagicSparkles} />
-            <p>{block_id}</p>
+            <p>{block_order} {block_id}</p>
             <p className='txt_design_select'>디자인을 선택하세요</p>
           </div>
           :
@@ -51,11 +50,15 @@ function Block({ block_id, design_type, design_id, block_order, addBlock, delete
             <div className='block_correction_btn' style={{ display: showBlockBtn === true ? 'flex' : 'none' }}>
               {correctionBtn.map(({ icon, clickFunc }, index) => (
                 <button className='block_function_btn' key={index}>
-                  <span onClick={() => clickFunc(block_order, block_id)}><FontAwesomeIcon icon={icon} /></span>
+                  <span onClick={() => clickFunc(block_id)}><FontAwesomeIcon icon={icon} /></span>
                 </button>
               ))}
             </div>
-            {(designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map((box, index) => renderBox(box, index))}
+            {(designType.find((item) => item.type === design_type))
+              .boxes
+              .filter((item) => item.id === design_id)
+              .map((box, index) => renderBox(box, index)
+            )}
           </>
         }
         <div className='wrap_btn'>
