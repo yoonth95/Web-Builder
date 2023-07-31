@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useMenuActions } from 'hooks/useMenu';
-import logo from 'assets/images/logo.svg';
-import Link1 from 'assets/images/Link1.svg';
-import Link2 from 'assets/images/Link2.svg';
-import Link3 from 'assets/images/Link3.svg';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Main/Nav.css';
-import Spinner from 'components/Spinner/Spinner';
+
 
 const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
   const { getMenuAction } = useMenuActions();
@@ -19,24 +15,20 @@ const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
     getMenuAction(setIsLoading);
   }, []);
 
-  if (isLoading) {
-    <Spinner />;
-  }
-
   return (
-    <div className='container'>
+      <div className='container'>
       {windowWidth <= 1098 ?  
       <header className='mobile_header_wrap'>
           <button>
               <FontAwesomeIcon icon={faMagnifyingGlass} className='moblie_icon' />
             </button>
-          <img src={logo} alt='로고' />
+          <img className="mobile_header_logo" src={logo} alt='로고' />
             <button>
               <FontAwesomeIcon icon={faBars} className='moblie_icon'/>
             </button>
       </header>
       : <header className='header_wrap' onMouseEnter={() => setCurrentMenuIdx(null)}>
-        <img src={logo} alt='로고' />
+        <img className="header_wrap_logo" src={logo} alt='로고' />
         <div className='header_right'>
           {logoList.map(({ id, src }) => (
             <img key={id} src={src} alt='로고' />
@@ -56,14 +48,14 @@ const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
               </li>
             ))}
           </ul>
-          <div className='option' onMouseEnter={() => setCurrentMenuIdx(null)}>
+          {!isLoading&&<div className='option' onMouseEnter={() => setCurrentMenuIdx(null)}>
             <button>
-              <FontAwesomeIcon icon={faBars} className='icon' />
+              <FontAwesomeIcon icon={faBars} className='icon'  />
             </button>
             <button>
               <FontAwesomeIcon icon={faMagnifyingGlass} className='icon' />
             </button>
-          </div>
+          </div>}
         </div>
         {type !== '편집' && (
           <div className={`gnb_info_wrap ${currentMenuIdx !== null ? 'on' : ''}`} onMouseLeave={() => setCurrentMenuIdx(null)}>
@@ -92,8 +84,10 @@ const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
 
 export default Nav;
 
+const logo = "https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/logo.png"
+
 const logoList = [
-  { id: '1', src: Link1 },
-  { id: '2', src: Link2 },
-  { id: '3', src: Link3 },
+  { id: '1', src: "https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_optionNavi1.png" },
+  { id: '2', src: "https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_optionNavi2.png"},
+  { id: '3', src: "https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_optionNavi3.png" },
 ];

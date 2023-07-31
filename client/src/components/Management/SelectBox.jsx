@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'styles/Management/SelectBox.css';
+import Dropdown from 'components/DropDown/DropDown';
 
 const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLinkChange }) => {
   const [isToggle, setIsToggle] = useState(false);
@@ -29,32 +30,34 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
   return (
     <ul className='list_select_option' onClick={toggle}>
       <li className={`selected_option ${isToggle ? 'open' : ''}`}>{resultTitle}</li>
-      <ul className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
-        <li className='disabled_option' onClick={stopEventBubbling}>
-          공통 페이지
-        </li>
-        {common.map((list) => (
-          <li className='select_option' key={list.id} onClick={(e) => handleButtonClick(e, list.link)}>
-            {list.title}
-          </li>
-        ))}
-        <li className='disabled_option' onClick={stopEventBubbling}>
-          사용자 추가 페이지
-        </li>
-        {type === '복제'
-          ? secondList.map((subMenu) => (
-              <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
-                {subMenu.title}
-              </li>
-            ))
-          : secondList
-              .filter((submenu) => submenu.parent_id === parent_id)
-              .map((subMenu) => (
-                <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
-                  {subMenu.title}
+    <Dropdown visibility={isToggle} dropdownClassName={isToggle ? 'selectbox-dropdown' : 'dropup'}>
+              <ul className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
+                <li className='disabled_option' onClick={stopEventBubbling}>
+                  공통 페이지
                 </li>
-              ))}
-      </ul>
+                {common.map((list) => (
+                  <li className='select_option' key={list.id} onClick={(e) => handleButtonClick(e, list.link)}>
+                    {list.title}
+                  </li>
+                ))}
+                <li className='disabled_option' onClick={stopEventBubbling}>
+                  사용자 추가 페이지
+                </li>
+                {type === '복제'
+                  ? secondList.map((subMenu) => (
+                      <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
+                        {subMenu.title}
+                      </li>
+                    ))
+                  : secondList
+                      .filter((submenu) => submenu.parent_id === parent_id)
+                      .map((subMenu) => (
+                        <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
+                          {subMenu.title}
+                        </li>
+                      ))}
+              </ul>
+        </Dropdown>
     </ul>
   );
 };

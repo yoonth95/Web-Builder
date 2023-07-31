@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import 'styles/Admin/AdminHeader.css';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {  useNavigate, useSearchParams } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import { useDispatch } from 'react-redux';
-import { logoutUser } from 'redux/userSlice';
 import { logoutAPI } from 'api/User/logoutAPI';
 
 const MainHeader = () => {
@@ -36,7 +35,7 @@ const MainHeader = () => {
     } else {
       setTab(tabValue === 'b' ? 'page' : 'menu');
     }
-  }, [searchParams]);
+  }, []);
 
   return (
     <header className='header'>

@@ -18,7 +18,7 @@ const EditableCell = ({
     setValue(initialValue);
   }, [initialValue]);
 
-  return <input value={value || ""} onChange={onChange} />;
+  return <input value={value || ""} onChange={onChange} style={{textAlign:"center" , padding:"10px" , border:"none"}}/>;
 };
 
 const defaultColumn = {
@@ -62,17 +62,18 @@ const MyTable = ({
   }, [editColumnName]);
 
   return (
-    <table {...getTableProps()} style={{ borderCollapse: "collapse" }}>
+    <table {...getTableProps()} style={{ margin:"0 auto", border:"none", padding:"40px"}}>
       <thead>
         {headerGroups.map((headerGroup, index) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
+          <tr {...headerGroup.getHeaderGroupProps()} >
             {headerGroup.headers.map((column, idx) => (
               <th
                 {...column.getHeaderProps()}
-                style={{ padding: "0", margin: "0", border: "1px solid black" }}
+                style={{ padding: "10px", fontSize:"20px", color:"#f3f3f3",backgroundColor:"#EE7D00"}}
               >
                 {editColumnName === idx ? (
                   <input
+                    style={{width:"100px"}}
                     ref={inputRef}
                     value={newColumnName}
                     onChange={(e) => setNewColumnName(e.target.value)}
@@ -109,7 +110,7 @@ const MyTable = ({
               {row.cells.map((cell) => (
                 <td
                   {...cell.getCellProps()}
-                  style={{ padding: "0", margin: "0", border: "1px solid black" }}
+                  style={{ padding: "0", margin: "0" }}
                 >
                   {cell.render("Cell")}
                 </td>

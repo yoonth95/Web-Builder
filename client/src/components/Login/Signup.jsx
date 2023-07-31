@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from 'assets/images/logo.svg';
 import 'styles/Login/Login.css';
 import { signupAPI } from 'api/User/signupAPI';
 import useInputValues from 'hooks/useInput';
@@ -44,7 +43,7 @@ const Signup = () => {
     <div className='admin'>
       <div className='login'>
         <div className='login_main'>
-          <img className='logo' src={logo} alt='로고 이미지' style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
+          <img className='logo' src="https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/logo.png" alt='로고 이미지' style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
           <form className='login_form' onSubmit={submitBtn}>
             <div className='inputTag'>
               <input type='text' id='input_name' name='name' value={name} onChange={handleChange} />

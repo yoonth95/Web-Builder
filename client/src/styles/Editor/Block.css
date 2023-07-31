@@ -208,12 +208,12 @@
   align-items: center;
   padding: 20px 0;
   min-height: 200px;
+  gap: 10px;
 }
 .module_layoutBox {
   border: 1px dashed #333;
   background-color: #f3f3f3;
   min-height: 200px;
-  margin: 0 10px;
 }
 
 .layout_wrap {

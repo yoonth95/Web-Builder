@@ -70,7 +70,6 @@
 .flootText {
   position: absolute;
   top: 7px;
-  right: 300px;
   font-size: 38px;
   color: #fff;
   cursor: pointer;
@@ -168,7 +167,7 @@
       right: 98px;
   }
   .consultationText {
-      left: 104px;
+    left: 100px;
   }
 }
 

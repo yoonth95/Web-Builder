@@ -364,13 +364,15 @@
           {
             "layout_id": 1,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "layout_id": 2,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           }
         ]
@@ -387,13 +389,15 @@
           {
             "layout_id": 1,
             "style": {
-              "flex": 1.5
+              "flex": 1.5,
+              "width": "100%"
             }
           },
           {
             "layout_id": 2,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           }
         ]
@@ -410,19 +414,22 @@
           {
             "layout_id": 1,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "layout_id": 2,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "layout_id": 3,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           }
         ]
@@ -439,7 +446,8 @@
           {
             "layout_id": 1,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
@@ -448,7 +456,8 @@
               "display": "flex",
               "flexDirection": "column",
               "justifyContent": "space-between",
-              "gap": "10px"
+              "gap": "10px",
+              "width": "100%"
             },
             "children": [
               {
@@ -479,25 +488,29 @@
           {
             "layout_id": 1,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "layout_id": 2,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "layout_id": 3,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "layout_id": 4,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           }
         ]
@@ -514,12 +527,14 @@
           {
             "layout_id": 1,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "style": {
               "flex": 1,
+              "width": "100%",
               "display": "flex",
               "flexDirection": "row",
               "justifyContent": "space-between",
@@ -543,7 +558,8 @@
           {
             "layout_id": 4,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           }
         ]
@@ -560,19 +576,22 @@
           {
             "layout_id": 1,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "layout_id": 2,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           },
           {
             "layout_id": 3,
             "style": {
-              "flex": 1
+              "flex": 1,
+              "width": "100%"
             }
           }
         ]
@@ -584,7 +603,8 @@
           "display": "grid",
           "gridTemplateColumns": "1fr 1fr",
           "gridTemplateRows": "1fr 1fr",
-          "gap": "10px"
+          "gap": "10px",
+          "width": "100%"
         },
         "elements": [{"layout_id": 1}, {"layout_id": 2}, {"layout_id": 3}, {"layout_id": 4}]
       }

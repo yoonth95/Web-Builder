@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'styles/Admin/AdminHeader.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import logo from 'assets/images/logo.svg';
 import { useDispatch } from 'react-redux';
-
 import { logoutAPI } from 'api/User/logoutAPI';
 
 const AdminHeader = () => {
@@ -41,7 +39,7 @@ const AdminHeader = () => {
   return (
     <header className='header'>
       <div className='info_box'>
-        <img src={logo} onClick={() => onBtnClick('menu')} alt='로고 이미지' />
+        <img src="https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/logo.png" onClick={() => onBtnClick('menu')} alt='로고 이미지' />
         <div>
           <span onClick={() => navigate('/mypage')}>마이페이지</span>
           <span className='line'>&#124;</span>

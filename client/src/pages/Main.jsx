@@ -16,10 +16,6 @@ const Main = ({ isLoading, setIsLoading }) => {
     setCurrentCarouselIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
 
-  const getWindowWidth = () => {
-    return window.innerWidth;
-  };
-
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);

@@ -24,7 +24,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
 
   const renderBox = (box, index) => {
     const clickHandler = () => setIsOpen(!isOpen);
-    return EditorRenderBox[design_type](box, index, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
+    return EditorRenderBox[design_type](box, index, JSON.parse(layout_design), clickHandler, setIsLayoutDesign, setLayoutId, designType);
   };
 
   const correctionBtn = [
@@ -62,7 +62,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
               ))}
             </div>
             {design_type === 'table'
-              ? <ApplyTable design_id={design_id}/>
+              ? <ApplyTable design_id={design_id} />
               : <>({(designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map((box, index) => renderBox(box, index))})</>
             }
           </>

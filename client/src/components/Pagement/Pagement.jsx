@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 // redux
 import { useDispatch } from 'react-redux';
-import { setBtn } from 'redux/buttonSlice';
 import { updateList } from 'redux/editorSlice';
 
 // 컴포넌트
 import Spinner from 'components/Spinner/Spinner';
 import AdminHeader from 'components/Admin/AdminHeader';
+import PageList from 'components/Pagement/PageList'
 
 // api
 import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
@@ -19,7 +18,6 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Pagement/Pagement.css';
 
 const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [pageList, setPageList] = useState([]);
   const [parentList, setParentList] = useState([]);
@@ -59,13 +57,6 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   const totalPages = Math.ceil(pageList.length / Page);
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
-  const dateFormat = (updatedAt) => {
-    const updatedAtDate = new Date(updatedAt);
-    const koreanTimezoneOffset = 9 * 60;
-    const koreanTime = new Date(updatedAtDate.getTime() + koreanTimezoneOffset * 60000);
-    return koreanTime.toISOString().slice(0, 19).replace('T', ' ');
-  };
-
   const search = () => {
     if (searchValue !=='') {
       const filteredList = pageList.filter(item => item.title.replace(/\s/g, '').includes(searchValue.replace(/\s/g, '')))
@@ -93,56 +84,23 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
             </button>
           </div>
         </div>
-
         <div className='board-list-wrap'>
           <div className='board-list'>
             <div className='top'>
-              <div className='top_content'>페이지명</div>
-              <div className='top_content'>페이지 경로</div>
-              <div className='top_content'>메뉴</div>
-              <div className='top_content'>업데이트 일시</div>
-              <div className='top_content'>관리</div>
+              {contentList.map(({id,content})=>(
+                <div key={id} className='top_content'>{content}</div>
+              ))}
             </div>
-            {getPageItems().length === 0 ? (
+            {getPageItems().length === 0 ? 
               <div className='not_found_wrap'>
                 <div className='not_found_text'>
                   <h1>{searchValue}</h1> 페이지는 목록에 없습니다.
                 </div>
               </div>
-            ) : (
-              getPageItems().map((menu) => {
-                return (
-                  <div key={menu.idx} className='info'>
-                    <div className='info_content title' title={menu.title}>
-                      {menu.title}
-                    </div>
-                    <div className='info_content link' title={`/page/${menu.link}`}>
-                      /page/{menu.link}
-                    </div>
-                    <div className='info_content btn'>
-                      <span className='txt_info_content_btn' title={parentList.filter((e) => e.idx === menu.parent_id)[0].title}>
-                        {parentList.filter((e) => e.idx === menu.parent_id)[0].title}
-                      </span>
-                    </div>
-                    <div className='info_content date'>{dateFormat(menu.updated_at)}</div>
-                    <div className='info_content' id='info_btn'>
-                      <button
-                        onClick={() => {
-                          setIsOpen(true);
-                          dispatch(setBtn('복제'));
-                        }}
-                      >
-                        복제
-                      </button>
-                      <button onClick={() => navigate(`/editor/${menu.idx}`)}>편집</button>
-                    </div>
-                  </div>
-                );
-              })
-            )}
+             : 
+              getPageItems().map(menu => <PageList key={menu.idx} menu={menu} parentList={parentList} setIsOpen={setIsOpen} dispatch={dispatch} />)}
           </div>
         </div>
-
         <div className='board-page'>
           <button className='back_btn' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
             이전
@@ -162,3 +120,7 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
 };
 
 export default Pagement;
+
+const contentList = [
+  {id:"01",content:"페이지명"}, {id:"02",content:"페이지 경로"}, {id:"03",content:"메뉴"}, {id:"04",content:"업데이트 일시"}, {id:"05",content:"관리"}
+]

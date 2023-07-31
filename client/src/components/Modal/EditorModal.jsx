@@ -15,13 +15,13 @@ import 'styles/Modal/EditorModal.css';
 
 
 const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutId }) => {
-  const defaultType = design_type === 'default' ? 'image' : design_type;
+  const defaultType = design_type === 'default' ? 'image' : isLayoutDesign ? 'image' : design_type;
 
   const [selectedDesignId, setSelectedDesignId] = useState(0);
   const [selectedDesignType, setSelectedDesignType] = useState(defaultType);
   const [activeCell, setActiveCell] = useState(null); 
 
-  const { updateBlockDesignAction } = useEditorActions();  
+  const { updateBlockDesignAction, updateBlockLayoutAction } = useEditorActions();  
 
   const designSelectType = (type) => {
     setSelectedDesignType(type);
@@ -38,18 +38,30 @@ const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutI
       alert('디자인을 선택해주세요.');
       return;
     }
-    if (selectedDesignType === 'table' && activeCell) {
-      const [rows, cols] = activeCell;
 
-      await updateBlockDesignAction(block_id, selectedDesignType, `${rows+1},${cols+1}`, isLayoutDesign, layoutId);
-    } else {
-      await updateBlockDesignAction(block_id, selectedDesignType, selectedDesignId, isLayoutDesign, layoutId);
+    // 레이아웃 디자인 수정 시
+    if (isLayoutDesign) {
+      if (selectedDesignType === 'table' && activeCell) {
+        const [rows, cols] = activeCell;
+        await updateBlockLayoutAction(block_id, selectedDesignType, `${rows+1},${cols+1}`, layoutId);
+      } else {
+        await updateBlockLayoutAction(block_id, selectedDesignType, selectedDesignId, layoutId);
+      }
+    } 
+    // 블록 디자인 수정 시
+    else {
+      if (selectedDesignType === 'table' && activeCell) {
+        const [rows, cols] = activeCell;
+        await updateBlockDesignAction(block_id, selectedDesignType, `${rows+1},${cols+1}`);
+      } else {
+        await updateBlockDesignAction(block_id, selectedDesignType, selectedDesignId);
+      }
     }
+    
     setIsOpen(false);
   }
 
   const renderBox = (box, index) => ModalRenderBox[selectedDesignType](box, index, designSelectId, selectedDesignId);
-
   const filterDesignType = isLayoutDesign ? designType.filter((item) => item.type !== 'layout') : designType;
 
   return (
@@ -76,7 +88,7 @@ const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutI
             </div>
           ) : (
             <div className='editModal-right' style={{ gridTemplateRows: `repeat(auto-fill, ${selectedDesignType === 'line' ? '96px' : '160px'})` }}>
-              {designType.find((item) => item.type === selectedDesignType).boxes.map((box, index) => renderBox(box, index))}
+              {filterDesignType.find((item) => item.type === selectedDesignType).boxes.map((box, index) => renderBox(box, index))}
             </div>
           )}
         </div>

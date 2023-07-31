@@ -3,6 +3,7 @@ import EditForm from './EditForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Management/SubMenu.css';
+import Dropdown from 'components/DropDown/DropDown';
 import NewMenu from './NewMenu';
 import { useDispatch } from 'react-redux';
 
@@ -27,7 +28,9 @@ const SubMenu = ({ setIsOpen, setBtn,Droppable, Draggable, parentID, editMenuIds
                       </span>
                     </div>
                   </div>
-                  {editMenuIds.includes(subMenu.idx) && <EditForm editMenu={editMenu} curMenuData={subMenu} firstList={firstList} secondList={secondList} />}
+                  <Dropdown visibility={editMenuIds.includes(subMenu.idx)}>
+                    <EditForm editMenu={editMenu} curMenuData={subMenu} firstList={firstList} secondList={secondList} />
+                  </Dropdown>
                 </div>
               )}
             </Draggable>

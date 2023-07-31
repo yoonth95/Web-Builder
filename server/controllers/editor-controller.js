@@ -69,13 +69,13 @@ exports.deleteBlock = async (req, res) => {
 
 // 에디터 블록 레이아웃 변경
 exports.updateBlockLayout = async (req, res) => {
-    // const data = req.body;
+    const data = req.body;
 
-    // try {
-    //     const result = await editorDB.updateBlockDesign(data.block_id, data.design_type, data.design_id);
-    //     res.status(200).json(result);
-    // } catch (err) {
-    //     console.error(err);
-    //     res.status(500).json('디자인 선택 오류');
-    // }
+    try {
+        const result = await editorDB.updateBlockLayout(data.block_id, data.layout_design);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json('디자인 선택 오류');
+    }
 }

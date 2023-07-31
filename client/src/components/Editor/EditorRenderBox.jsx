@@ -91,36 +91,90 @@ export const EditorRenderBox = {
     );
   },
   table: null,
-  layout: (box, index, layout_design, clickHandler, setIsLayoutDesign, setLayoutId) => {
+  layout: (box, index, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, designType) => {
     return (
       <div key={index} className='module_wrap'>
         <div className='module_container'>
-          <div className='module_layout_item'>
-            {box.elements.map((element, i) => (
-              <div key={i} className={element.children ? '' : 'module_layoutBox'} style={element.style} 
-                onClick={
-                  layout_design ? null : () => {
-                    clickHandler(); 
-                    setIsLayoutDesign(true);
-                    setLayoutId(element.layout_id)
-                  }
-                }
-              >
-                {element.children ? element.children.map((child, j) => (
-                  <div key={j} className='module_layoutBox' style={child.style} 
-                    onClick={
-                      layout_design ? null : () => {
-                        clickHandler(); 
-                        setIsLayoutDesign(true);
-                        setLayoutId(element.layout_id)
-                      }
+          <div className='module_layout_item' style={box.style}>
+            {box.elements.map((element, i) => {
+              const layout = layout_design && layout_design.find(e => e.layout_id === element.layout_id);
+              const layout_design_type = layout && layout.design_type;
+              const layout_design_id = layout && layout.design_id;
+
+              const layoutType = designType.find(e => e.type === layout_design_type);
+              const box = layoutType ? layoutType.boxes.filter(e => e.id === layout_design_id)[0] : undefined;
+              const index = Math.floor(Math.random() * 100);
+
+              return (
+                <div key={i} className={element.children ? '' : layout ? '' : 'module_layoutBox'} style={element.style} 
+                  onClick={
+                    layout ? null : () => {
+                      clickHandler(); 
+                      setIsLayoutDesign(true);
+                      setLayoutId(element.layout_id)
                     }
-                  >
-                    {layout_design ? layout_design : <ClickDiv />}
-                  </div>
-                )) : (layout_design ? layout_design : <ClickDiv />)}
-              </div>
-            ))}
+                  }
+                >
+                  {element.children 
+                    ? element.children.map((child, j) => {
+                      const layout_child = layout_design && layout_design.find(e => e.layout_id === child.layout_id);
+                      const layout_child_design_type = layout_child && layout_child.design_type;
+                      const layout_child_design_id = layout_child && layout_child.design_id;
+
+                      const child_layoutType = designType.find(e => e.type === layout_child_design_type);
+                      const child_box = child_layoutType ? child_layoutType.boxes.filter(e => e.id === layout_child_design_id)[0] : undefined;
+                      const child_index = Math.floor(Math.random() * 100);
+
+                      return (
+                        <div key={j} className={layout_child ? '' : 'module_layoutBox'} style={child.style} 
+                          onClick={
+                            layout_child ? null : (e) => {
+                              e.stopPropagation();
+                              clickHandler(); 
+                              setIsLayoutDesign(true);
+                              setLayoutId(child.layout_id)
+                            }
+                          }
+                        >
+                          {layout_child 
+                            // ? <span>{layout_child_design_type}</span>
+                            ? (layout_child_design_type === 'image'
+                                ? EditorRenderBox.image(child_box, child_index)
+                                : layout_child_design_type === 'text'
+                                  ? EditorRenderBox.text(child_box, child_index)
+                                  : layout_child_design_type === 'list'
+                                    ? EditorRenderBox.list(child_box, child_index)
+                                    : layout_child_design_type === 'table'
+                                      ? EditorRenderBox.table(child_box, child_index)
+                                      : layout_child_design_type === 'line'
+                                        ? EditorRenderBox.line(child_box, child_index)
+                                        : null
+                              )
+                            : <ClickDiv />
+                          }
+                        </div>
+                      )
+                    })
+                    : (layout 
+                        // ? <span>{layout_design_type}</span>
+                        ? (layout_design_type === 'image'
+                            ? EditorRenderBox.image(box, index)
+                            : layout_design_type === 'text'
+                              ? EditorRenderBox.text(box, index)
+                              : layout_design_type === 'list'
+                                ? EditorRenderBox.list(box, index)
+                                : layout_design_type === 'table'
+                                  ? EditorRenderBox.table(box, index)
+                                  : layout_design_type === 'line'
+                                    ? EditorRenderBox.line(box, index)
+                                    : null
+                          )
+                        : <ClickDiv />
+                      )
+                  }
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

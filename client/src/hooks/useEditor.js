@@ -12,7 +12,6 @@ import {
   UpdateBlockLayoutAPI,
 } from '../api/Editor';
 
-
 export const useEditorActions = () => {
   const blocks = useSelector(state => state.editor.blockList);
   const dispatch = useDispatch();
@@ -105,24 +104,15 @@ export const useEditorActions = () => {
   };
 
   // 블록 디자인 수정
-  const updateBlockDesignAction = async (block_id, design_type, design_id, isLayoutDesign, layoutId) => {
+  const updateBlockDesignAction = async (block_id, design_type, design_id) => {
     try {
-      if (isLayoutDesign) {
-        const layout_design = {
-          layout_id: layoutId,
-          layout_design: design_type,
-          layout_design_id: design_id
+      await UpdateBlockDesignAPI(block_id, design_type, design_id);
+      dispatch(updateList(blocks.map(block => {
+        if (block.block_id === block_id) {
+          return {...block, design_type: design_type, design_id: design_id}
         }
-        console.log(layout_design);
-      } else {
-        await UpdateBlockDesignAPI(block_id, design_type, design_id);
-        dispatch(updateList(blocks.map(block => {
-          if (block.block_id === block_id) {
-            return {...block, design_type: design_type, design_id: design_id}
-          }
-          return block;
-        })));
-      }
+        return block;
+      })));
     } catch (err) {
       console.error(err.message);
     }
@@ -231,8 +221,24 @@ export const useEditorActions = () => {
   };
   
   // 블록 레이아웃 수정
-  const updateBlockLayoutAction = async (page_idx, order, dir, setIsLoading, setError) => {
-  
+  const updateBlockLayoutAction = async (block_id, design_type, design_id, layout_id) => {
+    try {
+      const layout_design = {
+        layout_id: layout_id,
+        design_type: design_type,
+        design_id: design_id,
+      };
+      
+      await UpdateBlockLayoutAPI(block_id, layout_design);
+      dispatch(updateList(blocks.map(block => {
+        if (block.block_id === block_id) {
+          return {...block, layout_design: layout_design}
+        }
+        return block;
+      })));
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction };

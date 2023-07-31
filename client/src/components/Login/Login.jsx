@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { setUser } from 'redux/userSlice';
 import { loginAPI } from 'api/User/loginAPI';
 import useInputValues from 'hooks/useInput';
-import logo from 'assets/images/logo.svg';
 import 'styles/Login/Login.css';
 
 const Login = () => {
@@ -45,7 +44,7 @@ const Login = () => {
     <div className='admin'>
       <div className='login'>
         <div className='login_main'>
-          <img className='logo' src={logo} alt='로고 이미지' />
+          <img className='logo' src="https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/logo.png" alt='로고 이미지' />
           <form className='login_form' onSubmit={submit}>
             <div className='inputTag'>
               <input type='text' id='input_id' name='id' value={id} onChange={handleChange} />

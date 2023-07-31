@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useMenuActions } from 'hooks/useMenu';
 import useInputValues from 'hooks/useInput';
 import SelectBox from './SelectBox';
 import 'styles/Management/EditForm.css';
 
 const EditForm = ({ curMenuData, secondList, editMenu }) => {
+
   const { inputValues, handleChange } = useInputValues({
     editedTitle: curMenuData.title,
     editedLink: curMenuData.link,
@@ -41,7 +42,7 @@ const EditForm = ({ curMenuData, secondList, editMenu }) => {
         <div className='edit_wrap_sub'>
           <label className='subMenu_label link_label' htmlFor='subMenu_link'>
             링크
-            <SelectBox curMenuData={curMenuData} secondList={secondList} editedLink={editedLink} handleLinkChange={handleChange} />
+              <SelectBox curMenuData={curMenuData} secondList={secondList} editedLink={editedLink} handleLinkChange={handleChange} />
           </label>
           <input type='checkbox' name='editedWindow' id={`subMenu_chkBox_${curMenuData.idx}`} className='new_window_chkBox' checked={editedWindow} onChange={handleChange} />
           <label htmlFor={`subMenu_chkBox_${curMenuData.idx}`} className='txt_new_window'>
