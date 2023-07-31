@@ -62,6 +62,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
             design_type={block.design_type}
             design_id={block.design_id}
             block_order={block.block_order}
+            layout_design={block.layout_design}
             addBlock={addBlock}
             deleteBlock={deleteBlock}
             handleChangeBlockOrder={handleChangeBlockOrder}

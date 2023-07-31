@@ -32,8 +32,9 @@ export const useEditorActions = () => {
             page_id: page_idx,
             block_id: block_id,
             design_type: 'default',
-            design_id: 0,
-            layout: null,
+            design_id: '0',
+            layout_design: null,
+            content: null,
             block_order: 1
           };
 
@@ -66,8 +67,9 @@ export const useEditorActions = () => {
       page_id: page_idx,
       block_id: block_id,
       design_type: 'default',
-      design_id: 0,
-      layout: null,
+      design_id: '0',
+      layout_design: null,
+      content: null,
       block_order: dir === 'after' ? order + 1 : order
     };
   
@@ -103,15 +105,24 @@ export const useEditorActions = () => {
   };
 
   // 블록 디자인 수정
-  const updateBlockDesignAction = async (block_id, design_type, design_id) => {
+  const updateBlockDesignAction = async (block_id, design_type, design_id, isLayoutDesign, layoutId) => {
     try {
-      await UpdateBlockDesignAPI(block_id, design_type, design_id);
-      dispatch(updateList(blocks.map(block => {
-        if (block.block_id === block_id) {
-          return {...block, design_type: design_type, design_id: design_id}
+      if (isLayoutDesign) {
+        const layout_design = {
+          layout_id: layoutId,
+          layout_design: design_type,
+          layout_design_id: design_id
         }
-        return block;
-      })));
+        console.log(layout_design);
+      } else {
+        await UpdateBlockDesignAPI(block_id, design_type, design_id);
+        dispatch(updateList(blocks.map(block => {
+          if (block.block_id === block_id) {
+            return {...block, design_type: design_type, design_id: design_id}
+          }
+          return block;
+        })));
+      }
     } catch (err) {
       console.error(err.message);
     }

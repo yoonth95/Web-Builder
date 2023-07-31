@@ -4,21 +4,28 @@ import React, { useState } from 'react';
 import designType from 'data/designType';
 import { EditorRenderBox } from 'components/Editor/EditorRenderBox';
 import EditorModal from 'components/Modal/EditorModal';
-
+import ApplyTable from 'components/Editor/ApplyTable';
 // icon 및 css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRotateRight, faArrowUp, faEdit, faTrash, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/Block.css';
 
-function Block({ block_id, design_type, design_id, block_order, addBlock, deleteBlock, handleChangeBlockOrder }) {
+function Block({ block_id, design_type, design_id, block_order, layout_design, addBlock, deleteBlock, handleChangeBlockOrder }) {
   const [showBlockBtn, setShowBlockBtn] = useState(false);
+  const [isLayoutDesign, setIsLayoutDesign] = useState(false);
+  const [layoutId, setLayoutId] = useState(0);
+
   const handleShowBlockBtn = (e) => {
     e.type === 'mouseover' ? setShowBlockBtn(true) : setShowBlockBtn(false);
   };
   const [isOpen, setIsOpen] = useState(false);
 
   const isDefault = design_type === 'default';
-  const renderBox = (box, index) => EditorRenderBox[design_type](box, index);
+
+  const renderBox = (box, index) => {
+    const clickHandler = () => setIsOpen(!isOpen);
+    return EditorRenderBox[design_type](box, index, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
+  };
 
   const correctionBtn = [
     { icon: faEdit, clickFunc: () => console.log('edit') },
@@ -40,7 +47,7 @@ function Block({ block_id, design_type, design_id, block_order, addBlock, delete
           </button>
         </div>
         {isDefault ? 
-          <div className='wrap_design_select' onClick={() => setIsOpen(!isOpen)}>
+          <div className='wrap_design_select' onClick={() => {setIsOpen(!isOpen); setIsLayoutDesign(false)}}>
             <FontAwesomeIcon className='icon_design_select' icon={faWandMagicSparkles} />
             <p>{block_order} {block_id}</p>
             <p className='txt_design_select'>디자인을 선택하세요</p>
@@ -54,11 +61,10 @@ function Block({ block_id, design_type, design_id, block_order, addBlock, delete
                 </button>
               ))}
             </div>
-            {(designType.find((item) => item.type === design_type))
-              .boxes
-              .filter((item) => item.id === design_id)
-              .map((box, index) => renderBox(box, index)
-            )}
+            {design_type === 'table'
+              ? <ApplyTable design_id={design_id}/>
+              : <>({(designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map((box, index) => renderBox(box, index))})</>
+            }
           </>
         }
         <div className='wrap_btn'>
@@ -67,7 +73,7 @@ function Block({ block_id, design_type, design_id, block_order, addBlock, delete
           </button>
         </div>
       </div>
-      {isOpen && <EditorModal block_id={block_id} design_type={design_type} design_id={design_id} setIsOpen={setIsOpen} />}
+      {isOpen && <EditorModal block_id={block_id} design_type={design_type} setIsOpen={setIsOpen} isLayoutDesign={isLayoutDesign} layoutId={layoutId} />}
     </>
   )
 }

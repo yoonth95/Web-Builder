@@ -5,7 +5,7 @@
     "text": "이미지",
     "boxes": [
       {
-        "id": 1,
+        "id": "1",
         "numImages": 1,
         "src": "",
         "style": {
@@ -20,7 +20,7 @@
         }
       },
       {
-        "id": 2,
+        "id": "2",
         "numImages": 2,
         "src": "",
         "style": {
@@ -36,7 +36,7 @@
         }
       },
       {
-        "id": 3,
+        "id": "3",
         "numImages": 3,
         "src": "",
         "style": {
@@ -52,7 +52,7 @@
         }
       },
       {
-        "id": 4,
+        "id": "4",
         "numImages": 4,
         "src": "",
         "style": {
@@ -68,7 +68,7 @@
         }
       },
       {
-        "id": 5,
+        "id": "5",
         "numImages": 4,
         "src": "",
         "style": {
@@ -85,7 +85,7 @@
         }
       },
       {
-        "id": 6,
+        "id": "6",
         "numImages": 5,
         "src": "",
         "style": {
@@ -109,70 +109,70 @@
     "text": "구분선",
     "boxes": [
       {
-        "id": 1,
+        "id": "1",
         "thickness": "1px",
         "style": "solid",
         "length": "long",
         "direction": "horizontal"
       },
       {
-        "id": 2,
+        "id": "2",
         "thickness": "1px",
         "style": "dashed",
         "length": "long",
         "direction": "horizontal"
       },
       {
-        "id": 3,
+        "id": "3",
         "thickness": "2px",
         "style": "solid",
         "length": "long",
         "direction": "horizontal"
       },
       {
-        "id": 4,
+        "id": "4",
         "thickness": "2px",
         "style": "dashed",
         "length": "long",
         "direction": "horizontal"
       },
       {
-        "id": 5,
+        "id": "5",
         "thickness": "3px",
         "style": "solid",
         "length": "long",
         "direction": "horizontal"
       },
       {
-        "id": 6,
+        "id": "6",
         "thickness": "3px",
         "style": "dashed",
         "length": "long",
         "direction": "horizontal"
       },
       {
-        "id": 7,
+        "id": "7",
         "thickness": "1px",
         "style": "solid",
         "length": "short",
         "direction": "horizontal"
       },
       {
-        "id": 8,
+        "id": "8",
         "thickness": "3px",
         "style": "dotted",
         "length": "long",
         "direction": "horizontal"
       },
       {
-        "id": 9,
+        "id": "9",
         "thickness": "1px",
         "style": "solid",
         "length": "short",
         "direction": "diagonal"
       },
       {
-        "id": 10,
+        "id": "10",
         "thickness": "1px",
         "style": "solid",
         "length": "short",
@@ -186,20 +186,20 @@
     "text": "목록",
     "boxes": [
       {
-        "id": 1,
+        "id": "1",
         "shape": "circle",
         "src": "",
         "hasText": true
       },
       {
-        "id": 2,
+        "id": "2",
         "shape": "rectangle",
         "src": "",
         "hasTitle": true,
         "hasDetails": true
       },
       {
-        "id": 3,
+        "id": "3",
         "shape": "square",
         "src": "",
         "hasTitleColor": true,
@@ -207,7 +207,7 @@
         "hasTinyText": true
       },
       {
-        "id": 4,
+        "id": "4",
         "shape": "wideRectangle",
         "src": "",
         "hasTitle": true,
@@ -221,7 +221,7 @@
     "text": "텍스트",
     "boxes": [
       {
-        "id": 1,
+        "id": "1",
         "alignments": "center",
         "lines": [
           {
@@ -246,7 +246,7 @@
         ]
       },
       {
-        "id": 2,
+        "id": "2",
         "alignments": "center",
         "lines": [
           {
@@ -265,7 +265,7 @@
         ]
       },
       {
-        "id": 3,
+        "id": "3",
         "alignments": "center",
         "lines": [
           {
@@ -277,7 +277,7 @@
         ]
       },
       {
-        "id": 4,
+        "id": "4",
         "alignments": "center",
         "lines": [
           {
@@ -303,7 +303,7 @@
         ]
       },
       {
-        "id": 5,
+        "id": "5",
         "alignments": "center",
         "lines": [
           {
@@ -315,7 +315,7 @@
         ]
       },
       {
-        "id": 6,
+        "id": "6",
         "alignments": "left",
         "lines": [
           {
@@ -353,7 +353,7 @@
     "text": "레이아웃",
     "boxes": [
       {
-        "id": 1,
+        "id": "1",
         "layout": "2 elements, same size",
         "style": {
           "display": "flex",
@@ -362,11 +362,13 @@
         },
         "elements": [
           {
+            "layout_id": 1,
             "style": {
               "flex": 1
             }
           },
           {
+            "layout_id": 2,
             "style": {
               "flex": 1
             }
@@ -374,7 +376,7 @@
         ]
       },
       {
-        "id": 2,
+        "id": "2",
         "layout": "2 elements, 1.5:1 ratio",
         "style": {
           "display": "flex",
@@ -383,11 +385,13 @@
         },
         "elements": [
           {
+            "layout_id": 1,
             "style": {
               "flex": 1.5
             }
           },
           {
+            "layout_id": 2,
             "style": {
               "flex": 1
             }
@@ -395,7 +399,7 @@
         ]
       },
       {
-        "id": 3,
+        "id": "3",
         "layout": "3 elements, same size",
         "style": {
           "display": "flex",
@@ -404,16 +408,19 @@
         },
         "elements": [
           {
+            "layout_id": 1,
             "style": {
               "flex": 1
             }
           },
           {
+            "layout_id": 2,
             "style": {
               "flex": 1
             }
           },
           {
+            "layout_id": 3,
             "style": {
               "flex": 1
             }
@@ -421,7 +428,7 @@
         ]
       },
       {
-        "id": 4,
+        "id": "4",
         "layout": "1:1.5 row split",
         "style": {
           "display": "flex",
@@ -430,6 +437,7 @@
         },
         "elements": [
           {
+            "layout_id": 1,
             "style": {
               "flex": 1
             }
@@ -444,11 +452,13 @@
             },
             "children": [
               {
+                "layout_id": 2,
                 "style": {
                   "flex": 1
                 }
               },
               {
+                "layout_id": 3,
                 "style": {
                   "flex": 1
                 }
@@ -458,7 +468,7 @@
         ]
       },
       {
-        "id": 5,
+        "id": "5",
         "layout": "4 elements, same size",
         "style": {
           "display": "flex",
@@ -467,21 +477,25 @@
         },
         "elements": [
           {
+            "layout_id": 1,
             "style": {
               "flex": 1
             }
           },
           {
+            "layout_id": 2,
             "style": {
               "flex": 1
             }
           },
           {
+            "layout_id": 3,
             "style": {
               "flex": 1
             }
           },
           {
+            "layout_id": 4,
             "style": {
               "flex": 1
             }
@@ -489,7 +503,7 @@
         ]
       },
       {
-        "id": 6,
+        "id": "6",
         "layout": "1:1:1 split, middle split into 2",
         "style": {
           "display": "flex",
@@ -498,6 +512,7 @@
         },
         "elements": [
           {
+            "layout_id": 1,
             "style": {
               "flex": 1
             }
@@ -512,11 +527,13 @@
             },
             "children": [
               {
+                "layout_id": 2,
                 "style": {
                   "flex": 1
                 }
               },
               {
+                "layout_id": 3,
                 "style": {
                   "flex": 1
                 }
@@ -524,6 +541,7 @@
             ]
           },
           {
+            "layout_id": 4,
             "style": {
               "flex": 1
             }
@@ -531,7 +549,7 @@
         ]
       },
       {
-        "id": 7,
+        "id": "7",
         "layout": "3 vertical elements, same size",
         "style": {
           "display": "flex",
@@ -540,16 +558,19 @@
         },
         "elements": [
           {
+            "layout_id": 1,
             "style": {
               "flex": 1
             }
           },
           {
+            "layout_id": 2,
             "style": {
               "flex": 1
             }
           },
           {
+            "layout_id": 3,
             "style": {
               "flex": 1
             }
@@ -557,7 +578,7 @@
         ]
       },
       {
-        "id": 8,
+        "id": "8",
         "layout": "2x2 grid",
         "style": {
           "display": "grid",
@@ -565,7 +586,7 @@
           "gridTemplateRows": "1fr 1fr",
           "gap": "10px"
         },
-        "elements": [{}, {}, {}, {}]
+        "elements": [{"layout_id": 1}, {"layout_id": 2}, {"layout_id": 3}, {"layout_id": 4}]
       }
     ]
   }

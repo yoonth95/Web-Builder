@@ -18,7 +18,7 @@ exports.insertBlock = async (req, res) => {
     const data = req.body;
 
     try {
-        const result = await editorDB.insertBlock(data.page_id, data.block_id, data.design_type, data.design_id, data.block_order);
+        const result = await editorDB.insertBlock(data.page_id, data.block_id, data.design_type, data.design_id, data.layout_design, data.block_order);
         res.status(200).json(result);
     } catch (err) {
         console.error(err);

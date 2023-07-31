@@ -9,7 +9,7 @@ const rollback = util.promisify(db.rollback).bind(db);
 // 에디터 블록 가져오기
 exports.getBlocks = async (idx) => {
     try {
-        const result = await query(`SELECT page_id, block_id, design_type, design_id, layout, block_order FROM blocks WHERE page_id=? ORDER BY block_order asc`, idx);
+        const result = await query(`SELECT page_id, block_id, design_type, design_id, layout_design, content, block_order FROM blocks WHERE page_id=? ORDER BY block_order asc`, idx);
         return result;
     } catch (err) {
         throw err;
@@ -17,9 +17,9 @@ exports.getBlocks = async (idx) => {
 };
 
 // 에디터 블록 추가
-exports.insertBlock = async (page_id, block_id, design_type, design_id, block_order) => {
+exports.insertBlock = async (page_id, block_id, design_type, design_id, layout_design, block_order) => {
     try {
-        const result = await query(`INSERT INTO blocks (page_id, block_id, design_type, design_id, block_order) VALUES (?, ?, ?, ?, ?)`, [page_id, block_id, design_type, design_id, block_order]);
+        const result = await query(`INSERT INTO blocks (page_id, block_id, design_type, design_id, layout_design, block_order) VALUES (?, ?, ?, ?, ?, ?)`, [page_id, block_id, design_type, design_id, layout_design, block_order]);
         return result;
     } catch (err) {
         throw err;

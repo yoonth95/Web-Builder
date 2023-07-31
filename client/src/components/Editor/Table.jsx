@@ -1,89 +1,82 @@
 import React, { useState, useEffect } from 'react';
 import 'styles/Editor/Table.css';
 
-const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, clicked, onReleaseClick }) => {
+const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, activeCell, onReleaseClick }) => {
   const [color, setColor] = useState('white');
   const [borderColor, setBorderColor] = useState('black');
   const [borderStyle, setBorderStyle] = useState('dashed');
-  const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
-    if (clicked) {
-      if (row <= tableRange[0] && col <= tableRange[1]) {
-        setColor('#FFEBD6');
-        setBorderColor('#EE7D00');
-        setBorderStyle('solid');
-      } else {
-        setColor('white');
-      }
-    } else if (row <= previewRange[0] && col <= previewRange[1]) {
+    if (activeCell && row === activeCell[0] && col === activeCell[1]) { // 셀 활성화 시 스타일
       setColor('#FFEBD6');
       setBorderColor('#EE7D00');
       setBorderStyle('solid');
-    } else {
+    } else if (row <= previewRange[0] && col <= previewRange[1]) { // 셀 마우스 올려 있을 시 스타일
+      setColor('#FFEBD6');
+      setBorderColor('#EE7D00');
+      setBorderStyle('solid');
+    } else { // 그 외
       setColor('white');
       setBorderColor('black');
       setBorderStyle('dashed');
     }
-  }, [tableRange, previewRange, clicked]);
+  }, [tableRange, previewRange, activeCell]);
 
+  // '해제' 버튼을 누를 때 함수
   const handleButtonClick = (e) => {
     e.stopPropagation();
     console.log('버튼 클릭');
-    onReleaseClick();
+    onReleaseClick(); // 부모 컴포넌트로 전달
   };
 
   return (
     <td
       style={{ backgroundColor: color, borderColor: borderColor, borderStyle: borderStyle, cursor: 'pointer', verticalAlign: 'middle', textAlign: 'center' }}
       onClick={() => {
-        onClick();
-        if (clicked) {
-          setShowButton(true);
+        if (!activeCell) {
+          onClick(row, col);
         }
       }}
-      onMouseLeave={() => {
-        if (clicked) {
-          setShowButton(false);
-        }
+      onMouseEnter={() => {
+        onMouseEnter(row, col);
       }}
-      onMouseEnter={onMouseEnter}
     >
-      {showButton && <button style={{ border: '1px solid #EE7D00', padding: '5px', fontSize: '15px', borderRadius: '50%', backgroundColor: '#EE7D00', color: '#f3f3f3' }}>해제</button>}
+      {(activeCell && row === activeCell[0] && col === activeCell[1]) && (
+        <button onClick={handleButtonClick} className='cancle-btn'>
+          해제
+        </button>
+      )}
     </td>
   );
 };
 
-const Table = ({ rows, cols }) => {
+const Table = ({ rows, cols, activeCell, setActiveCell }) => {
   const [tableRange, setTableRange] = useState([0, 0]);
   const [previewRange, setPreviewRange] = useState([0, 0]);
-  const [clicked, setClicked] = useState(false);
+  
 
   const onCellMouseEnter = (i, j) => {
-    setPreviewRange([i, j]);
-    setClicked(false);
+    if (!activeCell) {
+      setPreviewRange([i, j]);
+    }
   };
 
   const onCellClick = (i, j) => {
     console.log(`Row: ${i}, Col: ${j}`);
     setTableRange([i, j]);
-    setClicked(true);
+    setActiveCell([i, j]);
   };
 
-  const handleTableLeave = () => {
-    setTableRange([0, 0]);
-    setPreviewRange([0, 0]);
-  };
   const handleReleaseClick = () => {
-    setClicked(false);
-    setTableRange([0, 0]);
+    setActiveCell(null);
   };
+
   return (
     <div className='table_wrap'>
       <p>
         {previewRange[0] + 1} X {previewRange[1] + 1} 표
       </p>
-      <table onMouseLeave={handleTableLeave}>
+      <table>
         <tbody>
           {Array(rows)
             .fill()
@@ -94,13 +87,13 @@ const Table = ({ rows, cols }) => {
                   .map((_, j) => (
                     <TableCell
                       key={j}
-                      onClick={() => onCellClick(i, j)}
+                      onClick={onCellClick}
                       row={i}
                       col={j}
-                      onMouseEnter={() => onCellMouseEnter(i, j)}
+                      onMouseEnter={onCellMouseEnter}
                       tableRange={tableRange}
                       previewRange={previewRange}
-                      clicked={clicked}
+                      activeCell={activeCell}
                       onReleaseClick={handleReleaseClick}
                     />
                   ))}
