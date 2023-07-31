@@ -49,10 +49,10 @@ const AdminHeader = () => {
         </div>
       </div>
       <div className='btn_box'>
-        <button className={tab === 'menu' ? 'check' : ''} onClick={() => onBtnClick('menu')} style={tab === 'menu' ? {} : { border: '0.5px solid var(--grayscale-30, #B3B3B3)' }}>
+        <button className={tab === 'menu' ? 'check' : ''} onClick={() => onBtnClick('menu')} >
           페이지 관리
         </button>
-        <button className={tab === 'page' ? 'check' : ''} onClick={() => onBtnClick('page')} style={tab === 'page' ? {} : { border: '0.5px solid var(--grayscale-30, #B3B3B3)' }}>
+        <button className={tab === 'page' ? 'check' : ''} onClick={() => onBtnClick('page')} >
           디자인 관리
         </button>
       </div>

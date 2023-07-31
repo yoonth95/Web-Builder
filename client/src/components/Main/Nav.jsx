@@ -8,8 +8,9 @@ import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Main/Nav.css';
+import Spinner from 'components/Spinner/Spinner';
 
-const Nav = ({ isLoading, setIsLoading, type }) => {
+const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
   const { getMenuAction } = useMenuActions();
   const { firstList, secondList } = useSelector((state) => state.menu);
   const [currentMenuIdx, setCurrentMenuIdx] = useState(null);
@@ -18,9 +19,23 @@ const Nav = ({ isLoading, setIsLoading, type }) => {
     getMenuAction(setIsLoading);
   }, []);
 
+  if (isLoading) {
+    <Spinner />;
+  }
+
   return (
     <div className='container'>
-      <header className='header_wrap'>
+      {windowWidth <= 1098 ?  
+      <header className='mobile_header_wrap'>
+          <button>
+              <FontAwesomeIcon icon={faMagnifyingGlass} className='moblie_icon' />
+            </button>
+          <img src={logo} alt='로고' />
+            <button>
+              <FontAwesomeIcon icon={faBars} className='moblie_icon'/>
+            </button>
+      </header>
+      : <header className='header_wrap' onMouseEnter={() => setCurrentMenuIdx(null)}>
         <img src={logo} alt='로고' />
         <div className='header_right'>
           {logoList.map(({ id, src }) => (
@@ -31,7 +46,7 @@ const Nav = ({ isLoading, setIsLoading, type }) => {
             <button>인재채용</button>
           </div>
         </div>
-      </header>
+      </header>}
       <nav className='gnb_wrap'>
         <div className='gnb'>
           <ul>
@@ -41,7 +56,7 @@ const Nav = ({ isLoading, setIsLoading, type }) => {
               </li>
             ))}
           </ul>
-          <div className='option'>
+          <div className='option' onMouseEnter={() => setCurrentMenuIdx(null)}>
             <button>
               <FontAwesomeIcon icon={faBars} className='icon' />
             </button>

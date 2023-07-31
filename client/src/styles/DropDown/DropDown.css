@@ -1,0 +1,64 @@
+/* dropdown */
+@-webkit-keyframes dropdown-animation {
+    0% {
+      transform: translateY(-100%);
+    }
+  
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes dropdown-animation {
+    0% {
+      transform: translateY(-100%);
+    }
+  
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  .dropdown {
+    overflow: hidden;
+  }
+  
+  .dropdown > ul,
+  .dropdown > form  {
+    -webkit-animation: dropdown-animation 0.4s ease;
+    animation: dropdown-animation 0.4s ease;
+  }
+  
+  /* dropup */
+  @-webkit-keyframes dropup-animation {
+    0% {
+      transform: translateY(0);
+    }
+  
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+  
+  @keyframes dropup-animation {
+    0% {
+      transform: translateY(0);
+    }
+  
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+  
+  .dropup {
+    overflow: hidden;
+  }
+  
+  .dropup > ul,
+  .dropup > form{
+    -webkit-animation: dropup-animation 0.4s ease;
+    animation: dropup-animation 0.4s ease;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+  }
+  

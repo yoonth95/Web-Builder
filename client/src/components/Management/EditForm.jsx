@@ -33,25 +33,25 @@ const EditForm = ({ curMenuData, secondList, editMenu }) => {
   };
 
   return (
-    <form className='edit_wrap' onSubmit={(e) => updateMenu(e, curMenuData.idx)}>
-      <label className='subMenu_label subMenu_title_label' htmlFor='subMenu_title'>
-        제목
-        <input id='subMenu_title' type='text' name='editedTitle' defaultValue={editedTitle} onChange={handleChange} />
-      </label>
-      <div className='edit_wrap_sub'>
-        <label className='subMenu_label link_label' htmlFor='subMenu_link'>
-          링크
-          <SelectBox curMenuData={curMenuData} secondList={secondList} editedLink={editedLink} handleLinkChange={handleChange} />
+      <form className='edit_wrap' onSubmit={(e) => updateMenu(e, curMenuData.idx)}>
+        <label className='subMenu_label subMenu_title_label' htmlFor='subMenu_title'>
+          제목
+          <input id='subMenu_title' type='text' name='editedTitle' defaultValue={editedTitle} onChange={handleChange} />
         </label>
-        <input type='checkbox' name='editedWindow' id={`subMenu_chkBox_${curMenuData.idx}`} className='new_window_chkBox' checked={editedWindow} onChange={handleChange} />
-        <label htmlFor={`subMenu_chkBox_${curMenuData.idx}`} className='txt_new_window'>
-          새 창 열기
-        </label>
-        <button className='save_btn' type='submit'>
-          저장
-        </button>
-      </div>
-    </form>
+        <div className='edit_wrap_sub'>
+          <label className='subMenu_label link_label' htmlFor='subMenu_link'>
+            링크
+            <SelectBox curMenuData={curMenuData} secondList={secondList} editedLink={editedLink} handleLinkChange={handleChange} />
+          </label>
+          <input type='checkbox' name='editedWindow' id={`subMenu_chkBox_${curMenuData.idx}`} className='new_window_chkBox' checked={editedWindow} onChange={handleChange} />
+          <label htmlFor={`subMenu_chkBox_${curMenuData.idx}`} className='txt_new_window'>
+            새 창 열기
+          </label>
+          <button className='save_btn' type='submit'>
+            저장
+          </button>
+        </div>
+      </form>
   );
 };
 

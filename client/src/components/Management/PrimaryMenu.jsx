@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
 import EditForm from './EditForm';
+import Dropdown from 'components/DropDown/DropDown';
 import 'styles/Management/PrimaryMenu.css';
 
 const PrimaryMenu = ({ toggleImage, clickId, editMenuIds, editMenu, deleteMenu, menu, firstList, secondList }) => {
@@ -15,19 +16,23 @@ const PrimaryMenu = ({ toggleImage, clickId, editMenuIds, editMenu, deleteMenu, 
         </div>
         <h1>{menu.title}</h1>
         <div className='box'>
-          <button
-            onClick={() => {
+          <button>
+            <span  onClick={() => {
               editMenu(menu.idx);
-            }}
-          >
+            }}>
             <FontAwesomeIcon icon={faGear} />
+            </span>
           </button>
-          <button onClick={() => deleteMenu(menu.idx, menu.order_num)}>
+          <button>
+          <span onClick={() => deleteMenu(menu.idx, menu.order_num)}>
             <FontAwesomeIcon icon={faXmark} />
+            </span>
           </button>
         </div>
       </div>
-      {editMenuIds.includes(menu.idx) && <EditForm curMenuData={menu} firstList={firstList} secondList={secondList} editMenu={editMenu} />}
+      <Dropdown visibility={editMenuIds.includes(menu.idx)}>
+        <EditForm curMenuData={menu} firstList={firstList} secondList={secondList} editMenu={editMenu} />
+      </Dropdown>
     </div>
   );
 };

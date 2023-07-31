@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import 'styles/Pagement/Pagement.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+
+// redux
 import { useDispatch } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
+import { updateList } from 'redux/editorSlice';
+
+// 컴포넌트
+import Spinner from 'components/Spinner/Spinner';
 import AdminHeader from 'components/Admin/AdminHeader';
 
+// api
 import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
+
+// icon 및 css
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import 'styles/Pagement/Pagement.css';
 
 const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   const navigate = useNavigate();
@@ -24,6 +33,7 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
       const data = await GetMenuAPI();
       setPageList(data.filter((e) => e.parent_id).sort((a, b) => a.parent_id - b.parent_id));
       setParentList(data.filter((e) => e.parent_id == null));
+      dispatch(updateList([]))
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -35,10 +45,6 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   useEffect(() => {
     getMenu();
   }, []);
-
-  useEffect(() => {
-    search();
-  }, [searchValue]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -61,10 +67,10 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   };
 
   const search = () => {
-    const lowercaseSearchValue = searchValue.toLowerCase();
-    const filteredList = pageList.filter((item) => item.title.toLowerCase().includes(lowercaseSearchValue));
-    setPageList(filteredList);
-    if (searchValue === '') {
+    if (searchValue !=='') {
+      const filteredList = pageList.filter(item => item.title.replace(/\s/g, '').includes(searchValue.replace(/\s/g, '')))
+      setPageList(filteredList);
+    } else {
       getMenu();
     }
   };
@@ -73,20 +79,16 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
     setSearchValue(event.target.value);
   };
 
-  const handlesearchPress = (e) => {
-    if (e.key === 'Enter') {
-      search();
-    }
-  };
-
+  if (isLoading) return <Spinner />;
+  
   return (
     <>
       <AdminHeader />
       <div className='board-wrap'>
         <div className='board-title'>
           <div id='SearchBox'>
-            <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={handlesearchPress} />
-            <button id='Search-btn' onClick={() => search()}>
+            <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={search}  />
+            <button id='Search-btn' onClick={search}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
           </div>

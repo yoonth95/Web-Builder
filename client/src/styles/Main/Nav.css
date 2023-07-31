@@ -1,10 +1,20 @@
 .header_wrap {
+  width: 1200px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
-  margin: 10px 20px;
+  margin: 10px auto;
   padding-bottom: 16px;
 }
+
+.mobile_header_wrap{
+  width:100% ;
+   display:flex;
+   padding: 6px 22px;
+   justify-content: space-between;
+  align-items: center;
+}
+
 .header_wrap img:hover {
   cursor: pointer;
 }
@@ -102,7 +112,10 @@
   width: 35px;
   height: 35px;
 }
-
+.moblie_icon{
+  width:21px;
+  height:50px;
+}
 .gnb_info_wrap {
   display: none;
   width: 100%;
@@ -156,8 +169,20 @@
   letter-spacing: -1px;
 }
 
-@media (min-width: 1920px) {
+@media (min-width: 1747px) and (max-width: 1920px) {
   .firstList_info {
     width: 540px;
+  }
+}
+
+@media (min-width: 1537px) and (max-width: 1746px) {
+  .firstList_info {
+    width: 453px;
+  }
+}
+
+@media (min-width: 1281px) and (max-width: 1536px) {
+  .firstList_info {
+    width: 349px;
   }
 }

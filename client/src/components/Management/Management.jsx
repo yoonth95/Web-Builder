@@ -7,11 +7,12 @@ import { setBtn } from 'redux/buttonSlice';
 import { useMenuActions } from 'hooks/useMenu';
 
 // 컴포넌트
-import NewMenu from './NewMenu';
 import SubMenu from './SubMenu';
 import PrimaryMenu from './PrimaryMenu';
 import AdminHeader from 'components/Admin/AdminHeader';
 import Spinner from 'components/Spinner/Spinner';
+import Dropdown from 'components/DropDown/DropDown';
+
 
 // css
 import 'styles/Management/Management.css';
@@ -129,23 +130,22 @@ const Management = ({ setIsOpen, setIsLoading, isLoading }) => {
                           menu={menu}
                           firstList={firstList}
                           secondList={secondList}
-                        />
-                        {clickId.includes(menu.idx) && (
-                          <>
-                            <SubMenu
-                              Droppable={Droppable}
-                              Draggable={Draggable}
-                              parentID={menu.idx}
-                              editMenuIds={editMenuIds}
-                              editMenu={editMenu}
-                              deleteMenu={deleteMenu}
-                              subMenus={secondList.filter((e) => e.parent_id === menu.idx)}
-                              firstList={firstList}
-                              secondList={secondList}
-                            />
-                            <NewMenu setIsOpen={setIsOpen} dispatch={dispatch} setBtn={setBtn} idx={menu.idx} />
-                          </>
-                        )}
+                          />
+                        <Dropdown visibility={clickId.includes(menu.idx)}>
+                          <SubMenu
+                            Droppable={Droppable}
+                            Draggable={Draggable}
+                            parentID={menu.idx}
+                            editMenuIds={editMenuIds}
+                            editMenu={editMenu}
+                            deleteMenu={deleteMenu}
+                            subMenus={secondList.filter((e) => e.parent_id === menu.idx)}
+                            firstList={firstList}
+                            secondList={secondList}
+                            setIsOpen={setIsOpen}
+                            setBtn={setBtn}
+                          />
+                        </Dropdown>
                       </div>
                     )}
                   </Draggable>

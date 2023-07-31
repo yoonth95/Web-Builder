@@ -15,7 +15,6 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
     setIsToggle((isToggle) => !isToggle);
   };
 
-  console.log('link', link, 'editedLink', editedLink);
   const handleButtonClick = (e, value) => {
     e.stopPropagation();
     const name = type === '복제' ? 'link' : 'editedLink';
@@ -23,17 +22,25 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
     setIsToggle(false);
   };
 
+  const stopEventBubbling = (e) => {
+    e.stopPropagation();
+  };
+
   return (
     <ul className='list_select_option' onClick={toggle}>
       <li className={`selected_option ${isToggle ? 'open' : ''}`}>{resultTitle}</li>
       <ul className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
-        <li className='disabled_option'>공통 페이지</li>
+        <li className='disabled_option' onClick={stopEventBubbling}>
+          공통 페이지
+        </li>
         {common.map((list) => (
           <li className='select_option' key={list.id} onClick={(e) => handleButtonClick(e, list.link)}>
             {list.title}
           </li>
         ))}
-        <li className='disabled_option'>사용자 추가 페이지</li>
+        <li className='disabled_option' onClick={stopEventBubbling}>
+          사용자 추가 페이지
+        </li>
         {type === '복제'
           ? secondList.map((subMenu) => (
               <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>

@@ -5,6 +5,7 @@ import 'styles/Main/Main.css';
 
 const Main = ({ isLoading, setIsLoading }) => {
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const nextImage = () => {
     setCurrentCarouselIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -15,8 +16,22 @@ const Main = ({ isLoading, setIsLoading }) => {
     setCurrentCarouselIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
 
+  const getWindowWidth = () => {
+    return window.innerWidth;
+  };
+
   useEffect(() => {
-    const timer = setTimeout(nextImage, 3000); // 3초마다 다음 이미지로 넘어가도록 설정
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
+  useEffect(() => {
+    const timer = setTimeout(nextImage, 3500); // 3.5초마다 다음 이미지로 넘어가도록 설정
 
     return () => {
       clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머를 정리(cleanup)
@@ -24,11 +39,12 @@ const Main = ({ isLoading, setIsLoading }) => {
   }, [currentCarouselIndex]);
 
   return (
+    <div className="wrapper">
     <div className='main_wrap'>
-      <Nav isLoading={isLoading} setIsLoading={setIsLoading} />
+      <Nav isLoading={isLoading} setIsLoading={setIsLoading} windowWidth={windowWidth} />
       <div className='carousel'>
         <div className='carousel-slider' style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}>
-          {images.map((image, index) => (
+          {(windowWidth > 1099 ? images : smallImages).map((image, index) => (
             <img key={index} src={image} alt={`Image ${index + 1}`} />
           ))}
         </div>
@@ -43,23 +59,27 @@ const Main = ({ isLoading, setIsLoading }) => {
       {conLists.map((item) => (
         <MainCon key={item.id} item={item} />
       ))}
-      <div className='btn_flooting'>
         <div className='btn_flooting'>
-          {flootingLists.map((flooting) => (
+          {(windowWidth <= 1098 ? flootiningMobileLists : flootingLists
+).map((flooting) => (
             <div className={`flooting ${flooting.title}Section`} key={flooting.id}>
-              <p className={`flootText ${flooting.title}Text`}>{flooting.text}</p>
+              <p className={`flootText ${flooting.title}Text`}>
+                {flooting.text}
+                {flooting.subtext&&<><br />{flooting.subtext}</>}
+              </p>
               <img className={`flootImg ${flooting.title}Image`} src={flooting.src} alt='로고' />
             </div>
           ))}
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 
 export default Main;
 
 const baseUrl = 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/main_v2023/v2023_pd_list_';
+
 const conLists = [
   {
     id: '01',
@@ -103,7 +123,19 @@ const images = [
   'https://online-cloud.wjthinkbig.com/contents/banner/95d4f82a-1ddf-46d9-ba7f-d570354af95d.jpg',
 ];
 
+const smallImages= [
+  "https://online-cloud.wjthinkbig.com/contents/banner/c332dd15-6a60-4dba-918f-847f1dfcad1d.jpg",
+ "https://online-cloud.wjthinkbig.com/contents/banner/90bdb6c9-cd82-49d9-9cfb-b93cdf2baf18.png ",
+"https://online-cloud.wjthinkbig.com/contents/banner/c0b640bc-9d3c-4905-bcce-b2b82faa77bd.png",
+"https://online-cloud.wjthinkbig.com/contents/banner/f1720231-8dbb-4ffa-b73b-84bbad0e68d1.jpg" 
+]
+
 const flootingLists = [
   { id: 10, title: 'trial', text: '무료체험', src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting1.png' },
   { id: 20, title: 'consultation', text: '상담신청', src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting2.png' },
 ];
+
+const flootiningMobileLists = [
+  { id: 10, title: 'trial', text: '무료',subtext:"체험" , src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting1_m.png' },
+  { id: 20, title: 'consultation', text: '상담',subtext:"신청", src: 'https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/img_flooting2_m.png' },
+]

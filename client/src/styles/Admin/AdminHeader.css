@@ -1,12 +1,12 @@
 .header{
-    margin-bottom: 92px;
+    margin-bottom: 45px;
 }
 
 .info_box{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 35px;
+    margin: 10px 0 35px 0;
 }
 .info_box img{
     cursor: pointer;
@@ -23,8 +23,6 @@
 .btn_box{
     display: flex;
     width:100%;
-    font-weight: 700;
-    font-size: 18px;
 }
 
 .btn_box button{
@@ -32,14 +30,18 @@
     height: 64px;
     border-radius: 10px 0 0 10px;
     text-align: center;
+    border: 0.5px solid #B3B3B3;
+    font-weight: bold;
+    font-size: 18px;
 }
 
 .btn_box button:last-child{
     border-radius: 0px 10px 10px 0px;
+    border-left: none;
 }
-
 
 .btn_box .check{
     color: #FFFFFF;
     background-color: #EE7D00;
+    border: none;
 }

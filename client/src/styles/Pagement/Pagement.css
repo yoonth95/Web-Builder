@@ -1,13 +1,10 @@
-.board-wrap {
-  position: relative;
-  top: -70px;
-}
 .board-title {
   display: flex;
   justify-content: right;
 }
 .board-list {
   width: 100%;
+  min-height: 408px;
 }
 .top,
 .info {

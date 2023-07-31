@@ -3,19 +3,22 @@ import EditForm from './EditForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faXmark } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Management/SubMenu.css';
+import NewMenu from './NewMenu';
+import { useDispatch } from 'react-redux';
 
-const SubMenu = ({ Droppable, Draggable, parentID, editMenuIds, editMenu, deleteMenu, subMenus, firstList, secondList }) => {
+const SubMenu = ({ setIsOpen, setBtn,Droppable, Draggable, parentID, editMenuIds, editMenu, deleteMenu, subMenus, firstList, secondList }) => {
+  const dispatch = useDispatch();
   return (
     <Droppable droppableId={`store-${parentID}`} type={`type-${parentID}`}>
       {(provided) => (
-        <div {...provided.droppableProps} ref={provided.innerRef} style={{marginTop: '-10px'}}>
+        <ul {...provided.droppableProps} ref={provided.innerRef} style={{marginTop: '10px'}}>
           {subMenus.map((subMenu, index) => (
             <Draggable key={subMenu.idx} draggableId={`item-${subMenu.idx}`} index={index}>
               {(provided) => (
                 <div className='subMenus_wrap' {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
                   <div className={`subMenus ${editMenuIds.includes(subMenu.idx) ? 'withEdit' : ''}`}>
                     <h1 className='sub_box'>{subMenu.title}</h1>
-                    <div className='box'>
+                    <div className='box' >
                       <span onClick={() => editMenu(subMenu.idx)}>
                         <FontAwesomeIcon icon={faGear} />
                       </span>
@@ -29,8 +32,9 @@ const SubMenu = ({ Droppable, Draggable, parentID, editMenuIds, editMenu, delete
               )}
             </Draggable>
           ))}
+          <NewMenu setIsOpen={setIsOpen} dispatch={dispatch} setBtn={setBtn} idx={parentID} />
           {provided.placeholder}
-        </div>
+        </ul>
       )}
     </Droppable>
   );
