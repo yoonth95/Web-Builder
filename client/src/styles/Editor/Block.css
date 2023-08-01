@@ -18,8 +18,10 @@
   z-index: 10;
 }
 
-.wrap_btn {
-  position: relative;
+.block_correction_btn.delete_block_btn {
+  width: 25px;
+  height: 25px;
+  right: 5%;
 }
 
 .wrap_btn {

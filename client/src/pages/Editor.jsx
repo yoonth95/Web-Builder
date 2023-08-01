@@ -25,16 +25,8 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const blocks = useSelector(state => state.editor.blockList);
   const [error, setError] = useState(null);
   const [screenSize, setScreenSize] = useState('desktop');
-  const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction } = useEditorActions();
-  
-  // const [sideBarOpen, setSideBarOpen] = useState(false);
-
-  //  // 사이드 바 패딩 만들기
-  // const [topPadding, setTopPadding] = useState(10);
-  // const [bottomPadding, setBottomPadding] = useState(40);
-
-  // 블록 스타일 상태 값
-  const [blockStyle, setBlockStyle] = useState([]);
+  const [blockStyle, setBlockStyle] = useState([]);   // 블록 스타일 상태 값
+  const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction, saveBlockAction } = useEditorActions();
 
   useEffect(() => {
     // 블록 조회
@@ -80,8 +72,10 @@ const Editor = ({ isLoading, setIsLoading }) => {
   };
 
   // 저장
-  const handleSave = () => {
-    
+  const handleSave = async () => {
+    const result = await saveBlockAction(page_idx, blockStyle, setIsLoading, setError);
+    console.log(result);
+    alert("저장되었습니다.");
   };
 
   if (isLoading) return <Spinner />;
@@ -93,54 +87,47 @@ const Editor = ({ isLoading, setIsLoading }) => {
 
   return (
    <>
-   <div className='editor_wrap'>
-    <div className='editor_pages_wrap'>
-      <div className='editor_pages'>
-        <label className='editor_pageList_Label'>현재 페이지</label>
-        <select className='editor_pageList' value={page_idx} onChange={handleSelectChange}>
-        {secondList.map(item => (
-          <option key={item.title} value={item.idx}>{item.title}</option>
-        ))}
-        </select>
-      </div>
-      <div className='editor_btns'>
-        <button className='editor_previewBtn' onClick={handlePreview}>미리보기</button>
-        <button className='editor_saveBtn' onClick={handleSave}>저장</button>
-      </div>
-    </div>
-    <div className='editor_switch_screen'>
-      {screenIcons.map(({id,icon,size})=>(
-        <button className='editor_switch_screen_Btn' key={id} onClick={()=>handleScreenChange(size)} >
-          <FontAwesomeIcon icon={icon} />
-      </button>))}
-      </div>
-    </div>
-    <div className={screenSize}>
-      <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize}  type='편집' />
-      {[...blocks].sort((a, b) => a.block_order - b.block_order).map(block => (
-        <div key={block.block_id}>
-          <Block 
-            block_id={block.block_id}
-            design_type={block.design_type}
-            design_id={block.design_id}
-            block_order={block.block_order}
-            layout_design={block.layout_design}
-            addBlock={addBlock}
-            deleteBlock={deleteBlock}
-            handleChangeBlockOrder={handleChangeBlockOrder}
-            blockStyle={blockStyle}
-            setBlockStyle={setBlockStyle}
-            // sideBarOpen={sideBarOpen}
-            // setSideBarOpen={setSideBarOpen}
-            // topPadding={topPadding}
-            // bottomPadding={bottomPadding}
-          />
+    <div className='editor_wrap'>
+      <div className='editor_pages_wrap'>
+        <div className='editor_pages'>
+          <label className='editor_pageList_Label'>현재 페이지</label>
+          <select className='editor_pageList' value={page_idx} onChange={handleSelectChange}>
+          {secondList.map(item => (
+            <option key={item.title} value={item.idx}>{item.title}</option>
+          ))}
+          </select>
         </div>
-      ))}
-    </div>
-    {/* <div className={`block_container_side ${sideBarOpen ? 'open' : 'close'}`}>
-      <SideBar setSideBarOpen={setSideBarOpen} sideBarOpen={sideBarOpen} topPadding={topPadding} bottomPadding={bottomPadding}  setTopPadding={setTopPadding} setBottomPadding={setBottomPadding}/>
-    </div> */}
+        <div className='editor_btns'>
+          <button className='editor_previewBtn' onClick={handlePreview}>미리보기</button>
+          <button className='editor_saveBtn' onClick={handleSave}>저장</button>
+        </div>
+      </div>
+      <div className='editor_switch_screen'>
+        {screenIcons.map(({id,icon,size})=>(
+          <button className='editor_switch_screen_Btn' key={id} onClick={()=>handleScreenChange(size)} >
+            <FontAwesomeIcon icon={icon} />
+        </button>))}
+        </div>
+      </div>
+      <div className={screenSize}>
+        <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize}  type='편집' />
+        {[...blocks].sort((a, b) => a.block_order - b.block_order).map(block => (
+          <div key={block.block_id}>
+            <Block 
+              block_id={block.block_id}
+              design_type={block.design_type}
+              design_id={block.design_id}
+              block_order={block.block_order}
+              layout_design={block.layout_design}
+              addBlock={addBlock}
+              deleteBlock={deleteBlock}
+              handleChangeBlockOrder={handleChangeBlockOrder}
+              blockStyle={blockStyle}
+              setBlockStyle={setBlockStyle}
+            />
+          </div>
+        ))}
+      </div>
     </>
   );
 };

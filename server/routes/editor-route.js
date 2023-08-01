@@ -8,5 +8,6 @@ router.delete("/deleteBlock/:block_id", editorController.deleteBlock);
 router.put("/orderBlock", editorController.orderBlock);
 router.put("/updateBlockDesign", editorController.updateBlockDesign);
 router.put("/updateBlockLayout", editorController.updateBlockLayout);
+router.put("/saveBlock", editorController.saveBlock);
 
 module.exports = router;

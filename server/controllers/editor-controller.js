@@ -79,3 +79,17 @@ exports.updateBlockLayout = async (req, res) => {
         res.status(500).json('디자인 선택 오류');
     }
 }
+
+
+// 에디터 블록 저장
+exports.saveBlock = async (req, res) => {
+    const data = req.body;
+
+    try {
+        const result = await editorDB.saveBlock(data.page_idx, data.blockStyle);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json('저장 오류');
+    }
+}

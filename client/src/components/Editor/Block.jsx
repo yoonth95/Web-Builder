@@ -15,7 +15,7 @@ import { faArrowDown, faArrowRotateRight, faArrowUp, faEdit, faTrash, faWandMagi
 import 'styles/Editor/Block.css';
 
 
-function Block({ block_id, design_type, design_id, block_order, layout_design, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, setBlockStyle}) {
+function Block({ block_id, design_type, design_id, block_order, layout_design, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, setBlockStyle }) {
   const isDefault = design_type === 'default';  
   const blockContainerRef = useRef(null);
 
@@ -23,7 +23,8 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
   const [isLayoutDesign, setIsLayoutDesign] = useState(false);
   const [layoutId, setLayoutId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [sideBarOpen, setSideBarOpen] = useState({open: false, block_id: ''});
+  const [currentBlockId, setCurrentBlockId] = useState(block_id);
 
   const handleShowBlockBtn = (e) => {
     e.type === 'mouseover' ? setShowBlockBtn(true) : setShowBlockBtn(false);
@@ -35,7 +36,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
   };
 
   const correctionBtn = [
-    { icon: faEdit, clickFunc: () => setSideBarOpen(!sideBarOpen)},
+    { icon: faEdit, clickFunc: () => setSideBarOpen({open: true, block_id: block_id})},
     { icon: faArrowRotateRight, clickFunc: ()=>setIsOpen(!isOpen) },
     { icon: faArrowUp, clickFunc: (id) => handleChangeBlockOrder(id, 'up') },
     { icon: faArrowDown, clickFunc: (id) => handleChangeBlockOrder(id, 'down') },
@@ -55,11 +56,18 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
           </button>
         </div>
         {isDefault ? 
-          <div className='wrap_design_select' onClick={() => {setIsOpen(!isOpen); setIsLayoutDesign(false)}}>
-            <FontAwesomeIcon className='icon_design_select' icon={faWandMagicSparkles} size="2x"/>
-            <p>{block_order} {block_id}</p>
-            <p className='txt_design_select'>디자인을 선택하세요</p>
-          </div>
+          <>
+            <div className='block_correction_btn delete_block_btn' style={{ display: showBlockBtn === true ? 'flex' : 'none' }}>
+              <button className='block_function_btn'>
+                <span onClick={() => correctionBtn[4].clickFunc(block_id)}><FontAwesomeIcon icon={correctionBtn[4].icon} /></span>
+              </button>
+            </div>
+            <div className='wrap_design_select' onClick={() => {setIsOpen(!isOpen); setIsLayoutDesign(false)}}>
+              <FontAwesomeIcon className='icon_design_select' icon={faWandMagicSparkles} size="2x"/>
+              <p>{block_order} {block_id}</p>
+              <p className='txt_design_select'>디자인을 선택하세요</p>
+            </div>
+          </>
           :
           <>
             <div className='block_correction_btn' style={{ display: showBlockBtn === true ? 'flex' : 'none' }}>
@@ -94,8 +102,8 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
         </div>
       </div>
       {isOpen && <EditorModal block_id={block_id} design_type={design_type} setIsOpen={setIsOpen} isLayoutDesign={isLayoutDesign} layoutId={layoutId} />}
-      <div className={`block_container_side ${sideBarOpen ? 'open' : 'close'}`}>
-        <SideBar setSideBarOpen={setSideBarOpen} sideBarOpen={sideBarOpen} blockStyle={blockStyle} setBlockStyle={setBlockStyle}/>
+      <div className={`block_container_side ${sideBarOpen.open ? 'open' : 'close'}`}>
+        <SideBar sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} blockStyle={blockStyle} setBlockStyle={setBlockStyle}/>
       </div>
     </>
   )

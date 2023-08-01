@@ -10,6 +10,7 @@ import {
   UpdateBlockDesignAPI,
   DeleteBlockAPI,
   UpdateBlockLayoutAPI,
+  SaveBlockAPI
 } from '../api/Editor';
 
 export const useEditorActions = () => {
@@ -48,17 +49,19 @@ export const useEditorActions = () => {
           if (!blockList.find(b => b.block_id === block.block_id)) {
             blockList.push(block);
 
-            console.log(block);
             if (block.block_style === null) {
               const block_dic = {
+                style: {
+                  maxWidth: "1240px",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                },
                 block_id: block.block_id,
-                paddingTop: "10px",
-                paddingBottom: "10px",
               }
               setBlockStyle(item => [...item, block_dic]);
             } else {
               const block_style = JSON.parse(block.block_style);
-              setBlockStyle(item => [...item, ...block_style]);
+              setBlockStyle(item => [...item, block_style]);
             }
           }
         });
@@ -79,6 +82,7 @@ export const useEditorActions = () => {
     const newBlock = {
       page_id: page_idx,
       block_id: block_id,
+      block_style: null,
       design_type: 'default',
       design_id: '0',
       layout_design: null,
@@ -258,5 +262,19 @@ export const useEditorActions = () => {
     }
   };
 
-  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction };
+  const saveBlockAction = async (page_idx, blockStyle, setIsLoading, setError) => {
+    try {
+      setIsLoading(true);
+      const result = await SaveBlockAPI(page_idx, blockStyle);
+
+      return result;
+    } catch (err) {
+      console.error(err.message);
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction };
 };

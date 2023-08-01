@@ -5,10 +5,9 @@ import { faWandMagicSparkles, faEdit, faArrowRotateRight } from '@fortawesome/fr
 
 export const EditorRenderBox = {
   image: (box, index, block_id, blockStyle) => {
-    console.log(blockStyle);
-    const filter_style = blockStyle;
+    const filter_style = blockStyle?.find(block => block.block_id === block_id);
     return (
-      <div key={index} className='module_wrap' >
+      <div key={index} className='module_wrap' style={filter_style?.style} >
         <div className='module_container' style={box.layout}>
           {[...Array(box.numImages)].map((_, i) => (
             <div key={i} style={box.style}>
@@ -22,10 +21,10 @@ export const EditorRenderBox = {
     );
   },
   line: (box, index, block_id, blockStyle ) => {
-    const filter_style = blockStyle;
+    const filter_style = blockStyle?.find(block => block.block_id === block_id);
     const isDotted = box.style === 'dotted';
     return (
-      <div key={index} className='module_wrap'>
+      <div key={index} className='module_wrap' style={filter_style?.style}>
         <div className='module_container_line'>
           <div
             style={{
@@ -42,9 +41,9 @@ export const EditorRenderBox = {
     );
   },
   list: (box, index, block_id, blockStyle) => {
-    const filter_style = blockStyle;
+    const filter_style = blockStyle?.find(block => block.block_id === block_id);
     return (
-      <div key={index} className='module_wrap font-style'>
+      <div key={index} className='module_wrap font-style' style={filter_style?.style}>
         <div className='module_container_list'>
           <div className='module_list_item'>
             <div className={`module_${box.shape} imgHover`}>
@@ -66,9 +65,9 @@ export const EditorRenderBox = {
     );
   },
   text: (box, index, block_id, blockStyle) => {
-    const filter_style = blockStyle;
+    const filter_style = blockStyle?.find(block => block.block_id === block_id);
     return (
-      <div key={index} className='module_wrap'>
+      <div key={index} className='module_wrap' style={filter_style?.style}>
         <div className='module_container' style={{ textAlign: `${box.alignments}` }}>
           <div className='module_text_item'>
             {box.lines.map((line, i) => (
@@ -90,11 +89,11 @@ export const EditorRenderBox = {
   },
   table: null,
   layout: (box, index, block_id, blockStyle, layout_design, clickHandler, setIsLayoutDesign, setLayoutId) => {
-    const filter_style = blockStyle;
+    const filter_style = blockStyle?.find(block => block.block_id === block_id);
     const parsed_layout_design = layout_design ? JSON.parse(layout_design) : null;
 
     return (
-      <div key={index} className='module_wrap'>
+      <div key={index} className='module_wrap' style={filter_style?.style}>
         <div className='module_container'>
           <div className='module_layout_item' style={box.style}>
             {box.elements.map((element, i) => {
@@ -217,3 +216,7 @@ const ClickDiv = () => {
 //     </button>
 //   </div>
 // }
+
+EditorRenderBox.defaultProps = {
+  blockStyle: [],
+};

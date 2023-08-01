@@ -86,3 +86,28 @@ exports.updateBlockLayout = async (block_id, layout_design) => {
         throw err;
     }
 }
+
+// 에디터 블록 저장
+exports.saveBlock = async (page_idx, blockStyle) => {
+    try {
+        await beginTransaction(); // 트랜잭션 시작 
+
+        let updateStyle = [];
+        let placeholders = [];
+        
+        blockStyle.forEach(item => {
+          updateStyle.push(`WHEN ? THEN ?`);
+          placeholders.push(item.block_id, JSON.stringify(item));
+        });
+        
+        let sql = `UPDATE blocks SET block_style = CASE block_id ${updateStyle.join(' ')} END WHERE page_id=? AND block_id IN (?)`;
+        await query(sql, [...placeholders, page_idx, blockStyle.map(item => item.block_id)]);
+
+        await commit();   // 트랜잭션 수행 
+        
+        return true;
+    } catch (err) {
+        await rollback(); // 트랜잭션 롤백
+        throw err;
+    }
+}
