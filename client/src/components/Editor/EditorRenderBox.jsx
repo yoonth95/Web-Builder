@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
+import { faWandMagicSparkles, faEdit, faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
 
 export const EditorRenderBox = {
   image: (box, index) => {
@@ -92,12 +92,14 @@ export const EditorRenderBox = {
   },
   table: null,
   layout: (box, index, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, designType) => {
+    const parsed_layout_design = layout_design ? JSON.parse(layout_design) : null;
+
     return (
       <div key={index} className='module_wrap'>
         <div className='module_container'>
           <div className='module_layout_item' style={box.style}>
             {box.elements.map((element, i) => {
-              const layout = layout_design && layout_design.find(e => e.layout_id === element.layout_id);
+              const layout = parsed_layout_design && parsed_layout_design.find(e => e.layout_id === element.layout_id);
               const layout_design_type = layout && layout.design_type;
               const layout_design_id = layout && layout.design_id;
 
@@ -117,13 +119,14 @@ export const EditorRenderBox = {
                 >
                   {element.children 
                     ? element.children.map((child, j) => {
-                      const layout_child = layout_design && layout_design.find(e => e.layout_id === child.layout_id);
+                      const layout_child = parsed_layout_design && parsed_layout_design.find(e => e.layout_id === child.layout_id);
                       const layout_child_design_type = layout_child && layout_child.design_type;
                       const layout_child_design_id = layout_child && layout_child.design_id;
 
                       const child_layoutType = designType.find(e => e.type === layout_child_design_type);
                       const child_box = child_layoutType ? child_layoutType.boxes.filter(e => e.id === layout_child_design_id)[0] : undefined;
                       const child_index = Math.floor(Math.random() * 100);
+
 
                       return (
                         <div key={j} className={layout_child ? '' : 'module_layoutBox'} style={child.style} 
@@ -192,3 +195,14 @@ const ClickDiv = () => {
     </div>
   )
 }
+
+// const EditToolbar = () => {
+//   <div className='block_correction_btn' style={{ display: showBlockBtn === true ? 'flex' : 'none' }}>
+//     <button className='block_function_btn'>
+//       <span onClick={() => console.log('edit')}><FontAwesomeIcon icon={faEdit} /></span>
+//     </button>
+//     <button className='block_function_btn'>
+//       <span onClick={() => console.log('rotate')}><FontAwesomeIcon icon={faArrowRotateRight} /></span>
+//     </button>
+//   </div>
+// }

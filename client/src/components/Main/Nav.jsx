@@ -6,7 +6,7 @@ import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Main/Nav.css';
 
 
-const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
+const Nav = ({ isLoading, setIsLoading, type, windowWidth,screenSize }) => {
   const { getMenuAction } = useMenuActions();
   const { firstList, secondList } = useSelector((state) => state.menu);
   const [currentMenuIdx, setCurrentMenuIdx] = useState(null);
@@ -17,7 +17,7 @@ const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
 
   return (
       <div className='container'>
-      {windowWidth <= 1098 ?  
+      {windowWidth <= 1098 || screenSize ==="tablet" || screenSize==="mobile"  ?  
       <header className='mobile_header_wrap'>
           <button>
               <FontAwesomeIcon icon={faMagnifyingGlass} className='moblie_icon' />
@@ -39,7 +39,7 @@ const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
           </div>
         </div>
       </header>}
-      <nav className='gnb_wrap'>
+      {screenSize ==="tablet" || screenSize==="mobile" ? null :<nav className='gnb_wrap'>
         <div className='gnb'>
           <ul>
             {firstList.map((menu) => (
@@ -77,7 +77,7 @@ const Nav = ({ isLoading, setIsLoading, type,windowWidth }) => {
             </div>
           </div>
         )}
-      </nav>
+      </nav>}
     </div>
   );
 };

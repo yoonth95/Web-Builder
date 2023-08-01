@@ -232,7 +232,9 @@ export const useEditorActions = () => {
       await UpdateBlockLayoutAPI(block_id, layout_design);
       dispatch(updateList(blocks.map(block => {
         if (block.block_id === block_id) {
-          return {...block, layout_design: layout_design}
+          const existing_layout_design = JSON.parse(block.layout_design || '[]');
+          existing_layout_design.push(layout_design);
+          return {...block, layout_design: JSON.stringify(existing_layout_design)}
         }
         return block;
       })));

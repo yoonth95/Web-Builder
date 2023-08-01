@@ -24,7 +24,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
 
   const renderBox = (box, index) => {
     const clickHandler = () => setIsOpen(!isOpen);
-    return EditorRenderBox[design_type](box, index, JSON.parse(layout_design), clickHandler, setIsLayoutDesign, setLayoutId, designType);
+    return EditorRenderBox[design_type](box, index, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, designType);
   };
 
   const correctionBtn = [
@@ -48,7 +48,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
         </div>
         {isDefault ? 
           <div className='wrap_design_select' onClick={() => {setIsOpen(!isOpen); setIsLayoutDesign(false)}}>
-            <FontAwesomeIcon className='icon_design_select' icon={faWandMagicSparkles} />
+            <FontAwesomeIcon className='icon_design_select' icon={faWandMagicSparkles} size="2x"/>
             <p>{block_order} {block_id}</p>
             <p className='txt_design_select'>디자인을 선택하세요</p>
           </div>
@@ -63,7 +63,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
             </div>
             {design_type === 'table'
               ? <ApplyTable design_id={design_id} />
-              : <>({(designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map((box, index) => renderBox(box, index))})</>
+              : <>{(designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map((box, index) => renderBox(box, index))}</>
             }
           </>
         }
