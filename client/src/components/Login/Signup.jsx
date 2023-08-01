@@ -32,7 +32,6 @@ const Signup = () => {
       alert('회원가입 성공');
       navigate('/');
     } catch (err) {
-      console.log(err.message);
       alert('회원가입 실패');
       reset();
       return;

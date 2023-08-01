@@ -35,7 +35,6 @@ const Login = () => {
       navigate('/admin');
     } catch (err) {
       alert('로그인 실패');
-      console.log(err.message);
       reset();
     }
   };
@@ -51,14 +50,12 @@ const Login = () => {
               <label htmlFor='input_id'>
                 Email <span style={{ color: '#EF4565' }}>*</span>
               </label>
-              {/* <span className='validation'>등록되지 않은 이메일 주소입니다.</span> */}
             </div>
             <div className='inputTag'>
               <input type='password' id='input_pw' name='pw' value={pw} onChange={handleChange} />
               <label htmlFor='input_pw'>
                 Password <span style={{ color: '#EF4565' }}>*</span>
               </label>
-              {/* <span className='validation'>비밀번호가 일치하지 않습니다.</span> */}
             </div>
             <div className='link_box'>
               <Link to='/signup'>계정 만들기</Link>

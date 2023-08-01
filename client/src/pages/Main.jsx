@@ -16,6 +16,7 @@ const Main = ({ isLoading, setIsLoading }) => {
     setCurrentCarouselIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
 
+  // 현재 페이지 크기 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
@@ -24,7 +25,6 @@ const Main = ({ isLoading, setIsLoading }) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
 
   useEffect(() => {
     const timer = setTimeout(nextImage, 3500); // 3.5초마다 다음 이미지로 넘어가도록 설정

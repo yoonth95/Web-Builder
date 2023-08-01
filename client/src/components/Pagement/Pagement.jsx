@@ -36,7 +36,6 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
     } catch (err) {
       setIsLoading(false);
       alert('조회 오류');
-      console.log(err.message);
     }
   };
 
