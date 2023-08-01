@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 // hooks
 import { useEditorActions } from 'hooks/useEditor';
@@ -45,7 +46,8 @@ const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutI
         const [rows, cols] = activeCell;
         await updateBlockLayoutAction(block_id, selectedDesignType, `${rows+1},${cols+1}`, layoutId);
       } else {
-        await updateBlockLayoutAction(block_id, selectedDesignType, selectedDesignId, layoutId);
+        const boxes = designType.find(item => item.type === selectedDesignType).boxes.find(item => item.id === selectedDesignId);
+        await updateBlockLayoutAction(block_id, selectedDesignType, selectedDesignId, layoutId, boxes);
       }
     } 
     // 블록 디자인 수정 시
@@ -99,3 +101,11 @@ const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutI
 };
 
 export default EditorModal;
+
+EditorModal.propTypes = {
+  block_id: PropTypes.string.isRequired,
+  design_type: PropTypes.string.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+  isLayoutDesign: PropTypes.bool.isRequired,
+  layoutId: PropTypes.number.isRequired,
+};

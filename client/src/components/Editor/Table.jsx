@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'styles/Editor/Table.css';
+import PropTypes from 'prop-types';
+
 
 const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, activeCell, onReleaseClick }) => {
   const [color, setColor] = useState('white');
@@ -50,6 +52,14 @@ const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, 
   );
 };
 
+TableCell.propTypes = {
+  row: PropTypes.number.isRequired,
+  col: PropTypes.number.isRequired,
+  tableRange: PropTypes.arrayOf(PropTypes.number).isRequired,
+  previewRange: PropTypes.arrayOf(PropTypes.number).isRequired,
+  activeCell: PropTypes.arrayOf(PropTypes.number),
+};
+
 const Table = ({ rows, cols, activeCell, setActiveCell }) => {
   const [tableRange, setTableRange] = useState([0, 0]);
   const [previewRange, setPreviewRange] = useState([0, 0]);
@@ -62,7 +72,6 @@ const Table = ({ rows, cols, activeCell, setActiveCell }) => {
   };
 
   const onCellClick = (i, j) => {
-    console.log(`Row: ${i}, Col: ${j}`);
     setTableRange([i, j]);
     setActiveCell([i, j]);
   };
@@ -106,3 +115,10 @@ const Table = ({ rows, cols, activeCell, setActiveCell }) => {
 };
 
 export default Table;
+
+Table.propTypes = {
+  rows: PropTypes.number.isRequired,
+  cols: PropTypes.number.isRequired,
+  activeCell: PropTypes.arrayOf(PropTypes.number),
+  setActiveCell: PropTypes.func.isRequired,
+};

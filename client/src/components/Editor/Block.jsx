@@ -1,35 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 // 컴포넌트 및 데이터
 import designType from 'data/designType';
 import { EditorRenderBox } from 'components/Editor/EditorRenderBox';
 import EditorModal from 'components/Modal/EditorModal';
 import ApplyTable from 'components/Editor/ApplyTable';
+
+import SideBar from 'components/Editor/SideBar'; 
+
 // icon 및 css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRotateRight, faArrowUp, faEdit, faTrash, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/Block.css';
 
-function Block({ block_id, design_type, design_id, block_order, layout_design, addBlock, deleteBlock, handleChangeBlockOrder }) {
+
+function Block({ block_id, design_type, design_id, block_order, layout_design, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, setBlockStyle}) {
+  const isDefault = design_type === 'default';  
+  const blockContainerRef = useRef(null);
+
   const [showBlockBtn, setShowBlockBtn] = useState(false);
   const [isLayoutDesign, setIsLayoutDesign] = useState(false);
   const [layoutId, setLayoutId] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [sideBarOpen, setSideBarOpen] = useState(false);
 
   const handleShowBlockBtn = (e) => {
     e.type === 'mouseover' ? setShowBlockBtn(true) : setShowBlockBtn(false);
   };
-  const [isOpen, setIsOpen] = useState(false);
-
-  const isDefault = design_type === 'default';
 
   const renderBox = (box, index) => {
     const clickHandler = () => setIsOpen(!isOpen);
-    return EditorRenderBox[design_type](box, index, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, designType);
+    return EditorRenderBox[design_type](box, index, block_id, blockStyle, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
   };
 
   const correctionBtn = [
-    { icon: faEdit, clickFunc: () => console.log('edit') },
-    { icon: faArrowRotateRight, clickFunc: () => console.log('rotate') },
+    { icon: faEdit, clickFunc: () => setSideBarOpen(!sideBarOpen)},
+    { icon: faArrowRotateRight, clickFunc: ()=>setIsOpen(!isOpen) },
     { icon: faArrowUp, clickFunc: (id) => handleChangeBlockOrder(id, 'up') },
     { icon: faArrowDown, clickFunc: (id) => handleChangeBlockOrder(id, 'down') },
     { icon: faTrash, clickFunc: (id) => deleteBlock(id) },
@@ -38,6 +45,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
   return (
     <>
       <div className='block_container'
+        ref={blockContainerRef}
         onMouseOver={handleShowBlockBtn} onMouseLeave={handleShowBlockBtn}
         style={{cursor: isDefault ? "pointer" : '', height: isDefault ? '160px' : 'auto'}}
       >
@@ -62,8 +70,20 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
               ))}
             </div>
             {design_type === 'table'
-              ? <ApplyTable design_id={design_id} />
-              : <>{(designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map((box, index) => renderBox(box, index))}</>
+              ? (
+                <div className='module_block'>
+                  <div className='module_wrap'>
+                    <div className='module_container'>
+                      <ApplyTable design_id={design_id} />
+                    </div>
+                  </div>
+                </div>
+              )
+              : (
+                <div className='module_block'>
+                  {(designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map((box, index) => renderBox(box, index, blockStyle))}
+                </div>
+              )
             }
           </>
         }
@@ -74,8 +94,19 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, a
         </div>
       </div>
       {isOpen && <EditorModal block_id={block_id} design_type={design_type} setIsOpen={setIsOpen} isLayoutDesign={isLayoutDesign} layoutId={layoutId} />}
+      <div className={`block_container_side ${sideBarOpen ? 'open' : 'close'}`}>
+        <SideBar setSideBarOpen={setSideBarOpen} sideBarOpen={sideBarOpen} blockStyle={blockStyle} setBlockStyle={setBlockStyle}/>
+      </div>
     </>
   )
 }
 
 export default Block;
+
+Block.propTypes = {
+  block_id: PropTypes.string.isRequired,
+  design_type: PropTypes.string.isRequired,
+  design_id: PropTypes.string.isRequired,
+  block_order: PropTypes.number.isRequired,
+  layout_design: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]), 
+};
