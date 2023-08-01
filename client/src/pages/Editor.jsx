@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDesktop,faTabletScreenButton,faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 
 // redux
 import { useSelector } from 'react-redux';
@@ -9,13 +7,16 @@ import { useSelector } from 'react-redux';
 // hooks
 import { useEditorActions } from 'hooks/useEditor';
 
-
 // 컴포넌트
 import Block from 'components/Editor/Block';
 import Nav from 'components/Main/Nav';
 import Spinner from 'components/Spinner/Spinner';
+// import SideBar from 'components/Editor/SideBar'; 
 
+// icon 및 css
 import "styles/Editor/Editor.css"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDesktop,faTabletScreenButton,faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 
 const Editor = ({ isLoading, setIsLoading }) => {
   const { page_idx } = useParams();
@@ -25,18 +26,27 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const [error, setError] = useState(null);
   const [screenSize, setScreenSize] = useState('desktop');
   const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction } = useEditorActions();
+  
+  // const [sideBarOpen, setSideBarOpen] = useState(false);
+
+  //  // 사이드 바 패딩 만들기
+  // const [topPadding, setTopPadding] = useState(10);
+  // const [bottomPadding, setBottomPadding] = useState(40);
+
+  // 블록 스타일 상태 값
+  const [blockStyle, setBlockStyle] = useState([]);
 
   useEffect(() => {
     // 블록 조회
-    getBlocksAction(Number(page_idx), setIsLoading, setError);
+    getBlocksAction(Number(page_idx), setIsLoading, setError, setBlockStyle);
   }, [page_idx]);
+
 
   // 블록 추가
   const addBlock = (order, dir) => {
     insertBlockAction(Number(page_idx), order, dir, setIsLoading, setError);
   };
 
-  // 블록 삭제, 순서 변경 아직 못함
   // 블록 삭제
   const deleteBlock = (id) => {
     if (blocks.length === 1) {
@@ -51,9 +61,28 @@ const Editor = ({ isLoading, setIsLoading }) => {
     await updateBlockOrderAction(block_id, dir, setIsLoading, setError);
   }
 
+  // 사이즈 변경
   const handleScreenChange = size => {
     setScreenSize(size);
   }
+  
+  // 페이지 이동
+  const handleSelectChange = (e) => {
+    const selectedValue = e.target.value;
+    if (window.confirm('저장후 이동하시겠습니까?')) {
+      navigate(`/editor/${selectedValue}`);
+    }
+  };
+
+  // 미리보기
+  const handlePreview = () => {
+    alert('미리보기');
+  };
+
+  // 저장
+  const handleSave = () => {
+    
+  };
 
   if (isLoading) return <Spinner />;
 
@@ -63,25 +92,31 @@ const Editor = ({ isLoading, setIsLoading }) => {
   }
 
   return (
-    <div className={screenSize}>
-    <div style={{textAlign:"center", padding:"10px 0"}}>
-    <div style={{ display: 'inline-block',position:"relative" }}>
-      <label >현재 페이지</label>
-      <select className='pageList' value={page_idx} onChange={e => navigate(`/editor/${e.target.value}`)}>
+   <>
+   <div className='editor_wrap'>
+    <div className='editor_pages_wrap'>
+      <div className='editor_pages'>
+        <label className='editor_pageList_Label'>현재 페이지</label>
+        <select className='editor_pageList' value={page_idx} onChange={handleSelectChange}>
         {secondList.map(item => (
           <option key={item.title} value={item.idx}>{item.title}</option>
         ))}
-      </select>
+        </select>
+      </div>
+      <div className='editor_btns'>
+        <button className='editor_previewBtn' onClick={handlePreview}>미리보기</button>
+        <button className='editor_saveBtn' onClick={handleSave}>저장</button>
+      </div>
     </div>
-    </div>
-    <div className='switchScreen'>
+    <div className='editor_switch_screen'>
       {screenIcons.map(({id,icon,size})=>(
-        <button className='screenButton' key={id} onClick={()=>handleScreenChange(size)} >
+        <button className='editor_switch_screen_Btn' key={id} onClick={()=>handleScreenChange(size)} >
           <FontAwesomeIcon icon={icon} />
       </button>))}
       </div>
-   
-      <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize} type='편집' />
+    </div>
+    <div className={screenSize}>
+      <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize}  type='편집' />
       {[...blocks].sort((a, b) => a.block_order - b.block_order).map(block => (
         <div key={block.block_id}>
           <Block 
@@ -93,13 +128,24 @@ const Editor = ({ isLoading, setIsLoading }) => {
             addBlock={addBlock}
             deleteBlock={deleteBlock}
             handleChangeBlockOrder={handleChangeBlockOrder}
+            blockStyle={blockStyle}
+            setBlockStyle={setBlockStyle}
+            // sideBarOpen={sideBarOpen}
+            // setSideBarOpen={setSideBarOpen}
+            // topPadding={topPadding}
+            // bottomPadding={bottomPadding}
           />
         </div>
       ))}
     </div>
+    {/* <div className={`block_container_side ${sideBarOpen ? 'open' : 'close'}`}>
+      <SideBar setSideBarOpen={setSideBarOpen} sideBarOpen={sideBarOpen} topPadding={topPadding} bottomPadding={bottomPadding}  setTopPadding={setTopPadding} setBottomPadding={setBottomPadding}/>
+    </div> */}
+    </>
   );
 };
 
 export default Editor;
 
 const screenIcons = [{id:"001",icon:faDesktop,size: 'desktop'},{id:"002",icon:faTabletScreenButton,size: 'tablet'},{id:"003",icon:faMobileScreenButton,size: 'mobile'}]
+

@@ -17,7 +17,7 @@ export const useEditorActions = () => {
   const dispatch = useDispatch();
 
   // 에디터 블록 조회
-  const getBlocksAction = async (page_idx, setIsLoading, setError) => {
+  const getBlocksAction = async (page_idx, setIsLoading, setError, setBlockStyle) => {
     try {
       setIsLoading(true);
       const data = await GetBlocksAPI(page_idx);
@@ -46,10 +46,24 @@ export const useEditorActions = () => {
         } 
         data.forEach(block => {
           if (!blockList.find(b => b.block_id === block.block_id)) {
-            blockList.push(block)
+            blockList.push(block);
+
+            console.log(block);
+            if (block.block_style === null) {
+              const block_dic = {
+                block_id: block.block_id,
+                paddingTop: "10px",
+                paddingBottom: "10px",
+              }
+              setBlockStyle(item => [...item, block_dic]);
+            } else {
+              const block_style = JSON.parse(block.block_style);
+              setBlockStyle(item => [...item, ...block_style]);
+            }
           }
         });
         dispatch(updateList(blockList));
+
       }
     } catch (err) {
       console.error(err.message);
@@ -221,12 +235,13 @@ export const useEditorActions = () => {
   };
   
   // 블록 레이아웃 수정
-  const updateBlockLayoutAction = async (block_id, design_type, design_id, layout_id) => {
+  const updateBlockLayoutAction = async (block_id, design_type, design_id, layout_id, boxes) => {
     try {
       const layout_design = {
         layout_id: layout_id,
         design_type: design_type,
         design_id: design_id,
+        boxes: boxes
       };
       
       await UpdateBlockLayoutAPI(block_id, layout_design);

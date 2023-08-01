@@ -3,6 +3,7 @@ import { useMenuActions } from 'hooks/useMenu';
 import { useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import {useNavigate} from "react-router-dom"
 import 'styles/Main/Nav.css';
 
 
@@ -10,6 +11,7 @@ const Nav = ({ isLoading, setIsLoading, type, windowWidth,screenSize }) => {
   const { getMenuAction } = useMenuActions();
   const { firstList, secondList } = useSelector((state) => state.menu);
   const [currentMenuIdx, setCurrentMenuIdx] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getMenuAction(setIsLoading);
@@ -70,7 +72,7 @@ const Nav = ({ isLoading, setIsLoading, type, windowWidth,screenSize }) => {
               {secondList
                 .filter((menu) => menu.parent_id === currentMenuIdx)
                 .map((menu) => (
-                  <div className='secondList_info' key={menu.idx} onMouseEnter={() => setCurrentMenuIdx(menu.parent_id)}>
+                  <div className='secondList_info' key={menu.idx} onClick={()=>navigate(`/pages/${menu.link}`)} onMouseEnter={() => setCurrentMenuIdx(menu.parent_id)}>
                     {menu.title}
                   </div>
                 ))}

@@ -62,6 +62,7 @@ const MyTable = ({
   }, [editColumnName]);
 
   return (
+    <div style={{ overflow: 'auto', height: '100%' }}>
     <table {...getTableProps()} style={{ margin:"0 auto", border:"none", padding:"40px"}}>
       <thead>
         {headerGroups.map((headerGroup, index) => (
@@ -120,6 +121,7 @@ const MyTable = ({
         })}
       </tbody>
     </table>
+    </div>
   );
 };
 

@@ -9,7 +9,7 @@ const rollback = util.promisify(db.rollback).bind(db);
 // 에디터 블록 가져오기
 exports.getBlocks = async (idx) => {
     try {
-        const result = await query(`SELECT page_id, block_id, design_type, design_id, layout_design, content, block_order FROM blocks WHERE page_id=? ORDER BY block_order asc`, idx);
+        const result = await query(`SELECT page_id, block_id, block_style, design_type, design_id, layout_design, content, block_order FROM blocks WHERE page_id=? ORDER BY block_order asc`, idx);
         return result;
     } catch (err) {
         throw err;

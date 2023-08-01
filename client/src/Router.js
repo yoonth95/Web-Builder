@@ -15,6 +15,7 @@ import Signup from 'components/Login/Signup';
 import Modal from 'components/Modal/Modal';
 import Main from 'pages/Main';
 import PrivateRoute from './PrivateRoute';
+import TestCom from 'pages/TestCom'
 
 const Router = () => {
   const { user } = useAuth();
@@ -40,6 +41,7 @@ const Router = () => {
         <Route path='/editor/:page_idx' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/main' element={<Main isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/*' element={<NotFound />} />
+        <Route path="/test" element={<TestCom isLoading={isLoading} setIsLoading={setIsLoading} />}/>
       </Routes>
     </BrowserRouter>
   );
