@@ -15,9 +15,9 @@
   align-items: center;
   width: 91%;
   height: 70px;
-  border: 0.5px solid var(--grayscale-30, #b3b3b3);
+  border: 0.5px solid  #b3b3b3;
   border-radius: 10px;
-  background: var(--grayscale-0, #fff);
+  background:  #fff;
 }
 
 .subMenus .box:first-child {
@@ -36,7 +36,7 @@
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.36px;
-  color: var(--grayscale-60, #666);
+  color: #666;
 }
 
 .subMenusHidden {

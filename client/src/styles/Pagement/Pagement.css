@@ -16,15 +16,15 @@
   border-bottom: 1px solid #ddd;
 }
 .top {
-  background: var(--grayscale-5, #f3f3f3);
+  background: #f3f3f3;
 }
 .info {
-  background: var(--grayscale-5, #ffffff);
+  background:  #ffffff;
 }
 .top_content,
 .info_content {
   width: 20%;
-  color: var(--grayscale-80, #333);
+  color:  #333;
 
   font-family: Pretendard;
   font-style: normal;
@@ -69,7 +69,7 @@
   display: inline-block;
   width: 100px;
   height: 27px;
-  background-color: var(--grayscale-30, #b3b3b3);
+  background-color:  #b3b3b3;
   color: #fff;
   border-radius: 50px;
   padding: 5px 10px;
@@ -106,14 +106,14 @@
   align-items: center;
   margin-bottom: 24px;
   border-radius: 10px;
-  border: 1px solid var(--grayscale-10, #e6e6e6);
-  background: var(--grayscale-0, #fff);
+  border: 1px solid  #e6e6e6;
+  background:  #fff;
   width: 245px;
   height: 40px;
   padding: 11.5px 15px;
 }
 #Search-btn {
-  color: var(--grayscale-20, #ccc);
+  color: #ccc;
   margin-left: 10px;
   cursor: pointer;
 }
@@ -150,9 +150,9 @@
 }
 #info_btn > button {
   border-radius: 50px;
-  border: 1px solid var(--grayscale-30, #b3b3b3);
-  background: var(--grayscale-0, #fff);
-  color: var(--grayscale-30, #b3b3b3);
+  border: 1px solid  #b3b3b3;
+  background: #fff;
+  color: #b3b3b3;
   text-align: center;
   font-family: Pretendard;
   font-size: 14px;
@@ -163,14 +163,14 @@
   padding: 5px 17px;
 }
 #info_btn > button:hover {
-  background: var(--grayscale-0, #ee7d00);
-  border: 1px solid var(--grayscale-30, #ee7d00);
-  color: var(--grayscale-30, #fff);
+  background:  #ee7d00;
+  border: 1px solid  #ee7d00;
+  color: #fff;
 }
 #info_btn > button:last-child {
-  background: var(--grayscale-0, #ee7d00);
-  border: 1px solid var(--grayscale-30, #ee7d00);
-  color: var(--grayscale-30, #fff);
+  background:  #ee7d00;
+  border: 1px solid  #ee7d00;
+  color:  #fff;
 }
 .active {
   border: 1px solid #ee7d00;

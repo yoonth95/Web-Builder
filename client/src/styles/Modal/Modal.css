@@ -46,9 +46,6 @@
 .modal_infor_box p {
   font-size: 16px;
 }
-/* .modal_infor_box:focus-within input[type='text']::placeholder{
-    visibility: hidden;
-  } */
 
 .modal_infor_box select {
   height: 48px;

@@ -11,7 +11,7 @@
   width: 100%;
   height: 48px;
   border-radius: 10px;
-  background: var(--grayscale-5, #f3f3f3);
+  background:  #f3f3f3;
   padding: 15.5px 10px;
 }
 .selected_option.open {
@@ -47,5 +47,5 @@
 }
 
 .select_option:hover {
-  color: var(--primary-100, #ee7d00);
+  color: #ee7d00;
 }

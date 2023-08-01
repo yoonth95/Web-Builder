@@ -29,10 +29,10 @@
 .login_main .inputTag input {
   height: 60px;
   border-radius: 10px;
-  background: var(--grayscale-5, #f3f3f3);
+  background:  #f3f3f3;
   padding: 29px 0px 12px 15px;
   outline: none;
-  color: var(--grayscale-100, #030303);
+  color:#030303;
   font-size: 16px;
   font-weight: 400;
 }
@@ -54,7 +54,7 @@ input[type='password'] {
   height: Fixed (14px);
   top: 10px;
   left: 15px;
-  color: var(--grayscale-60, #666);
+  color: #666;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: -0.24px;

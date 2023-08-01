@@ -1,37 +1,126 @@
-.desktop {
-    width: 1920px;
-    margin: 0 auto;
+ .editor_wrap {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #ffffff;
   }
-.tablet {
-    width: 785px;
-    margin: 0 auto;
-}
+  
 
-.mobile {
-    width: 370px;
-    margin: 0 auto;
-}
-
-.switchScreen{
-    height:65px;
-    display:flex; 
-    justify-content:center;
-    background-color:#030303;
-}
-
-.pageList{
+  .editor_pages_wrap {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 50px;
+  }
+  
+  .editor_pages_wrap::before {
+    content: '';
+    width: 300px;
+  }
+  
+  .editor_pages {
+    display: inline-block;
+    position: relative;
+  }
+  
+ 
+  .editor_btns {
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .editor_btns button {
+    width: 130px;
+    height: 50px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .editor_previewBtn {
+    background-color: #fff;
+    color: black;
+  }
+  
+  .editor_saveBtn {
+    background-color: #ee7d00;
+    color: #fff;
+  }
+  
+  .editor_pageList_Label {
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background-color: #ee7d00;
+    padding: 0 10px;
+    border-radius: 5px 0 0 5px;
+    color: #ffffff;
+  }
+  
+ 
+  .editor_pageList {
     width: 300px;
     font-size: 16px;
-    padding-left: 97px;
+    text-align: center;
+    padding-left: 85px;
     height: 50px;
-}
+    font-weight: bold;
+  }
+  
 
-.screenButton{
-    color:#ffffff;
-    font-size:22px;
-    width:65px;
-}
-.screenButton:hover{
+  .editor_switch_screen {
+    height: 65px;
+    display: flex;
+    justify-content: center;
+    background-color: #030303;
+  }
+  
+  .editor_switch_screen_Btn {
+    color: #ffffff;
+    font-size: 22px;
+    width: 65px;
+    cursor: pointer;
+  }
+  
+  .editor_switch_screen_Btn:hover {
     background-color: #ee7d00;
-}
+  }
 
+  .desktop {
+    width: 1920px;
+    min-height: 100%;
+    margin: 0 auto;
+  }
+  
+  .tablet {
+    width: 785px;
+    min-height: 100%;
+    margin: 0 auto;
+  }
+  
+  .mobile {
+    width: 370px;
+    min-height: 100%;
+    margin: 0 auto;
+  }
+  .block_container_side {
+    transition: transform 0.5s ease-in-out;
+    position: fixed;
+    right: 0;
+    top: 230px;
+    width: 300px;
+    background-color: #16181d;
+    border-radius: 20px;
+  }
+  
+  .block_container_side.open {
+    transform: translateX(0);
+  }
+  
+  .block_container_side.close {
+    transform: translateX(100%);
+  }

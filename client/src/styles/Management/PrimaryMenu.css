@@ -1,7 +1,7 @@
 .primaryMenus {
   border-radius: 10px;
-  border: 0.5px solid var(--grayscale-30, #b3b3b3);
-  background: var(--grayscale-0, #fff);
+  border: 0.5px solid #b3b3b3;
+  background:  #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,7 +19,7 @@
   cursor: pointer;
   width: 70px;
   height: 70px;
-  border-right: 0.5px solid var(--grayscale-30, #b3b3b3);
+  border-right: 0.5px solid #b3b3b3;
 }
 
 .img_wrap span {
@@ -45,7 +45,7 @@
 
 .primaryMenus h1 {
   width: 80%;
-  color: var(--grayscale-60, #666);
+  color: #666;
   font-family: 'Pretendard';
   font-size: 18px;
   font-style: normal;
@@ -57,7 +57,7 @@
 
 .primaryMenus .box:first-child {
   width: 10%;
-  border-right: 0.5px solid var(--grayscale-30, #b3b3b3);
+  border-right: 0.5px solid #b3b3b3;
   text-align: center;
 }
 

@@ -111,7 +111,6 @@
   margin: auto;
 }
 .module_container {
-  transition: padding 0.4s;
   padding: 20px 0;
 }
 .imgHover {
