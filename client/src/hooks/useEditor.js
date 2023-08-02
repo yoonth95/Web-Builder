@@ -165,25 +165,52 @@ export const useEditorActions = () => {
   };
 
   // 블록 텍스트 수정
-  const handleUpdateText = (block_id, lines, updatedText) => {
-    
-    const updateBlock = blocks?.map((block) => {
-      if (block.block_id === block_id) {
-        const updateLine = block.content?.lines?.map(e => {
-          if (e === lines) {
-            return {
-              ...e,
-              text: updatedText
-            }
-          } else return e
-        });
-        return { ...block, content: { ...block.content, lines: updateLine } }
-      }
-      return block;
-    });
-    
-    console.log("updateBlock",updateBlock)
-    dispatch(updateList(updateBlock));
+  const handleUpdateText = (block_id, line_idx, updatedText, isLayout) => {
+    // 레이아웃이 아닐 때
+    if (!isLayout) {
+      const updateBlock = blocks?.map((block) => {
+        if (block.block_id === block_id) {
+          const updateLine = block.content?.lines?.map((e, idx) => {
+            if (idx === line_idx) {
+              return {
+                ...e,
+                text: updatedText
+              }
+            } else return e
+          });
+          return { ...block, content: { ...block.content, lines: updateLine } }
+        }
+        return block;
+      });
+      dispatch(updateList(updateBlock));
+    } 
+    // 레이아웃일 때
+    else {
+      const layout_id = Number(isLayout.split("_")[1]);
+
+      const updateBlock = blocks?.map((block) => {
+        if (block.block_id === block_id) {
+          const StringToJson = JSON.parse(block.layout_design);
+          const updateLayout = StringToJson?.map(e => {
+            if (e.layout_id === layout_id) {
+              const updateLine = e.boxes?.lines?.map((e, idx) => {
+                if (idx === line_idx) {
+                  return {
+                    ...e,
+                    text: updatedText
+                  }
+                } else return e
+              });
+              return { ...e, boxes: { ...e.boxes, lines: updateLine } }
+            } else return e
+          });
+
+          return { ...block, layout_design: JSON.stringify(updateLayout) }
+        }
+        return block;
+      });
+      dispatch(updateList(updateBlock));
+    }
   };
 
 
@@ -313,10 +340,25 @@ export const useEditorActions = () => {
     }
   };
 
-  const saveBlockAction = async (page_idx, blockStyle, setIsLoading, setError) => {
+  const saveBlockAction = async (page_idx, blocks, setIsLoading, setError) => {
     try {
       setIsLoading(true);
-      const result = await SaveBlockAPI(page_idx, blockStyle);
+      const blockToBase64 = blocks.map(block => {
+        const content = block.content
+          ? btoa(unescape(encodeURIComponent(JSON.stringify(block.content))))
+          : null;
+        
+        const layout_design = block.layout_design
+          ? btoa(unescape(encodeURIComponent(block.layout_design)))
+          : null;
+
+        return {
+          ...block,
+          layout_design: layout_design,
+          content: content
+        };
+      });
+      const result = await SaveBlockAPI(page_idx, blockToBase64);
 
       return result;
     } catch (err) {

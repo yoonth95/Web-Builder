@@ -2,20 +2,22 @@ import React,{useState, useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/SideBar.css';
+import { useSelector } from 'react-redux';
 
 const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCheckBtn, checkBtn }) => {
   const [iconColor, setIconColor] = useState("#8f8f8f");
-  
+  const blockList = useSelector(state => state.editor.blockList);
+
   const handleTopPaddingChange = (e) => {
     const blockId = sideBarOpen.block_id;
     if (blockStyle.some(block => block.block_id === blockId)) {
       setBlockStyle(prev => prev.map(block => block.block_id === blockId ? {...block, style: {...block.style, paddingTop: `${e.target.value}px`}} : block));
     }
   };
-  const handleWidthChange = (e) => {
+  const handleWidthChange = () => {
     const blockId = sideBarOpen.block_id;
     if (blockStyle.some(block => block.block_id === blockId)) {
-      setBlockStyle(prev => prev.map(block => block.block_id === blockId ? {...block, style: {...block.style, maxWidth:'100%' }} : block));
+      setBlockStyle(prev => prev.map(block => block.block_id === blockId ? {...block, style: {...block.style, maxWidth: checkBtn ? '100%' : '1240px'}} : block));
     }
   };
   const handleBottomPaddingChange = (e) => {
@@ -25,18 +27,28 @@ const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCh
     }
   };
   useEffect(() => {
-    if (checkBtn) {
-      handleWidthChange();
-    }
+    handleWidthChange();
   }, [checkBtn]);
-  
+
+  useEffect(() => {
+    const block = blockList.find(block => block.block_id === sideBarOpen.block_id);
+    if (block) {
+      const style = JSON.parse(block.block_style);
+      if (style.style.maxWidth === '100%') {
+        setCheckBtn(true);
+      } else if (style.style.maxWidth === '1240px') {
+        setCheckBtn(false);
+      }
+    }
+  }, [blockList, sideBarOpen]);
+
   return (
       <div className="subMenu sub_menu" style={{ display: 'block' }}>
         <div className='title_wrap'>
           <h3>블록 설정</h3>
           <FontAwesomeIcon icon={faTimes} style={{color: iconColor, cursor:"pointer"}} onClick={() => setSideBarOpen(!sideBarOpen)} size='2x' onMouseEnter={() => setIconColor("#f3f3f3")} onMouseLeave={() => setIconColor("#8f8f8f")}/>
         </div>
-        <div className='widthSet_wrap' onChange={(e) => setCheckBtn(e.target.checked)}>
+        <div className='widthSet_wrap' onChange={(e) => setCheckBtn(!checkBtn)}>
           <input type="checkbox" />
           <p>화면 너비에 맞추기</p>
         </div>
@@ -73,11 +85,6 @@ const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCh
             </div>
           </li>
         </ul>
-
-        {/* <div style={{marginTop: "10px"}}>
-          <input type="checkbox" id=''/>
-          <label className="title1">화면 너비에 맞추기</label>
-        </div> */}
       </div>
   );
 };

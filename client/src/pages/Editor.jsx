@@ -74,7 +74,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
 
   // 저장
   const handleSave = async () => {
-    const result = await saveBlockAction(page_idx, blockStyle, setIsLoading, setError);
+    const result = await saveBlockAction(page_idx, blocks, setIsLoading, setError);
     console.log(result);
     alert('저장되었습니다.');
   };

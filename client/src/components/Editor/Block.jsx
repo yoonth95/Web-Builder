@@ -32,7 +32,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
 
   const renderBox = (box, id) => { 
     const clickHandler = () => setIsModalOpen({open: true, block_id: id});
-    return EditorRenderBox[design_type](box, id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, checkBtn);
+    return EditorRenderBox[design_type](box, id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
   };
 
   const correctionBtn = [
@@ -104,8 +104,8 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
               : (
                 <div className='module_block'>
                     {block_content 
-                      ? renderBox(block_content, block_id, blockStyle, handleUpdateText, checkBtn)
-                      : (designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map(box => renderBox(box, block_id, blockStyle, checkBtn))
+                      ? renderBox(block_content, block_id, blockStyle, handleUpdateText)
+                      : (designType.find((item) => item.type === design_type)).boxes.filter((item) => item.id === design_id).map(box => renderBox(box, block_id, blockStyle))
                     }
                 </div>
               )
