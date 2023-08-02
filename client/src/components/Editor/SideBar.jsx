@@ -1,32 +1,44 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/SideBar.css';
 
-const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle }) => {
+const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCheckBtn, checkBtn }) => {
   const [iconColor, setIconColor] = useState("#8f8f8f");
-
-  console.log(blockStyle);
-
+  
   const handleTopPaddingChange = (e) => {
     const blockId = sideBarOpen.block_id;
     if (blockStyle.some(block => block.block_id === blockId)) {
       setBlockStyle(prev => prev.map(block => block.block_id === blockId ? {...block, style: {...block.style, paddingTop: `${e.target.value}px`}} : block));
     }
   };
-
+  const handleWidthChange = (e) => {
+    const blockId = sideBarOpen.block_id;
+    if (blockStyle.some(block => block.block_id === blockId)) {
+      setBlockStyle(prev => prev.map(block => block.block_id === blockId ? {...block, style: {...block.style, maxWidth:'100%' }} : block));
+    }
+  };
   const handleBottomPaddingChange = (e) => {
     const blockId = sideBarOpen.block_id;
     if (blockStyle.some(block => block.block_id === blockId)) {
       setBlockStyle(prev => prev.map(block => block.block_id === blockId ? {...block, style: {...block.style, paddingBottom: `${e.target.value}px`}} : block));
     }
   };
-
+  useEffect(() => {
+    if (checkBtn) {
+      handleWidthChange();
+    }
+  }, [checkBtn]);
+  
   return (
       <div className="subMenu sub_menu" style={{ display: 'block' }}>
         <div className='title_wrap'>
           <h3>블록 설정</h3>
           <FontAwesomeIcon icon={faTimes} style={{color: iconColor, cursor:"pointer"}} onClick={() => setSideBarOpen(!sideBarOpen)} size='2x' onMouseEnter={() => setIconColor("#f3f3f3")} onMouseLeave={() => setIconColor("#8f8f8f")}/>
+        </div>
+        <div className='widthSet_wrap' onChange={(e) => setCheckBtn(e.target.checked)}>
+          <input type="checkbox" />
+          <p>화면 너비에 맞추기</p>
         </div>
         <div style={{marginTop: "10px"}}>
           <p className="title1">패딩 설정</p>
@@ -61,7 +73,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle }) => 
             </div>
           </li>
         </ul>
-        
+
         {/* <div style={{marginTop: "10px"}}>
           <input type="checkbox" id=''/>
           <label className="title1">화면 너비에 맞추기</label>

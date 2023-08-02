@@ -18,7 +18,7 @@ const EditableCell = ({
     setValue(initialValue);
   }, [initialValue]);
 
-  return <input value={value || ""} onChange={onChange} style={{textAlign:"center" , padding:"10px" , border:"none"}}/>;
+  return <input value={value || ""} onChange={onChange} style={{textAlign:"center" , padding:"10px" , border:"none", width:'100%'}}/>;
 };
 
 const defaultColumn = {
@@ -63,7 +63,7 @@ const MyTable = ({
 
   return (
     <div style={{ overflow: 'auto', height: '100%' }}>
-    <table {...getTableProps()} style={{ margin:"0 auto", border:"none", padding:"40px"}}>
+    <table {...getTableProps()} style={{ margin:"0 auto", border:"none", padding:"40px", width:'100%'}}>
       <thead>
         {headerGroups.map((headerGroup, index) => (
           <tr {...headerGroup.getHeaderGroupProps()} >

@@ -21,7 +21,7 @@
   justify-content: center;
   align-items: center;
   overscroll-behavior-y: contain;
-  z-index: 11;
+  z-index: 1000;
 }
 
 .editModal-container {
@@ -37,7 +37,7 @@
   border: 1px solid  #b3b3b3;
   background-color:  #f3f3f3;
   box-shadow: 4px 4px 21px 0px rgba(0, 0, 0, 0.3);
-  z-index: 12;
+  z-index: 1001;
 }
 
 .editModal-header {
@@ -282,4 +282,27 @@
 
 .editMenu-select-btn:active {
   transform: scale(0.95);
+}
+
+@media (max-width: 1180px) {
+  .editModal-container{
+    width: 760px;
+  } 
+  .editModal-right {
+    grid-template-columns: repeat(1, 505px);
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .editModal-container {
+    width: 340px;
+  }
+  .editModal-right {
+    grid-template-columns: repeat(1, 400px);
+    justify-content: center;
+  }
+  .editModal-left p {
+    writing-mode: vertical-lr;
+}
 }

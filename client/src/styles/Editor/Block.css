@@ -244,3 +244,6 @@
   outline: 2px #3a7fd0 solid;
   z-index: 500;
 }
+.widthSet {
+  max-width: 100%;
+}

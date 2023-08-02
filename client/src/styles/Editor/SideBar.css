@@ -68,3 +68,37 @@
 input[type=range] {
 	width: 100%;
 }
+.widthSet_wrap{
+	display: flex;
+	align-items: center;
+	padding: 10px 15px;
+}
+.widthSet_wrap input[type='checkbox'] {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  background: white;
+  position: relative;
+  border: 1px solid #000;
+	background-color: #555;
+	margin-right: 15px;
+}
+
+.widthSet_wrap input[type='checkbox']:checked:before {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background: url('https://wooks.clickn.co.kr/images/ico_check_orange.png') 50% 50% no-repeat;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.widthSet_wrap p {
+	color: #888;
+}
+.widthSet_wrap:hover p {
+	color: #f3f3f3;
+}
