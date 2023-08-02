@@ -6,16 +6,20 @@ exports.getBlocks = async (req, res) => {
 
     try {
         const getBlocks = await editorDB.getBlocks(idx);
-        const result = getBlocks.map((block) => {
-            if (!block.content) return block;
 
-            const BlobToBase64 = JSON.parse(Buffer.from(block.content).toString('utf-8'));
-            const Base64ToString = Buffer.from(BlobToBase64, 'base64').toString('utf-8');
-            const StringToJson = JSON.parse(Base64ToString);
+        const result = getBlocks.map((block) => {
+            const content = block.content
+                ? JSON.parse(Buffer.from(JSON.parse(Buffer.from(block.content).toString('utf-8')), 'base64').toString('utf-8'))
+                : null;
+            
+            const layout_design = block.layout_design
+                ? Buffer.from(Buffer.from(block.layout_design).toString('utf-8'), 'base64').toString('utf-8')
+                : null;
 
             return {
                 ...block,
-                content: StringToJson,
+                layout_design,
+                content,
             }
         });
 
@@ -97,9 +101,9 @@ exports.updateBlockLayout = async (req, res) => {
 // 에디터 블록 저장
 exports.saveBlock = async (req, res) => {
     const data = req.body;
-
+    
     try {
-        const result = await editorDB.saveBlock(data.page_idx, data.blockStyle);
+        const result = await editorDB.saveBlock(data.page_idx, data.blocks);
         res.status(200).json(result);
     } catch (err) {
         console.error(err);

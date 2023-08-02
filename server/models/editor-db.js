@@ -65,7 +65,7 @@ exports.updateBlockLayout = async (block_id, layout_design) => {
         const result = await query(`SELECT layout_design FROM blocks WHERE block_id=?`, block_id);
 
         if (result[0].layout_design !== null) {
-            getLayoutDesign = [...JSON.parse(result[0].layout_design)];
+            getLayoutDesign = [...JSON.parse(Buffer.from(Buffer.from(result[0].layout_design).toString('utf-8'), 'base64').toString('utf-8'))];
             if (getLayoutDesign.filter(item => item.layout_id === layout_design.layout_id).length > 0) {
                 const newLayoutDesign = getLayoutDesign.map(item => item.layout_id === layout_design.layout_id ? item = layout_design : item);
                 getLayoutDesign = [...newLayoutDesign];
@@ -76,7 +76,7 @@ exports.updateBlockLayout = async (block_id, layout_design) => {
             getLayoutDesign.push(layout_design);
         }
 
-        const result2 = await query(`UPDATE blocks SET layout_design=? WHERE block_id=?`, [JSON.stringify(getLayoutDesign), block_id]);
+        const result2 = await query(`UPDATE blocks SET layout_design=? WHERE block_id=?`, [btoa(unescape(encodeURIComponent(JSON.stringify(getLayoutDesign)))), block_id]);
 
         await commit(); // 트랜잭션 커밋
 
@@ -88,20 +88,13 @@ exports.updateBlockLayout = async (block_id, layout_design) => {
 }
 
 // 에디터 블록 저장
-exports.saveBlock = async (page_idx, blockStyle) => {
+exports.saveBlock = async (page_idx, blocks) => {
     try {
         await beginTransaction(); // 트랜잭션 시작 
 
-        let updateStyle = [];
-        let placeholders = [];
-        
-        blockStyle.forEach(item => {
-          updateStyle.push(`WHEN ? THEN ?`);
-          placeholders.push(item.block_id, JSON.stringify(item));
+        blocks.forEach(async item => {
+            await query(`UPDATE blocks SET block_style=?, design_type=?, design_id=?, layout_design=?, content=?, block_order=? WHERE page_id=? and block_id=?`, [item.block_style, item.design_type, item.design_id, item.layout_design, JSON.stringify(item.content), item.block_order, page_idx, item.block_id]);
         });
-        
-        let sql = `UPDATE blocks SET block_style = CASE block_id ${updateStyle.join(' ')} END WHERE page_id=? AND block_id IN (?)`;
-        await query(sql, [...placeholders, page_idx, blockStyle.map(item => item.block_id)]);
 
         await commit();   // 트랜잭션 수행 
         
