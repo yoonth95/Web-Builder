@@ -8,6 +8,7 @@
         "id": "1",
         "numImages": 1,
         "src": "",
+        "href": "",
         "style": {
           "width": "100%",
           "height": "100%",
@@ -23,6 +24,7 @@
         "id": "2",
         "numImages": 2,
         "src": "",
+        "href": "",
         "style": {
           "width": "100%",
           "height": "100%",
@@ -39,6 +41,7 @@
         "id": "3",
         "numImages": 3,
         "src": "",
+        "href": "",
         "style": {
           "width": "100%",
           "height": "100%",
@@ -55,6 +58,7 @@
         "id": "4",
         "numImages": 4,
         "src": "",
+        "href": "",
         "style": {
           "width": "100%",
           "height": "100%",
@@ -71,6 +75,7 @@
         "id": "5",
         "numImages": 4,
         "src": "",
+        "href": "",
         "style": {
           "width": "90px",
           "height": "90px",
@@ -88,6 +93,7 @@
         "id": "6",
         "numImages": 5,
         "src": "",
+        "href": "",
         "style": {
           "width": "70px",
           "height": "70px",
@@ -193,6 +199,7 @@
         "id": "1",
         "shape": "circle",
         "src": "",
+        "href": "",
         "hasText": true,
         "lines": [
           {
@@ -208,6 +215,7 @@
         "id": "2",
         "shape": "rectangle",
         "src": "",
+        "href": "",
         "hasTitle": true,
         "hasDetails": true,
         "lines": [
@@ -230,6 +238,7 @@
         "id": "3",
         "shape": "square",
         "src": "",
+        "href": "",
         "hasTitleColor": true,
         "hasSubtitle": true,
         "hasTinyText": true,
@@ -261,6 +270,7 @@
         "id": "4",
         "shape": "wideRectangle",
         "src": "",
+        "href": "",
         "hasTitle": true,
         "hasContent": true,
         "lines": [

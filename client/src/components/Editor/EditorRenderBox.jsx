@@ -3,16 +3,18 @@ import ApplyTable from 'components/Editor/ApplyTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWandMagicSparkles, faEdit, faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
 
+
 export const EditorRenderBox = {
-  image: (box, index, block_id, blockStyle) => {
+  image: (box, block_id, blockStyle, checkBtn) => {
+    console.log('checkBtn', checkBtn);
     const filter_style = blockStyle?.find(block => block.block_id === block_id);
     return (
-      <div key={index} className='module_wrap' style={filter_style?.style} >
-        <div className='module_container' style={box.layout}>
-          {[...Array(box.numImages)].map((_, i) => (
-            <div key={i} style={box.style}>
+      <div key={block_id} className={`module_wrap ${checkBtn ? 'widthSet' : ''}`} style={filter_style?.style} >
+        <div className='module_container' style={box?.layout}>
+          {[...Array(box?.numImages)].map((_, i) => (
+            <div key={i} style={box?.style}>
               <div className='module_imageBox imgHover'>
-                <img src={`${box.src}`} alt="" />
+                <img src={`${box?.src}`} alt="" />
               </div>
             </div>
           ))}
@@ -20,19 +22,19 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  line: (box, index, block_id, blockStyle ) => {
+  line: (box, block_id, blockStyle, checkBtn) => {
     const filter_style = blockStyle?.find(block => block.block_id === block_id);
-    const isDotted = box.style === 'dotted';
+    const isDotted = box?.style === 'dotted';
     return (
-      <div key={index} className='module_wrap' style={filter_style?.style}>
+      <div key={block_id} className='module_wrap' style={filter_style?.style}>
         <div className='module_container_line'>
           <div
             style={{
-              borderTop: isDotted ? 'none' : `${box.thickness} ${box.style} #B3B3B3`,
+              borderTop: isDotted ? 'none' : `${box?.thickness} ${box?.style} #B3B3B3`,
               backgroundImage: isDotted ? `radial-gradient(circle, rgb(179, 179, 179) 15%, transparent 0%)` : 'none',
               backgroundSize: isDotted ? '25px 100%' : 'auto',
-              width: box.length === 'long' ? '100%' : '15%',
-              transform: box.direction === 'diagonal' ? 'rotate(135deg)' : box.direction === 'vertical' ? 'rotate(90deg)' : 'none',
+              width: box?.length === 'long' ? '100%' : '15%',
+              transform: box?.direction === 'diagonal' ? 'rotate(135deg)' : box?.direction === 'vertical' ? 'rotate(90deg)' : 'none',
               height: isDotted ? `${box.thickness}` : 'auto',
             }}
           />
@@ -40,16 +42,16 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  list: (box, index, block_id, blockStyle) => {
+  list: (box, block_id, blockStyle, checkBtn) => {
     const filter_style = blockStyle?.find(block => block.block_id === block_id);
     return (
-      <div key={index} className='module_wrap font-style' style={filter_style?.style}>
+      <div key={block_id} className='module_wrap font-style' style={filter_style?.style}>
         <div className='module_container_list'>
           <div className='module_list_item'>
-            <div className={`module_${box.shape} imgHover`}>
-              <img src={`${box.src}`} alt=""/>
+            <div className={`module_${box?.shape} imgHover`}>
+              <img src={`${box?.src}`} alt=""/>
             </div>
-            {box.lines && box.lines.map((line, lineIndex) => (
+            {box?.lines && box?.lines.map((line, lineIndex) => (
               <div
                 key={lineIndex}
                 contentEditable={true}
@@ -64,21 +66,23 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  text: (box, index, block_id, blockStyle) => {
+  text: (box, block_id, blockStyle, handleUpdateText, checkBtn) => {
     const filter_style = blockStyle?.find(block => block.block_id === block_id);
     return (
-      <div key={index} className='module_wrap' style={filter_style?.style}>
-        <div className='module_container' style={{ textAlign: `${box.alignments}` }}>
+      <div key={block_id} className='module_wrap' style={filter_style?.style}>
+        <div className='module_container' style={{ textAlign: `${box?.alignments}` }}>
           <div className='module_text_item'>
-            {box.lines.map((line, i) => (
+            {box?.lines.map((line, i) => (
               <div 
                 key={i}
                 className='module_text_line'
                 contentEditable={true} 
                 suppressContentEditableWarning
                 style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
+                onBlur={(e) => handleUpdateText(block_id, line, e.target.innerHTML)} 
+                dangerouslySetInnerHTML={{ __html: line.text }}
               >
-                {line.text}
+                {/* {line.text} */}
                 {line.button && <button className={line.buttonStyle}>{line.button}</button>}
               </div>
             ))}
@@ -88,15 +92,15 @@ export const EditorRenderBox = {
     );
   },
   table: null,
-  layout: (box, index, block_id, blockStyle, layout_design, clickHandler, setIsLayoutDesign, setLayoutId) => {
+  layout: (box, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, checkBtn) => {
     const filter_style = blockStyle?.find(block => block.block_id === block_id);
     const parsed_layout_design = layout_design ? JSON.parse(layout_design) : null;
 
     return (
-      <div key={index} className='module_wrap' style={filter_style?.style}>
+      <div key={block_id} className='module_wrap' style={filter_style?.style}>
         <div className='module_container'>
-          <div className='module_layout_item' style={box.style}>
-            {box.elements.map((element, i) => {
+          <div className='module_layout_item' style={box?.style}>
+            {box?.elements.map((element, i) => {
               const layout = parsed_layout_design && parsed_layout_design.find(e => e.layout_id === element.layout_id);
               const layout_design_type = layout && layout.design_type;
               const layout_design_id = layout && layout.design_id;
@@ -105,7 +109,7 @@ export const EditorRenderBox = {
               let boxes, index, tableDesignId;
               if (layout_design_type !== 'table') {
                 boxes = layout_boxes ? layout_boxes : undefined;
-                index = Math.floor(Math.random() * 100);
+                index = Math.floor(Math.random() * 899999) + 100000;
               } else {
                 tableDesignId = layout_design_id;
               }
@@ -153,15 +157,15 @@ export const EditorRenderBox = {
                         >
                           {layout_child 
                             ? (layout_child_design_type === 'image'
-                                ? EditorRenderBox.image(child_boxes, child_index)
+                                ? EditorRenderBox.image(child_boxes, child_index, blockStyle)
                                 : layout_child_design_type === 'text'
-                                  ? EditorRenderBox.text(child_boxes, child_index)
+                                  ? EditorRenderBox.text(child_boxes, child_index, blockStyle, handleUpdateText)
                                   : layout_child_design_type === 'list'
-                                    ? EditorRenderBox.list(child_boxes, child_index)
+                                    ? EditorRenderBox.list(child_boxes, child_index, blockStyle)
                                     : layout_child_design_type === 'table'
                                       ? <ApplyTable design_id={tableDesignId} />
                                       : layout_child_design_type === 'line'
-                                        ? EditorRenderBox.line(child_boxes, child_index)
+                                        ? EditorRenderBox.line(child_boxes, child_index, blockStyle)
                                         : null
                               )
                             : <ClickDiv />
@@ -171,15 +175,15 @@ export const EditorRenderBox = {
                     })
                     : (layout 
                         ? (layout_design_type === 'image'
-                            ? EditorRenderBox.image(boxes, index)
+                            ? EditorRenderBox.image(boxes, index, blockStyle)
                             : layout_design_type === 'text'
-                              ? EditorRenderBox.text(boxes, index)
+                              ? EditorRenderBox.text(boxes, index, blockStyle, handleUpdateText)
                               : layout_design_type === 'list'
-                                ? EditorRenderBox.list(boxes, index)
+                                ? EditorRenderBox.list(boxes, index, blockStyle)
                                 : layout_design_type === 'table'
                                   ? <ApplyTable design_id={tableDesignId} />
                                   : layout_design_type === 'line'
-                                    ? EditorRenderBox.line(boxes, index)
+                                    ? EditorRenderBox.line(boxes, index, blockStyle)
                                     : null
                           )
                         : <ClickDiv />

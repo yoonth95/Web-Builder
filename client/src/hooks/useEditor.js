@@ -3,6 +3,8 @@ import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateList } from 'redux/editorSlice';
 
+import designType from 'data/designType';
+
 import { 
   GetBlocksAPI, 
   InsertBlockAPI, 
@@ -28,9 +30,18 @@ export const useEditorActions = () => {
       } else {
         if (data.length === 0) {
           const block_id = `${page_idx}_${new Date().getTime()}_${Math.floor(Math.random() * 899999) + 100000}`;
+          const block_style = {
+            style: {
+              maxWidth: "1240px",
+              paddingTop: "0px",
+              paddingBottom: "0px",
+            },
+            block_id: block_id,
+          }
           const newBlock = {
             page_id: page_idx,
             block_id: block_id,
+            block_style: JSON.stringify(block_style),
             design_type: 'default',
             design_id: '0',
             layout_design: null,
@@ -40,33 +51,33 @@ export const useEditorActions = () => {
 
           await InsertBlockAPI(newBlock);
           dispatch(updateList([newBlock]))
-        }
-        let blockList = [];
-        if (blocks && blocks.length > 0) {
-          blockList = [...blocks];
-        } 
-        data.forEach(block => {
-          if (!blockList.find(b => b.block_id === block.block_id)) {
-            blockList.push(block);
-
-            if (block.block_style === null) {
-              const block_dic = {
-                style: {
-                  maxWidth: "1240px",
-                  paddingTop: "0px",
-                  paddingBottom: "0px",
-                },
-                block_id: block.block_id,
+        } else {
+          let blockList = [];
+          if (blocks && blocks.length > 0) {
+            blockList = [...blocks];
+          } 
+          data.forEach(block => {
+            if (!blockList.find(b => b.block_id === block.block_id)) {
+              blockList.push(block);
+  
+              if (block.block_style === null) {
+                const block_dic = {
+                  style: {
+                    maxWidth: "1240px",
+                    paddingTop: "0px",
+                    paddingBottom: "0px",
+                  },
+                  block_id: block.block_id,
+                }
+                setBlockStyle(item => [...item, block_dic]);
+              } else {
+                const block_style = JSON.parse(block.block_style);
+                setBlockStyle(item => [...item, block_style]);
               }
-              setBlockStyle(item => [...item, block_dic]);
-            } else {
-              const block_style = JSON.parse(block.block_style);
-              setBlockStyle(item => [...item, block_style]);
             }
-          }
-        });
-        dispatch(updateList(blockList));
-
+          });
+          dispatch(updateList(blockList));
+        }
       }
     } catch (err) {
       console.error(err.message);
@@ -79,10 +90,18 @@ export const useEditorActions = () => {
   // 블록 추가
   const insertBlockAction = async (page_idx, order, dir, setIsLoading, setError) => {
     const block_id = `${page_idx}_${new Date().getTime()}_${Math.floor(Math.random() * 899999) + 100000}`;
+    const block_style = {
+      style: {
+        maxWidth: "1240px",
+        paddingTop: "0px",
+        paddingBottom: "0px",
+      },
+      block_id: block_id,
+    }
     const newBlock = {
       page_id: page_idx,
       block_id: block_id,
-      block_style: null,
+      block_style: JSON.stringify(block_style),
       design_type: 'default',
       design_id: '0',
       layout_design: null,
@@ -124,10 +143,19 @@ export const useEditorActions = () => {
   // 블록 디자인 수정
   const updateBlockDesignAction = async (block_id, design_type, design_id) => {
     try {
-      await UpdateBlockDesignAPI(block_id, design_type, design_id);
+      let content;
+      if (design_type === 'table') {
+        content = null;
+        await UpdateBlockDesignAPI(block_id, design_type, design_id, content);
+      } else {
+        content = designType.find(type => type.type === design_type).boxes.find(box => box.id === design_id);
+        const JsonToBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(content)))); 
+        await UpdateBlockDesignAPI(block_id, design_type, design_id, JSON.stringify(JsonToBase64));
+      }
+
       dispatch(updateList(blocks.map(block => {
         if (block.block_id === block_id) {
-          return {...block, design_type: design_type, design_id: design_id}
+          return {...block, design_type: design_type, design_id: design_id, content: content}
         }
         return block;
       })));
@@ -135,6 +163,29 @@ export const useEditorActions = () => {
       console.error(err.message);
     }
   };
+
+  // 블록 텍스트 수정
+  const handleUpdateText = (block_id, lines, updatedText) => {
+    
+    const updateBlock = blocks?.map((block) => {
+      if (block.block_id === block_id) {
+        const updateLine = block.content?.lines?.map(e => {
+          if (e === lines) {
+            return {
+              ...e,
+              text: updatedText
+            }
+          } else return e
+        });
+        return { ...block, content: { ...block.content, lines: updateLine } }
+      }
+      return block;
+    });
+    
+    console.log("updateBlock",updateBlock)
+    dispatch(updateList(updateBlock));
+  };
+
 
   // 블록 삭제
   const deleteBlockAction = async (block_id, setIsLoading, setError) => {
@@ -276,5 +327,5 @@ export const useEditorActions = () => {
     }
   }
 
-  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction };
+  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction, handleUpdateText };
 };

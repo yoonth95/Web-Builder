@@ -61,7 +61,8 @@ const Editor = ({ isLoading, setIsLoading }) => {
   // 페이지 이동
   const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
-    if (window.confirm('저장후 이동하시겠습니까?')) {
+    if (window.confirm('저장 후 이동하시겠습니까?')) {
+      handleSave();
       navigate(`/editor/${selectedValue}`);
     }
   };
@@ -75,7 +76,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const handleSave = async () => {
     const result = await saveBlockAction(page_idx, blockStyle, setIsLoading, setError);
     console.log(result);
-    alert("저장되었습니다.");
+    alert('저장되었습니다.');
   };
 
   if (isLoading) return <Spinner />;
@@ -87,26 +88,26 @@ const Editor = ({ isLoading, setIsLoading }) => {
 
   return (
    <>
-    <div className='editor_wrap'>
-      <div className='editor_pages_wrap'>
-        <div className='editor_pages'>
-          <label className='editor_pageList_Label'>현재 페이지</label>
-          <select className='editor_pageList' value={page_idx} onChange={handleSelectChange}>
-          {secondList.map(item => (
-            <option key={item.title} value={item.idx}>{item.title}</option>
-          ))}
-          </select>
+      <div className='editor_wrap'>
+        <div className='editor_pages_wrap'>
+          <div className='editor_pages'>
+            <label className='editor_pageList_Label'>현재 페이지</label>
+            <select className='editor_pageList' value={page_idx} onChange={handleSelectChange}>
+            {secondList.map(item => (
+              <option key={item.title} value={item.idx}>{item.title}</option>
+            ))}
+            </select>
+          </div>
+          <div className='editor_btns'>
+            <button className='editor_previewBtn' onClick={handlePreview}>미리보기</button>
+            <button className='editor_saveBtn' onClick={handleSave}>저장</button>
+          </div>
         </div>
-        <div className='editor_btns'>
-          <button className='editor_previewBtn' onClick={handlePreview}>미리보기</button>
-          <button className='editor_saveBtn' onClick={handleSave}>저장</button>
-        </div>
-      </div>
-      <div className='editor_switch_screen'>
-        {screenIcons.map(({id,icon,size})=>(
-          <button className='editor_switch_screen_Btn' key={id} onClick={()=>handleScreenChange(size)} >
-            <FontAwesomeIcon icon={icon} />
-        </button>))}
+        <div className='editor_switch_screen'>
+          {screenIcons.map(({id,icon,size})=>(
+            <button className='editor_switch_screen_Btn' key={id} onClick={()=>handleScreenChange(size)} >
+              <FontAwesomeIcon icon={icon} />
+          </button>))}
         </div>
       </div>
       <div className={screenSize}>
@@ -119,6 +120,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
               design_id={block.design_id}
               block_order={block.block_order}
               layout_design={block.layout_design}
+              block_content={block.content}
               addBlock={addBlock}
               deleteBlock={deleteBlock}
               handleChangeBlockOrder={handleChangeBlockOrder}

@@ -6,7 +6,20 @@ exports.getBlocks = async (req, res) => {
 
     try {
         const getBlocks = await editorDB.getBlocks(idx);
-        res.status(200).json(getBlocks);
+        const result = getBlocks.map((block) => {
+            if (!block.content) return block;
+
+            const BlobToBase64 = JSON.parse(Buffer.from(block.content).toString('utf-8'));
+            const Base64ToString = Buffer.from(BlobToBase64, 'base64').toString('utf-8');
+            const StringToJson = JSON.parse(Base64ToString);
+
+            return {
+                ...block,
+                content: StringToJson,
+            }
+        });
+
+        res.status(200).json(result);
     } catch (err) {
         console.error(err);
         res.status(500).json(err);
@@ -16,9 +29,9 @@ exports.getBlocks = async (req, res) => {
 // 에디터 블록 추가
 exports.insertBlock = async (req, res) => {
     const data = req.body;
-
+    
     try {
-        const result = await editorDB.insertBlock(data.page_id, data.block_id, data.design_type, data.design_id, data.layout_design, data.block_order);
+        const result = await editorDB.insertBlock(data.page_id, data.block_id, data.block_style, data.design_type, data.design_id, data.layout_design, data.block_order);
         res.status(200).json(result);
     } catch (err) {
         console.error(err);
@@ -44,7 +57,7 @@ exports.updateBlockDesign = async (req, res) => {
     const data = req.body;
 
     try {
-        const result = await editorDB.updateBlockDesign(data.block_id, data.design_type, data.design_id);
+        const result = await editorDB.updateBlockDesign(data.block_id, data.design_type, data.design_id, data.content);
         res.status(200).json(result);
     } catch (err) {
         console.error(err);

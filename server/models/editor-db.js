@@ -17,9 +17,9 @@ exports.getBlocks = async (idx) => {
 };
 
 // 에디터 블록 추가
-exports.insertBlock = async (page_id, block_id, design_type, design_id, layout_design, block_order) => {
+exports.insertBlock = async (page_id, block_id, block_style, design_type, design_id, layout_design, block_order) => {
     try {
-        const result = await query(`INSERT INTO blocks (page_id, block_id, design_type, design_id, layout_design, block_order) VALUES (?, ?, ?, ?, ?, ?)`, [page_id, block_id, design_type, design_id, layout_design, block_order]);
+        const result = await query(`INSERT INTO blocks (page_id, block_id, block_style, design_type, design_id, layout_design, block_order) VALUES (?, ?, ?, ?, ?, ?, ?)`, [page_id, block_id, block_style, design_type, design_id, layout_design, block_order]);
         return result;
     } catch (err) {
         throw err;
@@ -37,9 +37,9 @@ exports.orderBlock = async (block_id, block_order) => {
 }
 
 // 에디터 블록 디자인 변경
-exports.updateBlockDesign = async (block_id, design_type, design_id) => {
+exports.updateBlockDesign = async (block_id, design_type, design_id, content) => {
     try {
-        const result = await query(`UPDATE blocks SET design_type=?, design_id=? WHERE block_id=?`, [design_type, design_id, block_id]);
+        const result = await query(`UPDATE blocks SET design_type=?, design_id=?, content=? WHERE block_id=?`, [design_type, design_id, content, block_id]);
         return result;
     } catch (err) {
         throw err;

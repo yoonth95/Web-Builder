@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // hooks
@@ -15,14 +15,14 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Modal/EditorModal.css';
 
 
-const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutId }) => {
+const EditorModal = ({ design_type, isModalOpen, setIsModalOpen, isLayoutDesign, layoutId }) => {
   const defaultType = design_type === 'default' ? 'image' : isLayoutDesign ? 'image' : design_type;
 
   const [selectedDesignId, setSelectedDesignId] = useState(0);
   const [selectedDesignType, setSelectedDesignType] = useState(defaultType);
   const [activeCell, setActiveCell] = useState(null); 
 
-  const { updateBlockDesignAction, updateBlockLayoutAction } = useEditorActions();  
+  const { updateBlockDesignAction, updateBlockLayoutAction } = useEditorActions();
 
   const designSelectType = (type) => {
     setSelectedDesignType(type);
@@ -44,23 +44,23 @@ const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutI
     if (isLayoutDesign) {
       if (selectedDesignType === 'table' && activeCell) {
         const [rows, cols] = activeCell;
-        await updateBlockLayoutAction(block_id, selectedDesignType, `${rows+1},${cols+1}`, layoutId);
+        await updateBlockLayoutAction(isModalOpen.block_id, selectedDesignType, `${rows+1},${cols+1}`, layoutId);
       } else {
         const boxes = designType.find(item => item.type === selectedDesignType).boxes.find(item => item.id === selectedDesignId);
-        await updateBlockLayoutAction(block_id, selectedDesignType, selectedDesignId, layoutId, boxes);
+        await updateBlockLayoutAction(isModalOpen.block_id, selectedDesignType, selectedDesignId, layoutId, boxes);
       }
     } 
     // 블록 디자인 수정 시
     else {
       if (selectedDesignType === 'table' && activeCell) {
         const [rows, cols] = activeCell;
-        await updateBlockDesignAction(block_id, selectedDesignType, `${rows+1},${cols+1}`);
+        await updateBlockDesignAction(isModalOpen.block_id, selectedDesignType, `${rows+1},${cols+1}`);
       } else {
-        await updateBlockDesignAction(block_id, selectedDesignType, selectedDesignId);
+        await updateBlockDesignAction(isModalOpen.block_id, selectedDesignType, selectedDesignId);
       }
     }
     
-    setIsOpen(false);
+    setIsModalOpen({ open: false, block_id: '' });
   }
 
   const renderBox = (box, index) => ModalRenderBox[selectedDesignType](box, index, designSelectId, selectedDesignId);
@@ -71,7 +71,7 @@ const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutI
       <div className='editModal-container'>
         <div className='editModal-header'>
           <h3 className='font-style'>블록 디자인 추가</h3>
-          <span style={{ cursor: 'pointer' }} onClick={() => setIsOpen(false)}>
+          <span style={{ cursor: 'pointer' }} onClick={() => setIsModalOpen({ open: false, block_id: '' })}>
             <FontAwesomeIcon icon={faXmark} />
           </span>
         </div>
@@ -103,9 +103,9 @@ const EditorModal = ({ block_id, design_type, setIsOpen, isLayoutDesign, layoutI
 export default EditorModal;
 
 EditorModal.propTypes = {
-  block_id: PropTypes.string.isRequired,
   design_type: PropTypes.string.isRequired,
-  setIsOpen: PropTypes.func.isRequired,
+  isModalOpen: PropTypes.object.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
   isLayoutDesign: PropTypes.bool.isRequired,
   layoutId: PropTypes.number.isRequired,
 };
