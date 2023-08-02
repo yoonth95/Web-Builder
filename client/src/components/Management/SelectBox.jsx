@@ -30,7 +30,6 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
   return (
     <ul className='list_select_option' onClick={toggle}>
       <li className={`selected_option ${isToggle ? 'open' : ''}`}>{resultTitle}</li>
-    <Dropdown visibility={isToggle} dropdownClassName={isToggle ? 'selectbox-dropdown' : 'dropup'}>
               <ul className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
                 <li className='disabled_option' onClick={stopEventBubbling}>
                   공통 페이지
@@ -57,7 +56,6 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
                         </li>
                       ))}
               </ul>
-        </Dropdown>
     </ul>
   );
 };
@@ -70,3 +68,4 @@ const common = [
   { id: '565373', link: '/signup', title: '회원가입' },
   { id: '09042385', link: '/findId', title: '아이디 찾기' },
 ];
+{/* <Dropdown visibility={isToggle} dropdownClassName={isToggle ? 'selectbox-dropupp' : 'dropup'}> </Dropdown> */}

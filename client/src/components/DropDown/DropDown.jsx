@@ -7,6 +7,8 @@ const Dropdown = ({ visibility, children }) => {
 
   useEffect(() => {
     if (visibility) {
+      clearTimeout(dropdownRef);
+      dropdownRef.current = null;
       setVisibilityAnimation(true);
     } else {
       setTimeout(() => {
@@ -37,7 +39,7 @@ const Dropdown = ({ visibility, children }) => {
   }, []);
 
   return (
-    <article ref={dropdownRef} className={`${visibility ? 'dropdown' : 'dropup'}`}>
+    <article ref={dropdownRef} className={`${visibility ? 'dropdown'  : 'dropup'}`}>
       {visibilityAnimation && children}
     </article>
   );
