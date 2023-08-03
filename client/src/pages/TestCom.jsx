@@ -21,7 +21,6 @@ const TestCom = ({ isLoading, setIsLoading, setError }) => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-    // 필터한 데이터 뿌려주기 (idx값으로)
   }, []);
 
   useEffect(() => {
@@ -43,29 +42,37 @@ const TestCom = ({ isLoading, setIsLoading, setError }) => {
     console.log('design_type', design_type, 'block_content', content, 'block_id', block_id);
 
     if (content) {
-      return EditorRenderBox[design_type](content, block_id);
+      return EditorRenderBox[design_type](content, block_id,blockStyle,handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
     }
     const typeItem = designType.find((item) => item.type === design_type);
     console.log('typeItem.boxes', typeItem.boxes);
     const filteredBoxes = typeItem.boxes.filter((box) => box.id === design_id);
-    // return typeItem.boxes.map((box) => EditorRenderBox[design_type](box, block_id));
-    // return filteredBoxes.map((box) => EditorRenderBox[design_type](box, block_id));
     return filteredBoxes.map((box) => EditorRenderBox[design_type](box, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId));
   };
 
   console.log(data);
+  // 저.. 저기... 요......... 제 말 들리세요.......?.......?........?.......?......?......?.....?
 
+  // 진짜 안 보이시나요........?????????........????????? 궁금해서 그래요...............???????????????????
+  // 저.................. 안보이시나요...........................................?????????????????????
   return (
     <>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} windowWidth={windowWidth} />
-      {data &&
-        data
-          .sort((a, b) => a.block_order - b.block_order)
-          .map((block) => (
+     
+
+      {data?.sort((a, b) => a.block_order - b.block_order)
+          .map((block) => {
+            const isDefault = block.design_type === 'default';
+            <div
+            className='block_container'
+            // ref={blockContainerRef}
+            style={{ height: isDefault ? '160px' : 'auto' }}
+          >
             <div key={block.block_id}>
               <div className='module_block'>{renderBox(block)}</div>
+      </div>
             </div>
-          ))}
+      })}
     </>
   );
 };

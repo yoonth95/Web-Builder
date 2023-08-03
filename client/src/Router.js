@@ -42,7 +42,6 @@ const Router = () => {
         <Route path='/editor/:page_idx' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/main' element={<Main isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/*' element={<NotFound />} />
-        <Route path="/test" element={<TestCom isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/pages/:link/:sublink?' element={<TestCom isLoading={isLoading} setIsLoading={setIsLoading} />} />
       </Routes>
     </BrowserRouter>
