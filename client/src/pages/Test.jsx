@@ -3,47 +3,20 @@ import React from 'react';
 import ApplyTable from 'components/Editor/ApplyTable';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWandMagicSparkles, faImage, faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
+import './Test.css';
 
 export const EditorRenderBox = {
   image: (box, block_id, blockStyle) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
-
-    const isCircle = box.style.borderRadius === '50%';
-    const containerWidth = filter_style?.style?.maxWidth || '1240px'; // module_wrap의 maxWidth 값을 가져옵니다.
-    const imageWidth = `calc(${containerWidth} / ${box?.numImages} - 40px)`; // 각 이미지의 너비를 계산합니다.
-
-    const imageBoxStyle = {
-      position: 'relative',
-      width: imageWidth,
-      height: isCircle ? imageWidth : '300px', // 원형 이미지의 높이를 너비와 동일하게 설정합니다.
-      cursor: 'pointer',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      overflow: 'hidden',
-      borderRadius: box.style.borderRadius || '10px',
-      margin: '20px',
-      background: 'rgba(0, 0, 0, 0.4)',
-      ...box.style,
-    };
-
     return (
       <div key={block_id} className='module_wrap' style={filter_style?.style}>
         <div className='module_container' style={box?.layout}>
           {[...Array(box?.numImages)].map((_, i) => (
-            <div key={i} className='module_imageBox imgHover' style={imageBoxStyle}>
-              <img src={box.src} alt='' style={{ width: '100%', height: '100%' }} />
-              {/* <div className='module_imageBox imgHover'>
-                {box?.src && <img src={box.src} alt='' />}
-                <FontAwesomeIcon icon={faImage} size='3x' style={{ color: '#696969', position: 'relative', left: '60px' }} />
-                <div className='module_image'>
-                  <FontAwesomeIcon icon={faImage} style={{ color: '#ffffff', width: '50%' }} />
-                </div>
-                <div className='module_image'>
-                  <FontAwesomeIcon icon={faPaperclip} style={{ color: '#ffffff', width: '50%' }} />
-                </div>
-              </div> */}
+            <div key={i} style={box?.style}>
+              <div className='module_imageBox'>
+                <img src={`${box?.src}`} alt='' />
+              </div>
             </div>
           ))}
         </div>
@@ -71,31 +44,20 @@ export const EditorRenderBox = {
     );
   },
   list: (box, block_id, blockStyle, handleUpdateText) => {
-    let blockId, isLayout;
-    if (block_id.includes('layout')) {
-      [blockId, isLayout] = block_id.split('/');
-    } else {
-      blockId = block_id;
-      isLayout = false;
-    }
-
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     return (
       <div key={block_id} className='module_wrap font-style' style={filter_style?.style}>
         <div className='module_container_list'>
           <div className='module_list_item'>
-            <div className={`module_${box?.shape} imgHover`}>
+            <div className={`module_${box?.shape}`}>
               <img src={`${box?.src}`} alt='' />
             </div>
             {box?.lines &&
               box?.lines.map((line, lineIndex) => (
                 <div
                   key={lineIndex}
-                  contentEditable={true}
-                  suppressContentEditableWarning
                   style={{ margin: line.margin, fontFamily: line.fontFamily || 'inherit', fontSize: line.fontSize, fontWeight: line.fontWeight, color: line.color }}
                   className={line.className}
-                  onBlur={(e) => handleUpdateText(blockId, lineIndex, e.target.innerHTML, isLayout)}
                   dangerouslySetInnerHTML={{ __html: line.text }}
                 />
               ))}
@@ -123,10 +85,7 @@ export const EditorRenderBox = {
                 <div
                   key={i}
                   className='module_text_line'
-                  contentEditable={true}
-                  suppressContentEditableWarning
                   style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
-                  onBlur={(e) => handleUpdateText(blockId, i, e.target.innerHTML, isLayout)}
                   dangerouslySetInnerHTML={{ __html: line.text }}
                 ></div>
                 {line.button && <button className={line.buttonStyle}>{line.button}</button>}

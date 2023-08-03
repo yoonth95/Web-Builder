@@ -11,28 +11,30 @@ import { useEditorActions } from 'hooks/useEditor';
 import Block from 'components/Editor/Block';
 import Nav from 'components/Main/Nav';
 import Spinner from 'components/Spinner/Spinner';
-// import SideBar from 'components/Editor/SideBar'; 
+// import SideBar from 'components/Editor/SideBar';
 
 // icon 및 css
-import "styles/Editor/Editor.css"
+import 'styles/Editor/Editor.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDesktop,faTabletScreenButton,faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
+import { faDesktop, faTabletScreenButton, faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 
 const Editor = ({ isLoading, setIsLoading }) => {
   const { page_idx } = useParams();
   const navigate = useNavigate();
   const { secondList } = useSelector((state) => state.menu);
-  const blocks = useSelector(state => state.editor.blockList);
+  const blocks = useSelector((state) => state.editor.blockList);
   const [error, setError] = useState(null);
   const [screenSize, setScreenSize] = useState('desktop');
-  const [blockStyle, setBlockStyle] = useState([]);   // 블록 스타일 상태 값
+  const [blockStyle, setBlockStyle] = useState([]); // 블록 스타일 상태 값
   const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction, saveBlockAction } = useEditorActions();
 
   useEffect(() => {
     // 블록 조회
-    getBlocksAction(Number(page_idx), setIsLoading, setError, setBlockStyle);
+    const getBlocks = async () => {
+      await getBlocksAction(Number(page_idx), setIsLoading, setError, setBlockStyle);
+    };
+    getBlocks();
   }, [page_idx]);
-
 
   // 블록 추가
   const addBlock = (order, dir) => {
@@ -51,18 +53,18 @@ const Editor = ({ isLoading, setIsLoading }) => {
   // 블록 순서 변경
   const handleChangeBlockOrder = async (block_id, dir) => {
     await updateBlockOrderAction(block_id, dir, setIsLoading, setError);
-  }
+  };
 
   // 사이즈 변경
-  const handleScreenChange = size => {
+  const handleScreenChange = (size) => {
     setScreenSize(size);
-  }
-  
+  };
+
   // 페이지 이동
-  const handleSelectChange = (e) => {
+  const handleSelectChange = async (e) => {
     const selectedValue = e.target.value;
     if (window.confirm('저장 후 이동하시겠습니까?')) {
-      handleSave();
+      await saveBlockAction(page_idx, blocks, setIsLoading, setError);
       navigate(`/editor/${selectedValue}`);
     }
   };
@@ -87,48 +89,58 @@ const Editor = ({ isLoading, setIsLoading }) => {
   }
 
   return (
-   <>
+    <>
       <div className='editor_wrap'>
         <div className='editor_pages_wrap'>
           <div className='editor_pages'>
             <label className='editor_pageList_Label'>현재 페이지</label>
             <select className='editor_pageList' value={page_idx} onChange={handleSelectChange}>
-            {secondList.map(item => (
-              <option key={item.title} value={item.idx}>{item.title}</option>
-            ))}
+              {secondList.map((item) => (
+                <option key={item.title} value={item.idx}>
+                  {item.title}
+                </option>
+              ))}
             </select>
           </div>
           <div className='editor_btns'>
-            <button className='editor_previewBtn' onClick={handlePreview}>미리보기</button>
-            <button className='editor_saveBtn' onClick={handleSave}>저장</button>
+            <button className='editor_previewBtn' onClick={handlePreview}>
+              미리보기
+            </button>
+            <button className='editor_saveBtn' onClick={handleSave}>
+              저장
+            </button>
           </div>
         </div>
         <div className='editor_switch_screen'>
-          {screenIcons.map(({id,icon,size})=>(
-            <button className='editor_switch_screen_Btn' key={id} onClick={()=>handleScreenChange(size)} >
+          {screenIcons.map(({ id, icon, size }) => (
+            <button className='editor_switch_screen_Btn' key={id} onClick={() => handleScreenChange(size)}>
               <FontAwesomeIcon icon={icon} />
-          </button>))}
+            </button>
+          ))}
         </div>
       </div>
       <div className={screenSize}>
-        <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize}  type='편집' />
-        {[...blocks].sort((a, b) => a.block_order - b.block_order).map(block => (
-          <div key={block.block_id}>
-            <Block 
-              block_id={block.block_id}
-              design_type={block.design_type}
-              design_id={block.design_id}
-              block_order={block.block_order}
-              layout_design={block.layout_design}
-              block_content={block.content}
-              addBlock={addBlock}
-              deleteBlock={deleteBlock}
-              handleChangeBlockOrder={handleChangeBlockOrder}
-              blockStyle={blockStyle}
-              setBlockStyle={setBlockStyle}
-            />
-          </div>
-        ))}
+        <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize} type='편집' />
+        {[...blocks]
+          .filter((e) => e.page_id === Number(page_idx))
+          .sort((a, b) => a.block_order - b.block_order)
+          .map((block) => (
+            <div key={block.block_id}>
+              <Block
+                block_id={block.block_id}
+                design_type={block.design_type}
+                design_id={block.design_id}
+                block_order={block.block_order}
+                layout_design={block.layout_design}
+                block_content={block.content}
+                addBlock={addBlock}
+                deleteBlock={deleteBlock}
+                handleChangeBlockOrder={handleChangeBlockOrder}
+                blockStyle={blockStyle}
+                setBlockStyle={setBlockStyle}
+              />
+            </div>
+          ))}
       </div>
     </>
   );
@@ -136,5 +148,8 @@ const Editor = ({ isLoading, setIsLoading }) => {
 
 export default Editor;
 
-const screenIcons = [{id:"001",icon:faDesktop,size: 'desktop'},{id:"002",icon:faTabletScreenButton,size: 'tablet'},{id:"003",icon:faMobileScreenButton,size: 'mobile'}]
-
+const screenIcons = [
+  { id: '001', icon: faDesktop, size: 'desktop' },
+  { id: '002', icon: faTabletScreenButton, size: 'tablet' },
+  { id: '003', icon: faMobileScreenButton, size: 'mobile' },
+];

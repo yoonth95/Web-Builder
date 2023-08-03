@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import useAuth from 'hooks/useAuth';
@@ -27,6 +27,7 @@ const Router = () => {
     if (user) dispatch(setUser(user));
   }, [user, dispatch]);
 
+
   return (
     <BrowserRouter>
       <Modal isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -41,7 +42,8 @@ const Router = () => {
         <Route path='/editor/:page_idx' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/main' element={<Main isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/*' element={<NotFound />} />
-        <Route path="/test" element={<TestCom isLoading={isLoading} setIsLoading={setIsLoading} />}/>
+        <Route path="/test" element={<TestCom isLoading={isLoading} setIsLoading={setIsLoading} />} />
+        <Route path='/pages/:link/:sublink?' element={<TestCom isLoading={isLoading} setIsLoading={setIsLoading} />} />
       </Routes>
     </BrowserRouter>
   );

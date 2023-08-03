@@ -9,7 +9,7 @@ const rollback = util.promisify(db.rollback).bind(db);
 // 에디터 블록 가져오기
 exports.getBlocks = async (idx) => {
     try {
-        const result = await query(`SELECT page_id, block_id, block_style, design_type, design_id, layout_design, content, block_order FROM blocks WHERE page_id=? ORDER BY block_order asc`, idx);
+        const result = await query(`SELECT page_id, block_id, block_style, design_type, design_id, layout_design, content, block_order, save_time FROM blocks WHERE page_id=? ORDER BY block_order asc`, idx);
         return result;
     } catch (err) {
         throw err;
@@ -93,11 +93,11 @@ exports.saveBlock = async (page_idx, blocks) => {
         await beginTransaction(); // 트랜잭션 시작 
 
         blocks.forEach(async item => {
-            await query(`UPDATE blocks SET block_style=?, design_type=?, design_id=?, layout_design=?, content=?, block_order=? WHERE page_id=? and block_id=?`, [item.block_style, item.design_type, item.design_id, item.layout_design, JSON.stringify(item.content), item.block_order, page_idx, item.block_id]);
+            await query(`UPDATE blocks SET block_style=?, design_type=?, design_id=?, layout_design=?, content=?, block_order=? WHERE page_id=? and block_id=?`, [item.block_style, item.design_type, item.design_id, item.layout_design, item.content, item.block_order, page_idx, item.block_id]);
         });
 
         await commit();   // 트랜잭션 수행 
-        
+
         return true;
     } catch (err) {
         await rollback(); // 트랜잭션 롤백

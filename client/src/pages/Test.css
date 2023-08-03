@@ -1,0 +1,32 @@
+.module_layoutBox {
+  border: none;
+}
+
+/* .layout_wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  cursor: none;
+  border: none;
+}
+
+.layout_wrap:hover {
+  outline: none;
+} */
+
+@media (max-width: 1098px) {
+  .module_layout_item {
+    flex-direction: column !important;
+  }
+  .module_container {
+    flex-direction: column !important;
+  }
+  .module_wideRectangle {
+    width: 100%;
+  }
+  .module_rectangle {
+    width: 100%;
+  }
+}

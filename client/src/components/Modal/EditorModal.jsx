@@ -14,13 +14,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Modal/EditorModal.css';
 
-
 const EditorModal = ({ design_type, isModalOpen, setIsModalOpen, isLayoutDesign, layoutId }) => {
   const defaultType = design_type === 'default' ? 'image' : isLayoutDesign ? 'image' : design_type;
 
   const [selectedDesignId, setSelectedDesignId] = useState(0);
   const [selectedDesignType, setSelectedDesignType] = useState(defaultType);
-  const [activeCell, setActiveCell] = useState(null); 
+  const [activeCell, setActiveCell] = useState(null);
 
   const { updateBlockDesignAction, updateBlockLayoutAction } = useEditorActions();
 
@@ -34,7 +33,7 @@ const EditorModal = ({ design_type, isModalOpen, setIsModalOpen, isLayoutDesign,
     setSelectedDesignId(id);
   };
 
-  const handleGetBlock = async () => { 
+  const handleGetBlock = async () => {
     if (selectedDesignId === 0 && !activeCell) {
       alert('디자인을 선택해주세요.');
       return;
@@ -44,24 +43,25 @@ const EditorModal = ({ design_type, isModalOpen, setIsModalOpen, isLayoutDesign,
     if (isLayoutDesign) {
       if (selectedDesignType === 'table' && activeCell) {
         const [rows, cols] = activeCell;
-        await updateBlockLayoutAction(isModalOpen.block_id, selectedDesignType, `${rows+1},${cols+1}`, layoutId);
+        await updateBlockLayoutAction(isModalOpen.block_id, selectedDesignType, `${rows + 1},${cols + 1}`, layoutId);
       } else {
-        const boxes = designType.find(item => item.type === selectedDesignType).boxes.find(item => item.id === selectedDesignId);
+        const boxes = designType.find((item) => item.type === selectedDesignType).boxes.find((item) => item.id === selectedDesignId);
         await updateBlockLayoutAction(isModalOpen.block_id, selectedDesignType, selectedDesignId, layoutId, boxes);
       }
-    } 
+    }
     // 블록 디자인 수정 시
     else {
       if (selectedDesignType === 'table' && activeCell) {
         const [rows, cols] = activeCell;
-        await updateBlockDesignAction(isModalOpen.block_id, selectedDesignType, `${rows+1},${cols+1}`);
+        await updateBlockDesignAction(isModalOpen.block_id, selectedDesignType, `${rows + 1},${cols + 1}`);
       } else {
         await updateBlockDesignAction(isModalOpen.block_id, selectedDesignType, selectedDesignId);
       }
     }
-    
+
     setIsModalOpen({ open: false, block_id: '' });
-  }
+    // window.location.reload();
+  };
 
   const renderBox = (box, index) => ModalRenderBox[selectedDesignType](box, index, designSelectId, selectedDesignId);
   const filterDesignType = isLayoutDesign ? designType.filter((item) => item.type !== 'layout') : designType;
@@ -82,7 +82,11 @@ const EditorModal = ({ design_type, isModalOpen, setIsModalOpen, isLayoutDesign,
                 {item.text}
               </p>
             ))}
-            {(selectedDesignId !== 0 || activeCell !== null) && <button className='editMenu-select-btn' onClick={handleGetBlock}>가져오기</button>}
+            {(selectedDesignId !== 0 || activeCell !== null) && (
+              <button className='editMenu-select-btn' onClick={handleGetBlock}>
+                가져오기
+              </button>
+            )}
           </div>
           {selectedDesignType === 'table' ? (
             <div className='editModal_table'>

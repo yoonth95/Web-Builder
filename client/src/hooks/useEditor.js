@@ -5,10 +5,10 @@ import { updateList } from 'redux/editorSlice';
 
 import designType from 'data/designType';
 
-import { 
-  GetBlocksAPI, 
-  InsertBlockAPI, 
-  UpdateBlockOrderAPI, 
+import {
+  GetBlocksAPI,
+  InsertBlockAPI,
+  UpdateBlockOrderAPI,
   UpdateBlockDesignAPI,
   DeleteBlockAPI,
   UpdateBlockLayoutAPI,
@@ -29,6 +29,7 @@ export const useEditorActions = () => {
         Navigate('/notfound');
       } else {
         if (data.length === 0) {
+          console.log('dd');
           const block_id = `${page_idx}_${new Date().getTime()}_${Math.floor(Math.random() * 899999) + 100000}`;
           const block_style = {
             style: {
@@ -55,11 +56,11 @@ export const useEditorActions = () => {
           let blockList = [];
           if (blocks && blocks.length > 0) {
             blockList = [...blocks];
-          } 
+          }
           data.forEach(block => {
             if (!blockList.find(b => b.block_id === block.block_id)) {
               blockList.push(block);
-  
+
               if (block.block_style === null) {
                 const block_dic = {
                   style: {
@@ -108,12 +109,12 @@ export const useEditorActions = () => {
       content: null,
       block_order: dir === 'after' ? order + 1 : order
     };
-  
+
     try {
       setIsLoading(true);
       const updatedBlocks = blocks.map(block => {
         if (block.block_order >= newBlock.block_order) {
-          return {...block, block_order: block.block_order + 1}
+          return { ...block, block_order: block.block_order + 1 }
         }
         return block;
       });
@@ -123,9 +124,9 @@ export const useEditorActions = () => {
           await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
         }
       }
-  
+
       await InsertBlockAPI(newBlock);
-  
+
       let blockList = [];
       if (updatedBlocks && updatedBlocks.length > 0) {
         blockList = [...updatedBlocks];
@@ -149,13 +150,13 @@ export const useEditorActions = () => {
         await UpdateBlockDesignAPI(block_id, design_type, design_id, content);
       } else {
         content = designType.find(type => type.type === design_type).boxes.find(box => box.id === design_id);
-        const JsonToBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(content)))); 
-        await UpdateBlockDesignAPI(block_id, design_type, design_id, JSON.stringify(JsonToBase64));
+        const JsonToBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(content))));
+        await UpdateBlockDesignAPI(block_id, design_type, design_id, JsonToBase64);
       }
 
       dispatch(updateList(blocks.map(block => {
         if (block.block_id === block_id) {
-          return {...block, design_type: design_type, design_id: design_id, content: content}
+          return { ...block, design_type: design_type, design_id: design_id, content: content }
         }
         return block;
       })));
@@ -183,7 +184,7 @@ export const useEditorActions = () => {
         return block;
       });
       dispatch(updateList(updateBlock));
-    } 
+    }
     // 레이아웃일 때
     else {
       const layout_id = Number(isLayout.split("_")[1]);
@@ -232,7 +233,7 @@ export const useEditorActions = () => {
 
       const updatedBlocks = blocks.map(block => {
         if (block.block_order > blockToDelete.block_order) {
-          return {...block, block_order: block.block_order - 1}
+          return { ...block, block_order: block.block_order - 1 }
         }
         return block;
       });
@@ -267,7 +268,7 @@ export const useEditorActions = () => {
 
       let newBlocks = [...blocks];
       let blockToMove = { ...newBlocks[blockToMoveIndex] };
-  
+
       // 블록을 위로 올릴 때
       if (dir === 'up' && blockToMove.block_order > 1) {
         const blockAboveIndex = newBlocks.findIndex(block => block.block_order === blockToMove.block_order - 1);
@@ -290,16 +291,16 @@ export const useEditorActions = () => {
       if (dir === 'down' && blockToMove.block_order < newBlocks.length) {
         const blockBelowIndex = newBlocks.findIndex(block => block.block_order === blockToMove.block_order + 1);
         let blockBelow = { ...newBlocks[blockBelowIndex] };
-  
+
         blockBelow.block_order -= 1;
         blockToMove.block_order += 1;
-  
+
         // 서버에 블록 순서 업데이트
         await Promise.all([
           UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
           UpdateBlockOrderAPI(blockBelow.block_id, blockBelow.block_order)
         ]);
-  
+
         // 새로운 상태를 Redux store에 반영
         newBlocks[blockToMoveIndex] = blockToMove;
         newBlocks[blockBelowIndex] = blockBelow;
@@ -315,7 +316,7 @@ export const useEditorActions = () => {
       setIsLoading(false);
     }
   };
-  
+
   // 블록 레이아웃 수정
   const updateBlockLayoutAction = async (block_id, design_type, design_id, layout_id, boxes) => {
     try {
@@ -325,13 +326,13 @@ export const useEditorActions = () => {
         design_id: design_id,
         boxes: boxes
       };
-      
+
       await UpdateBlockLayoutAPI(block_id, layout_design);
       dispatch(updateList(blocks.map(block => {
         if (block.block_id === block_id) {
           const existing_layout_design = JSON.parse(block.layout_design || '[]');
           existing_layout_design.push(layout_design);
-          return {...block, layout_design: JSON.stringify(existing_layout_design)}
+          return { ...block, layout_design: JSON.stringify(existing_layout_design) }
         }
         return block;
       })));
@@ -347,7 +348,7 @@ export const useEditorActions = () => {
         const content = block.content
           ? btoa(unescape(encodeURIComponent(JSON.stringify(block.content))))
           : null;
-        
+
         const layout_design = block.layout_design
           ? btoa(unescape(encodeURIComponent(block.layout_design)))
           : null;

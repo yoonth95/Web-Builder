@@ -30,32 +30,32 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
   return (
     <ul className='list_select_option' onClick={toggle}>
       <li className={`selected_option ${isToggle ? 'open' : ''}`}>{resultTitle}</li>
-              <ul className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
-                <li className='disabled_option' onClick={stopEventBubbling}>
-                  공통 페이지
+      <ul className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
+        <li className='disabled_option' onClick={stopEventBubbling}>
+          공통 페이지
+        </li>
+        {common.map((list) => (
+          <li className='select_option' key={list.id} onClick={(e) => handleButtonClick(e, list.link)}>
+            {list.title}
+          </li>
+        ))}
+        <li className='disabled_option' onClick={stopEventBubbling}>
+          사용자 추가 페이지
+        </li>
+        {type === '복제'
+          ? secondList.map((subMenu) => (
+              <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
+                {subMenu.title}
+              </li>
+            ))
+          : secondList
+              .filter((submenu) => submenu.parent_id === parent_id)
+              .map((subMenu) => (
+                <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
+                  {subMenu.title}
                 </li>
-                {common.map((list) => (
-                  <li className='select_option' key={list.id} onClick={(e) => handleButtonClick(e, list.link)}>
-                    {list.title}
-                  </li>
-                ))}
-                <li className='disabled_option' onClick={stopEventBubbling}>
-                  사용자 추가 페이지
-                </li>
-                {type === '복제'
-                  ? secondList.map((subMenu) => (
-                      <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
-                        {subMenu.title}
-                      </li>
-                    ))
-                  : secondList
-                      .filter((submenu) => submenu.parent_id === parent_id)
-                      .map((subMenu) => (
-                        <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
-                          {subMenu.title}
-                        </li>
-                      ))}
-              </ul>
+              ))}
+      </ul>
     </ul>
   );
 };
@@ -68,4 +68,6 @@ const common = [
   { id: '565373', link: '/signup', title: '회원가입' },
   { id: '09042385', link: '/findId', title: '아이디 찾기' },
 ];
-{/* <Dropdown visibility={isToggle} dropdownClassName={isToggle ? 'selectbox-dropupp' : 'dropup'}> </Dropdown> */}
+{
+  /* <Dropdown visibility={isToggle} dropdownClassName={isToggle ? 'selectbox-dropupp' : 'dropup'}> </Dropdown> */
+}

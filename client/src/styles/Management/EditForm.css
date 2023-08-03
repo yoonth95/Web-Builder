@@ -1,8 +1,8 @@
 .edit_wrap {
   border-radius: 0px 0px 10px 10px;
-  border: 0.5px solid  #b3b3b3;
+  border: 0.5px solid #b3b3b3;
   border-width: 0 0.5px 0.5px 0.5px;
-  background:  #fff;
+  background: #fff;
   height: 155px;
   padding: 20px 22px 50px 22px;
 }
@@ -29,9 +29,9 @@
 
 .save_btn {
   border-radius: 7px;
-  border: 1px solid  #ee7d00;
+  border: 1px solid #ee7d00;
   background: #ffebd6;
-  color:  #ee7d00;
+  color: #ee7d00;
   text-align: center;
   padding: 4px 15px;
 }
@@ -43,6 +43,7 @@
 }
 
 .subMenus_wrap .txt_new_window {
+  font-size: 13px;
   margin-right: 20px;
 }
 
