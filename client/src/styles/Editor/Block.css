@@ -1,7 +1,7 @@
 .block_container {
   position: relative;
   width: 100%;
-  background: #f3f3f3;
+  /* background: #f3f3f3;  */
   outline: 1px dashed #333;
 }
 
@@ -115,51 +115,103 @@
 .module_container {
   padding: 20px 0;
 }
-.imgHover {
-  cursor: pointer;
-}
+
 .imgHover:hover {
   outline: 2px #3a7fd0 solid;
   z-index: 500;
 }
-.imgHover:hover img {
-  -webkit-filter: brightness(70%);
-  filter: brightness(70%);
+.imgHover:hover .downIcon {
+  display: none;
+}
+.imgHover:hover .attatchIcon {
+  display: flex;
+  /* -webkit-filter: brightness(70%); */
+  /* filter: brightness(70%); */
+}
+.imageTag {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* 이미지 블록 css */
-.module_imageBox {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  cursor: pointer;
+.imageDiv {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  margin-top: 20px;
-  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-height: 300px;
+  background-color: #F3F3F3;
 }
-.module_imageBox img {
+.imageDiv:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+.backgroundNone {
+  background-color: #fff !important;
+}
+
+.module_imageBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
 }
-.module_image {
+.deleteIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  border-radius: 5px;
+  background-color: #999;
+  color: #fff;
+  cursor: pointer;
+  z-index: 100;
+}
+.downIcon {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 2rem;
+  color: #B3B3B3;
+}
+.downIcon svg {
+  color: #B3B3B3;
+}
+
+.attatchIcon {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  background-color: #999999;
+}
+.attatchIcon label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
   border-radius: 5px;
-  background: #f7901e;
-  width: 50px;
-  height: 50px;
-  position: relative;
-  left: -70px;
+  background-color: #FF8B0A;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
-.module_image:nth-of-type(1) {
-  margin-right: 10px;
+.attatchIcon label input {
+  display: none;
 }
+
 /* 구분선 블록 css */
 .module_container_line {
   display: flex;
@@ -192,29 +244,22 @@
   width: 205px;
   height: 205px;
   border-radius: 50%;
-  border: 1px solid #c0c0c0;
+  background-color: #F3F3F3;
 }
 .module_rectangle {
   width: 350px;
   height: 200px;
-  border: 1px solid #c0c0c0;
+  background-color: #F3F3F3;
 }
 .module_square {
   width: 300px;
   height: 300px;
-  border: 1px solid #c0c0c0;
+  background-color: #F3F3F3;
 }
 .module_wideRectangle {
   width: 500px;
   height: 200px;
-  border: 1px solid #c0c0c0;
-}
-.module_wrap_list img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  -o-object-fit: cover;
-  object-fit: cover;
+  background-color: #F3F3F3;
 }
 
 /* 텍스트 블록 css */

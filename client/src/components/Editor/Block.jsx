@@ -6,8 +6,9 @@ import designType from 'data/designType';
 import { EditorRenderBox } from 'components/Editor/EditorRenderBox';
 import EditorModal from 'components/Modal/EditorModal';
 import ApplyTable from 'components/Editor/ApplyTable';
-import { useEditorActions } from 'hooks/useEditor';
 import SideBar from 'components/Editor/SideBar';
+import { useEditorActions } from 'hooks/useEditor';
+import { useImageActions } from 'hooks/useImage';
 
 // icon 및 css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,6 +19,8 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const isDefault = design_type === 'default';
   const blockContainerRef = useRef(null);
   const { handleUpdateText } = useEditorActions();
+  const { addImageAction, deleteImageAction } = useImageActions();
+
   const [showBlockBtn, setShowBlockBtn] = useState(false);
   const [checkBtn, setCheckBtn] = useState(false);
   const [isLayoutDesign, setIsLayoutDesign] = useState(false);
@@ -25,15 +28,59 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const [sideBarOpen, setSideBarOpen] = useState({ open: false, block_id: '' });
   const [isModalOpen, setIsModalOpen] = useState({ open: false, block_id: '' });
 
+  // 블록 마우스 오버 시 툴 바 버튼 보이게
   const handleShowBlockBtn = (e) => {
     e.type === 'mouseover' ? setShowBlockBtn(true) : setShowBlockBtn(false);
   };
 
+  // 블록 디자인 렌더링
   const renderBox = (box, id) => {
     const clickHandler = () => setIsModalOpen({ open: true, block_id: id });
-    return EditorRenderBox[design_type](box, id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
+
+    const arg = {
+      block_id: id,                         // 블록 id
+      design: box,                          // design box 값
+      blockStyle: blockStyle,               // 블록 스타일
+      layout_design: layout_design,         // 레이아웃 디자인
+      clickHandler: clickHandler,           // 모달 열기 (block_id 전달)
+      setIsLayoutDesign: setIsLayoutDesign, // 레이아웃 디자인 여부
+      setLayoutId: setLayoutId,             // 레이아웃 id
+      handleUpdateText: handleUpdateText,   // 텍스트 수정 시
+      attatchImg: attatchImg,               // 이미지 첨부
+      attatchLink: attatchLink,             // 링크 첨부
+      deleteImage: deleteImage              // 이미지 삭제
+    }
+
+    return EditorRenderBox[design_type](arg);
   };
 
+  // 이미지 첨부
+  const attatchImg = ({tag, block_id, idx}) => {
+    console.log(tag.target.files[0]);
+    console.log(block_id, idx, '이미지 첨부');
+    if (!tag.target.files[0] || !tag.target.files[0].type.includes('image')) {
+      alert('이미지 파일만 첨부해주세요.');
+      return;
+    }
+    const url = URL.createObjectURL(tag.target.files[0]);
+    console.log(url);
+    addImageAction({src: url, block_id: block_id, idx: idx});
+  }
+
+  // 링크 첨부
+  const attatchLink = ({block_id, idx}) => {
+    console.log(idx);
+    console.log(block_id, '링크 첨부');
+  }
+
+  // 이미지 삭제
+  const deleteImage = ({block_id, idx}) => {
+    console.log(idx);
+    console.log(block_id, '이미지 삭제');
+    deleteImageAction({block_id: block_id, idx: idx});
+  }
+
+  // 툴 바 버튼
   const correctionBtn = [
     {
       icon: faEdit,
@@ -48,6 +95,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
     { icon: faTrash, clickFunc: (id) => deleteBlock(id) },
   ];
 
+  // 블록 추가 버튼 렌더링
   const renderAddBlockButton = (a) => {
     if (!sideBarOpen.open) {
       // SideBar가 열려있을 때는 추가버튼 숨김

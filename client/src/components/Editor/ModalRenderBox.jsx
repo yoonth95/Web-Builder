@@ -9,7 +9,7 @@ export const ModalRenderBox = {
     return (
       <div key={index} className='typeBox' onClick={() => designSelectId(box.id)} style={{ border: isSelected ? '2px solid #ee7d00' : '' }}>
         <div className='parentBox' style={box.layout}>
-          {[...Array(box.numImages)].map((_, i) => (
+          {[...Array(box.images.length)].map((_, i) => (
             <div key={i} style={box.style} className='imageBox'>
               <FontAwesomeIcon icon={faImage} />
             </div>
