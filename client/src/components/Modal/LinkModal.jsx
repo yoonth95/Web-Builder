@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateList } from 'redux/editorSlice';
 import 'styles/Modal/LinkModal.css';
 
 const LinkModal = ({ block_id, idx, setIsOpen, isOpen }) => {
   const [isNoLinkChecked, setNoLinkChecked] = useState(true);
   const [isInternalLinkChecked, setInternalLinkChecked] = useState(false);
   const [isUrlChecked, setUrlChecked] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('');
   const [selectedLink, setSelectedLink] = useState('');
-
-  const url = `/page/${selectedLink}`;
-  console.log(url);
+  console.log(block_id);
   const { secondList } = useSelector((state) => state.menu);
-  console.log(secondList);
+  const blocks = useSelector(state => state.editor.blockList);
+
+  const dispatch = useDispatch();
 
   const handleNoLinkCheckboxChange = () => {
     setNoLinkChecked(true);
@@ -32,15 +32,38 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen }) => {
     setUrlChecked(true);
   };
 
+  const updateLink = (images, href) => {
+    if (idx === undefined) {
+      return images.map(image => ({ ...image, href }));
+    } else {
+      return images.map((image, i) =>
+        i === idx ? { ...image, href } : image
+      );
+    }
+  }
+
+  const updateBlockLink = (link) => {
+    dispatch(updateList(blocks.map(block => {
+      if (block.block_id === block_id) {
+        return {
+          ...block,
+          content: {
+            ...block.content,
+            images: updateLink(block.content.images, link)
+          }
+        }
+      }
+      return block;
+    })));
+  };
+
   const handleOptionChange = (e) => {
-    console.log(e.target.value);
-    setSelectedOption(e.target.value);
-    const selectedPage = secondList.find((item) => item.idx === e.target.value);
-    console.log(selectedPage);
+    const selectedPage = secondList.find((item) => item.idx === Number(e.target.value));
     if (selectedPage) {
       setSelectedLink(selectedPage.link);
     }
   };
+
   return (
     <div className='modal-overlay'>
       <div className='modal-content'>
@@ -76,7 +99,14 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen }) => {
         </div>
         <div className='modal_btn_box'>
           <button onClick={() => setIsOpen(false)}>닫기</button>
-          <button>확인</button>
+          <button onClick={() => {
+            if (selectedLink) {
+              const link = `/page/${selectedLink}`;
+              updateBlockLink(link);
+              console.log('완료');
+            }
+            setIsOpen(false);
+          }}>확인</button>
         </div>
       </div>
     </div>

@@ -115,6 +115,9 @@
   border: 1px solid #ee7d00;
   border-radius: 50%;
 }
+.notUse:hover{
+  cursor: pointer;
+}
 .modal_link_check.checked .notUse {
   background-color: #ee7d00;
 }
