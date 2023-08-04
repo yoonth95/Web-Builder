@@ -18,19 +18,19 @@ const Nav = ({ isLoading, setIsLoading, type, windowWidth, screenSize }) => {
 
   return (
     <div className='container'>
-      {windowWidth <= 1098 || screenSize === 'tablet' || screenSize === 'mobile' ? (
+      {windowWidth <= 1199 || screenSize === 'tablet' || screenSize === 'mobile' ? (
         <header className='mobile_header_wrap'>
           <button>
             <FontAwesomeIcon icon={faMagnifyingGlass} className='moblie_icon' />
           </button>
-          <img className='mobile_header_logo' src={logo} alt='로고' />
+          <img className='mobile_header_logo' onClick={() => navigate('/main')} src={logo} alt='로고' />
           <button>
             <FontAwesomeIcon icon={faBars} className='moblie_icon' />
           </button>
         </header>
       ) : (
         <header className='header_wrap' onMouseEnter={() => setCurrentMenuIdx(null)}>
-          <img className='header_wrap_logo' src={logo} alt='로고' />
+          <img className='header_wrap_logo' onClick={() => navigate('/main')} src={logo} alt='로고' />
           <div className='header_right'>
             {logoList.map(({ id, src }) => (
               <img key={id} src={src} alt='로고' />
@@ -47,7 +47,14 @@ const Nav = ({ isLoading, setIsLoading, type, windowWidth, screenSize }) => {
           <div className='gnb'>
             <ul>
               {firstList.map((menu) => (
-                <li key={menu.idx} className={`navWrap ${menu.idx === currentMenuIdx ? 'on' : ''}`} onMouseEnter={() => setCurrentMenuIdx(menu.idx)}>
+                <li
+                  key={menu.idx}
+                  className={`navWrap ${menu.idx === currentMenuIdx ? 'on' : ''}`}
+                  onClick={() => {
+                    navigate(`/${menu.link}`);
+                  }}
+                  onMouseEnter={() => setCurrentMenuIdx(menu.idx)}
+                >
                   {menu.title}
                 </li>
               ))}
@@ -64,31 +71,38 @@ const Nav = ({ isLoading, setIsLoading, type, windowWidth, screenSize }) => {
             )}
           </div>
           {type !== '편집' && (
-            <div className={`gnb_info_wrap ${currentMenuIdx !== null ? 'on' : ''}`} onMouseLeave={() => setCurrentMenuIdx(null)}>
-              {firstList
-                .filter((menu) => menu.idx === currentMenuIdx)
-                .map((menu) => (
-                  <div className='firstList_info' key={menu.idx} onMouseEnter={() => setCurrentMenuIdx(menu.idx)}>
-                    {menu.title}
-                  </div>
-                ))}
-              <div className='secondList_info_wrap'>
-                {secondList
-                  .filter((menu) => menu.parent_id === currentMenuIdx)
+            <div className={`gnb_info_wrap ${currentMenuIdx !== null ? 'on' : ''}`}>
+              <div className='secondList_info_wrap' onMouseLeave={() => setCurrentMenuIdx(null)}>
+                {firstList
+                  .filter((menu) => menu.idx === currentMenuIdx)
                   .map((menu) => (
-                    <div
-                      className='secondList_info'
-                      key={menu.idx}
-                      onClick={() => {
-                        navigate(`/pages/${menu.link}`);
-                        setCurrentMenuIdx(null);
-                      }}
-                      onMouseEnter={() => setCurrentMenuIdx(menu.parent_id)}
-                    >
+                    <div className='firstList_info' key={menu.idx} onMouseEnter={() => setCurrentMenuIdx(menu.idx)}>
                       {menu.title}
                     </div>
                   ))}
+                <div className='list_wrap'>
+                  {secondList
+                    .filter((menu) => menu.parent_id === currentMenuIdx)
+                    .map((menu) => (
+                      <div
+                        className='secondList_info'
+                        key={menu.idx}
+                        onClick={() => {
+                          if (menu.new_window === 1) {
+                            window.open(`/pages/${menu.link}`, '_blank');
+                          } else {
+                            navigate(`/pages/${menu.link}`);
+                          }
+                          setCurrentMenuIdx(null);
+                        }}
+                        onMouseEnter={() => setCurrentMenuIdx(menu.parent_id)}
+                      >
+                        {menu.title}
+                      </div>
+                    ))}
+                </div>
               </div>
+              <div className='back'></div>
             </div>
           )}
         </nav>

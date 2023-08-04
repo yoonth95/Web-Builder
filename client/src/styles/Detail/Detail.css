@@ -1,0 +1,40 @@
+.module_container_line_detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+@media screen and (max-width: 1024px) {
+  .detail_wrap {
+    max-width: 640px;
+    min-height: 100%;
+    padding: 0 0 60px;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  .detail_wrap div {
+    flex-direction: column !important;
+  }
+
+  table {
+    padding: 0px !important;
+  }
+  .module_rectangle {
+    width: 100%;
+  }
+  .module_square {
+    width: 100%;
+  }
+
+  .module_wideRectangle {
+    width: 100%;
+  }
+  .module_container_line_detail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
+}

@@ -13,10 +13,9 @@ import Login from 'components/Login/Login';
 import Signup from 'components/Login/Signup';
 
 import Modal from 'components/Modal/Modal';
-import LinkModal from 'components/Modal/LinkModal';
 import Main from 'pages/Main';
 import PrivateRoute from './PrivateRoute';
-import TestCom from 'pages/TestCom'
+import Detail from 'pages/Detail/Detail';
 
 const Router = () => {
   const { user } = useAuth();
@@ -34,7 +33,6 @@ const Router = () => {
       <Modal isOpen={isOpen} setIsOpen={setIsOpen} />
       <Routes>
         <Route path='/' element={<Login />} />
-        <Route path='/Modal' element={<LinkModal />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/admin' element={
           <PrivateRoute>
@@ -44,7 +42,7 @@ const Router = () => {
         <Route path='/editor/:page_idx' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/main' element={<Main isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/*' element={<NotFound />} />
-        <Route path='/pages/:link/:sublink?' element={<TestCom isLoading={isLoading} setIsLoading={setIsLoading} />} />
+        <Route path='/pages/:link/:sublink?' element={<Detail isLoading={isLoading} setIsLoading={setIsLoading} />} />
       </Routes>
     </BrowserRouter>
   );

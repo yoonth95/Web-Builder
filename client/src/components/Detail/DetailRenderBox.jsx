@@ -1,10 +1,11 @@
-import React  from "react";
+import React from 'react';
 
 import ApplyTable from 'components/Editor/ApplyTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
+import 'styles/Detail/Detail.css';
 
-export const EditorRenderBoxTest = {
+export const DetailRenderBox = {
   image: (box, block_id, blockStyle) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     return (
@@ -26,7 +27,7 @@ export const EditorRenderBoxTest = {
     const isDotted = box?.style === 'dotted';
     return (
       <div key={block_id} className='module_wrap' style={filter_style?.style}>
-        <div className='module_container_line'>
+        <div className='module_container_line_detail'>
           <div
             style={{
               borderTop: isDotted ? 'none' : `${box?.thickness} ${box?.style} #B3B3B3`,
@@ -170,15 +171,15 @@ export const EditorRenderBoxTest = {
                         >
                           {layout_child ? (
                             layout_child_design_type === 'image' ? (
-                              EditorRenderBoxTest.image(child_boxes, child_index, (blockStyle = null))
+                              DetailRenderBox.image(child_boxes, child_index, (blockStyle = null))
                             ) : layout_child_design_type === 'text' ? (
-                              EditorRenderBoxTest.text(child_boxes, child_index, (blockStyle = null), handleUpdateText)
+                              DetailRenderBox.text(child_boxes, child_index, (blockStyle = null), handleUpdateText)
                             ) : layout_child_design_type === 'list' ? (
-                              EditorRenderBoxTest.list(child_boxes, child_index, (blockStyle = null), handleUpdateText)
+                              DetailRenderBox.list(child_boxes, child_index, (blockStyle = null), handleUpdateText)
                             ) : layout_child_design_type === 'table' ? (
                               <ApplyTable design_id={tableDesignId} />
                             ) : layout_child_design_type === 'line' ? (
-                              EditorRenderBoxTest.line(child_boxes, child_index, (blockStyle = null))
+                              DetailRenderBox.line(child_boxes, child_index, (blockStyle = null))
                             ) : null
                           ) : (
                             <ClickDiv />
@@ -188,15 +189,15 @@ export const EditorRenderBoxTest = {
                     })
                   ) : layout ? (
                     layout_design_type === 'image' ? (
-                      EditorRenderBoxTest.image(boxes, index, (blockStyle = null))
+                      DetailRenderBox.image(boxes, index, (blockStyle = null))
                     ) : layout_design_type === 'text' ? (
-                      EditorRenderBoxTest.text(boxes, index, (blockStyle = null), handleUpdateText)
+                      DetailRenderBox.text(boxes, index, (blockStyle = null), handleUpdateText)
                     ) : layout_design_type === 'list' ? (
-                      EditorRenderBoxTest.list(boxes, index, (blockStyle = null), handleUpdateText)
+                      DetailRenderBox.list(boxes, index, (blockStyle = null), handleUpdateText)
                     ) : layout_design_type === 'table' ? (
                       <ApplyTable design_id={tableDesignId} />
                     ) : layout_design_type === 'line' ? (
-                      EditorRenderBoxTest.line(boxes, index, (blockStyle = null))
+                      DetailRenderBox.line(boxes, index, (blockStyle = null))
                     ) : null
                   ) : (
                     <ClickDiv />
@@ -220,8 +221,6 @@ const ClickDiv = () => {
   );
 };
 
-EditorRenderBoxTest.defaultProps = {
+DetailRenderBox.defaultProps = {
   blockStyle: [],
 };
-
-

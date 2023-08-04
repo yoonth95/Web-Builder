@@ -109,62 +109,62 @@
 
 @media (min-width: 1747px) {
   .carousel_btn {
-      top: 480px;
-      left: 361px;
+    top: 480px;
+    left: 361px;
   }
 }
 
 @media (min-width: 1537px) and (max-width: 1746px) {
   .carousel_btn {
-      top: 435px;
-      left: 325px;
+    top: 435px;
+    left: 325px;
   }
 }
 
 @media (min-width: 1281px) and (max-width: 1536px) {
   .carousel_btn {
-      top: 381px;
-      left: 285px;
+    top: 381px;
+    left: 285px;
   }
 }
 
-@media (max-width: 1098px) {
+@media (max-width: 1199px) {
   .main_wrap {
-      max-width: 640px;
-      min-height: 100%;
-      padding: 0 0 60px;
-      overflow: hidden;
+    max-width: 640px;
+    min-height: 100%;
+    padding: 0 0 60px;
+    overflow: hidden;
   }
   .gnb_wrap {
-      display: none;
+    display: none;
   }
   .btn_flooting {
-      min-width: 0;
+    min-width: 0;
   }
   .carousel_btn {
-      top: 859px;
-      left: 467px;
+    top: 859px;
+    left: 467px;
   }
   .trialImage {
-      right: 17px;
-      width: 64px;
+    right: 17px;
+    width: 64px;
   }
   .flootImg {
-      top: -3px;
-      height: 100%;
+    top: -3px;
+    height: 100%;
   }
   .consultationImage {
-      left: 10px;
-      width: 81px;
+    left: 10px;
+    width: 81px;
   }
   .flootText {
-      top: 13px;
-      font-size: 20px;
-      line-height: 1.1;
-      font-weight: 600;
+    top: 13px;
+    font-size: 20px;
+    line-height: 1.1;
+    font-weight: 600;
   }
   .trialText {
-      right: 98px;
+    right: 98px;
   }
   .consultationText {
     left: 100px;
@@ -173,11 +173,11 @@
 
 @media screen and (max-width: 639px) {
   .carousel_btn {
-      position: absolute;
-      bottom: 4.6875vw !important;
-      right: 6.25vw;
-      left: auto;
-      top: auto;
-      width: 105px;
+    position: absolute;
+    bottom: 4.6875vw !important;
+    right: 6.25vw;
+    left: auto;
+    top: auto;
+    width: 105px;
   }
 }
