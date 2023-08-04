@@ -79,7 +79,7 @@
   text-align: center;
   color: #ffffff;
   background-color: #333;
-  color: var(--grayscale-0, #FFF);
+  color: var(--grayscale-0, #fff);
   font-family: Pretendard;
   font-size: 19px;
   font-style: normal;
@@ -92,16 +92,22 @@
   background-color: #ee7d00;
   border-radius: 0px 0px 10px 0px;
 }
+.pageInput {
+  border-radius: 10px;
+}
 .pageInput::placeholder {
   color: #9a9a9a;
 }
+
 .modal_link_check {
   display: flex;
   justify-content: left;
-  align-items: center;
-  padding: 40px 19px 30px 19px;
+  padding: 0 19px;
 }
-.modal_link_check .notUse{
+/* .modal_link_check:first-child {
+  padding: 0 19px 26px 19px;
+} */
+.modal_link_check .notUse {
   margin-right: 5px;
   appearance: none;
   width: 16px;
@@ -109,7 +115,7 @@
   border: 1px solid #ee7d00;
   border-radius: 50%;
 }
-.modal_link_check.checked .notUse{
+.modal_link_check.checked .notUse {
   background-color: #ee7d00;
 }
 .modal_link_check label {
@@ -121,4 +127,25 @@
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.28px;
+}
+.strikethrough {
+  text-decoration: line-through;
+}
+.select_box {
+  padding: 10px 15px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--grayscale-5, #f3f3f3);
+  /* Body4_14/R */
+  font-family: Pretendard;
+  color: #000;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  margin-bottom: 14px;
+}
+.first_option {
+  color: var(--grayscale-30, #b3b3b3);
 }

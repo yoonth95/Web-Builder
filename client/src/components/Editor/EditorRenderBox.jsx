@@ -7,7 +7,7 @@ import { faWandMagicSparkles, faImage, faPaperclip, faDownload } from '@fortawes
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 export const EditorRenderBox = {
-  image: ({design, block_id, blockStyle, attatchImg, attatchLink, deleteImage}) => {
+  image: ({ design, block_id, blockStyle, attatchImg, attatchLink, deleteImage }) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
 
     let blockId, isLayout;
@@ -23,38 +23,47 @@ export const EditorRenderBox = {
         <div className='module_container' style={design?.layout}>
           {[...Array(design?.images.length)].map((_, i) => (
             <div key={i} className={design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} style={design?.style}>
-              {design?.images[i].src !== '' 
-                ? (
-                    <div style={{position: 'relative'}}>
-                      <span className='deleteIcon' onClick={() => deleteImage({block_id: blockId, idx: i, isLayout: isLayout})}><FontAwesomeIcon icon={faTrashCan} /></span>
-                      <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={design?.style}/>
-                    </div>
-                  )
-                : (
-                    <div className='module_imageBox imgHover' style={design?.style}>
-                      <div className='downIcon'>
-                        <FontAwesomeIcon icon={faDownload} />
-                      </div>
-                      <div className='attatchIcon' style={design?.style}>
-                        <label>
-                          <FontAwesomeIcon icon={faImage} />
-                          <input type="file" accept='image/*' onChange={(e) => attatchImg({tag: e, block_id: blockId, idx: i, isLayout: isLayout})}/>
-                        </label>
-                        <label onClick={() => attatchLink({block_id: blockId, idx: i, isLayout: isLayout})}>
-                          <FontAwesomeIcon icon={faPaperclip} />
-                        </label>
-                      </div>
-                    </div>
-                  )
-              }
+              {design?.images[i].src !== '' ? (
+                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                  <div className='icon_container'>
+                    <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </span>
+                    <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                      <FontAwesomeIcon icon={faPaperclip} />
+                    </span>
+                    <label className='imgIcon'>
+                      <FontAwesomeIcon icon={faImage} />
+                      <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
+                    </label>
+                  </div>
+                  <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={design?.style} />
+                </div>
+              ) : (
+                <div className='module_imageBox imgHover' style={design?.style}>
+                  <div className='downIcon'>
+                    <FontAwesomeIcon icon={faDownload} />
+                  </div>
+                  <div className='attatchIcon' style={design?.style}>
+                    <label>
+                      <FontAwesomeIcon icon={faImage} />
+                      <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
+                    </label>
+                    <label onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                      <FontAwesomeIcon icon={faPaperclip} />
+                    </label>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
     );
   },
-  line: ({design, block_id, blockStyle}) => {
+  line: ({ design, block_id, blockStyle }) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
+
     const isDotted = design?.style === 'dotted';
     return (
       <div key={block_id} className='module_wrap' style={filter_style?.style}>
@@ -73,7 +82,7 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  list: ({design, block_id, blockStyle, handleUpdateText, attatchImg, attatchLink, deleteImage}) => {
+  list: ({ design, block_id, blockStyle, handleUpdateText, attatchImg, attatchLink, deleteImage }) => {
     let blockId, isLayout;
     if (block_id.includes('layout')) {
       [blockId, isLayout] = block_id.split('/');
@@ -87,31 +96,30 @@ export const EditorRenderBox = {
       <div key={block_id} className='module_wrap font-style' style={filter_style?.style}>
         <div className='module_container_list'>
           <div className='module_list_item'>
-            <div className={`module_${design?.shape}`} style={design?.images[0].src !== '' ? {backgroundColor: '#fff'} : {backgroundColor: '#F3F3F3'}}>
-              {design?.images[0].src !== '' 
-                ? (
-                    <div style={{position: 'relative'}}>
-                      <span className='deleteIcon' onClick={() => deleteImage({block_id: blockId, isLayout: isLayout})}><FontAwesomeIcon icon={faTrashCan} /></span>
-                      <img className='imageTag' src={`${design?.images[0].src}`} alt='' style={design?.style}/>
-                    </div>
-                  )
-                : (
-                  <div className='module_imageBox imgHover' style={design?.style}>
-                    <div className='downIcon'>
-                      <FontAwesomeIcon icon={faDownload} />
-                    </div>
-                    <div className='attatchIcon' style={design?.style}>
-                      <label>
-                        <FontAwesomeIcon icon={faImage} />
-                        <input type="file" accept='image/*' onChange={(e) => attatchImg({tag: e, block_id: blockId, isLayout: isLayout})}/>
-                      </label>
-                      <label onClick={() => attatchLink({block_id: blockId, isLayout: isLayout})}>
-                        <FontAwesomeIcon icon={faPaperclip} />
-                      </label>
-                    </div>
+            <div className={`module_${design?.shape}`} style={design?.images[0].src !== '' ? { backgroundColor: '#fff' } : { backgroundColor: '#F3F3F3' }}>
+              {design?.images[0].src !== '' ? (
+                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                  <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, isLayout: isLayout })}>
+                    <FontAwesomeIcon icon={faTrashCan} />
+                  </span>
+                  <img className='imageTag' src={`${design?.images[0].src}`} alt='' style={design?.style} />
+                </div>
+              ) : (
+                <div className='module_imageBox imgHover' style={design?.style}>
+                  <div className='downIcon'>
+                    <FontAwesomeIcon icon={faDownload} />
                   </div>
-                )
-              }
+                  <div className='attatchIcon' style={design?.style}>
+                    <label>
+                      <FontAwesomeIcon icon={faImage} />
+                      <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, isLayout: isLayout })} />
+                    </label>
+                    <label onClick={() => attatchLink({ block_id: blockId, isLayout: isLayout })}>
+                      <FontAwesomeIcon icon={faPaperclip} />
+                    </label>
+                  </div>
+                </div>
+              )}
             </div>
             {design?.lines &&
               design?.lines.map((line, lineIndex) => (
@@ -130,7 +138,7 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  text: ({design, block_id, blockStyle, handleUpdateText}) => {
+  text: ({ design, block_id, blockStyle, handleUpdateText }) => {
     let blockId, isLayout;
     if (block_id.includes('layout')) {
       [blockId, isLayout] = block_id.split('/');
@@ -164,7 +172,7 @@ export const EditorRenderBox = {
     );
   },
   table: null,
-  layout: ({design, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, attatchImg, attatchLink, deleteImage}) => {
+  layout: ({ design, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, attatchImg, attatchLink, deleteImage }) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     const parsed_layout_design = layout_design ? JSON.parse(layout_design) : null;
 
@@ -239,15 +247,15 @@ export const EditorRenderBox = {
                         >
                           {layout_child ? (
                             layout_child_design_type === 'image' ? (
-                              EditorRenderBox.image({design: child_boxes, block_id: child_index, attatchImg, attatchLink, deleteImage})
+                              EditorRenderBox.image({ design: child_boxes, block_id: child_index, attatchImg, attatchLink, deleteImage })
                             ) : layout_child_design_type === 'text' ? (
-                              EditorRenderBox.text({design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText})
+                              EditorRenderBox.text({ design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText })
                             ) : layout_child_design_type === 'list' ? (
-                              EditorRenderBox.list({design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage})
+                              EditorRenderBox.list({ design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage })
                             ) : layout_child_design_type === 'table' ? (
                               <ApplyTable design_id={tableDesignId} />
                             ) : layout_child_design_type === 'line' ? (
-                              EditorRenderBox.line({design: child_boxes, block_id: child_index})
+                              EditorRenderBox.line({ design: child_boxes, block_id: child_index })
                             ) : null
                           ) : (
                             <ClickDiv />
@@ -257,15 +265,15 @@ export const EditorRenderBox = {
                     })
                   ) : layout ? (
                     layout_design_type === 'image' ? (
-                      EditorRenderBox.image({design: boxes, block_id: index, attatchImg, attatchLink, deleteImage})
+                      EditorRenderBox.image({ design: boxes, block_id: index, attatchImg, attatchLink, deleteImage })
                     ) : layout_design_type === 'text' ? (
-                      EditorRenderBox.text({design: boxes, block_id: index, handleUpdateText: handleUpdateText})
+                      EditorRenderBox.text({ design: boxes, block_id: index, handleUpdateText: handleUpdateText })
                     ) : layout_design_type === 'list' ? (
-                      EditorRenderBox.list({design: boxes, block_id: index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage})
+                      EditorRenderBox.list({ design: boxes, block_id: index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage })
                     ) : layout_design_type === 'table' ? (
                       <ApplyTable design_id={tableDesignId} />
                     ) : layout_design_type === 'line' ? (
-                      EditorRenderBox.line({design: boxes, block_id: index})
+                      EditorRenderBox.line({ design: boxes, block_id: index })
                     ) : null
                   ) : (
                     <ClickDiv />

@@ -60,7 +60,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCh
         />
       </div>
       <div className='widthSet_wrap' onChange={(e) => setCheckBtn((prevCheckBtn) => !prevCheckBtn)}>
-        <input type='checkbox' checked={checkBtn} />
+        {/* <input type='checkbox' checked={checkBtn} /> */}
         <p>화면 너비에 맞추기</p>
       </div>
       <div style={{ marginTop: '10px' }}>

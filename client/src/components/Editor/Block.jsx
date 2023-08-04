@@ -7,6 +7,7 @@ import { EditorRenderBox } from 'components/Editor/EditorRenderBox';
 import EditorModal from 'components/Modal/EditorModal';
 import ApplyTable from 'components/Editor/ApplyTable';
 import SideBar from 'components/Editor/SideBar';
+import LinkModal from 'components/Modal/LinkModal';
 import { useEditorActions } from 'hooks/useEditor';
 import { useImageActions } from 'hooks/useImage';
 
@@ -27,6 +28,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const [layoutId, setLayoutId] = useState(0);
   const [sideBarOpen, setSideBarOpen] = useState({ open: false, block_id: '' });
   const [isModalOpen, setIsModalOpen] = useState({ open: false, block_id: '' });
+  const [isOpen, setIsOpen] = useState(false);
 
   // 블록 마우스 오버 시 툴 바 버튼 보이게
   const handleShowBlockBtn = (e) => {
@@ -38,47 +40,43 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
     const clickHandler = () => setIsModalOpen({ open: true, block_id: id });
 
     const arg = {
-      block_id: id,                         // 블록 id
-      design: box,                          // design box 값
-      blockStyle: blockStyle,               // 블록 스타일
-      layout_design: layout_design,         // 레이아웃 디자인
-      clickHandler: clickHandler,           // 모달 열기 (block_id 전달)
+      block_id: id, // 블록 id
+      design: box, // design box 값
+      blockStyle: blockStyle, // 블록 스타일
+      layout_design: layout_design, // 레이아웃 디자인
+      clickHandler: clickHandler, // 모달 열기 (block_id 전달)
       setIsLayoutDesign: setIsLayoutDesign, // 레이아웃 디자인 여부
-      setLayoutId: setLayoutId,             // 레이아웃 id
-      handleUpdateText: handleUpdateText,   // 텍스트 수정 시
-      attatchImg: attatchImg,               // 이미지 첨부
-      attatchLink: attatchLink,             // 링크 첨부
-      deleteImage: deleteImage              // 이미지 삭제
-    }
+      setLayoutId: setLayoutId, // 레이아웃 id
+      handleUpdateText: handleUpdateText, // 텍스트 수정 시
+      attatchImg: attatchImg, // 이미지 첨부
+      attatchLink: attatchLink, // 링크 첨부
+      deleteImage: deleteImage, // 이미지 삭제
+    };
 
     return EditorRenderBox[design_type](arg);
   };
 
   // 이미지 첨부
-  const attatchImg = ({tag, block_id, idx, isLayout}) => {
-    console.log(tag.target.files[0]);
-    console.log(block_id, idx, isLayout, '이미지 첨부');
+  const attatchImg = ({ tag, block_id, idx, isLayout }) => {
     if (!tag.target.files[0] || !tag.target.files[0].type.includes('image')) {
       alert('이미지 파일만 첨부해주세요.');
       return;
     }
     const url = URL.createObjectURL(tag.target.files[0]);
-    console.log(url);
-
-    addImageAction({src: url, block_id: block_id, idx: idx, isLayout: isLayout});
-  }
+    addImageAction({ tag: tag, src: url, block_id: block_id, idx: idx, isLayout: isLayout });
+  };
 
   // 링크 첨부
-  const attatchLink = ({block_id, idx, isLayout}) => {
+  const attatchLink = ({ block_id, idx, isLayout }) => {
     console.log(idx);
     console.log(block_id, idx, isLayout, '링크 첨부');
-  }
+    setIsOpen(!isOpen);
+  };
 
   // 이미지 삭제
-  const deleteImage = ({block_id, idx, isLayout}) => {
-    console.log(block_id, idx, isLayout, '이미지 삭제');
-    deleteImageAction({block_id: block_id, idx: idx, isLayout: isLayout});
-  }
+  const deleteImage = ({ block_id, idx, isLayout }) => {
+    deleteImageAction({ block_id: block_id, idx: idx, isLayout: isLayout });
+  };
 
   // 툴 바 버튼
   const correctionBtn = [
@@ -182,6 +180,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       <div className={`block_container_side ${sideBarOpen.open ? 'open' : 'close'}`}>
         <SideBar checkBtn={checkBtn} setCheckBtn={setCheckBtn} sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} blockStyle={blockStyle} setBlockStyle={setBlockStyle} />
       </div>
+      {isOpen && <LinkModal isOpen={isOpen} setIsOpen={setIsOpen} />}
     </>
   );
 }

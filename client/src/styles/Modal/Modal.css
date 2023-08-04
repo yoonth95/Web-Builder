@@ -85,6 +85,9 @@
   background-color: #ee7d00;
   border-radius: 0px 0px 10px 0px;
 }
+.pageInput {
+  padding: 15px 10px;
+}
 .pageInput::placeholder {
   color: #9a9a9a;
 }

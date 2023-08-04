@@ -7,7 +7,7 @@ import { updateList } from 'redux/editorSlice';
 // 컴포넌트
 import Spinner from 'components/Spinner/Spinner';
 import AdminHeader from 'components/Admin/AdminHeader';
-import PageList from 'components/Pagement/PageList'
+import PageList from 'components/Pagement/PageList';
 
 // api
 import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
@@ -31,7 +31,7 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
       const data = await GetMenuAPI();
       setPageList(data.filter((e) => e.parent_id).sort((a, b) => a.parent_id - b.parent_id));
       setParentList(data.filter((e) => e.parent_id == null));
-      dispatch(updateList([]))
+      dispatch(updateList([]));
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -57,8 +57,8 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   const search = () => {
-    if (searchValue !=='') {
-      const filteredList = pageList.filter(item => item.title.replace(/\s/g, '').includes(searchValue.replace(/\s/g, '')))
+    if (searchValue !== '') {
+      const filteredList = pageList.filter((item) => item.title.replace(/\s/g, '').includes(searchValue.replace(/\s/g, '')));
       setPageList(filteredList);
     } else {
       getMenu();
@@ -70,14 +70,25 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   };
 
   if (isLoading) return <Spinner />;
-  
+
   return (
     <>
       <AdminHeader />
       <div className='board-wrap'>
         <div className='board-title'>
           <div id='SearchBox'>
-            <input type='text' placeholder='페이지명' id='SearchContent' value={searchValue} onChange={handleInputChange} onKeyPress={search}  />
+            <input
+              type='text'
+              placeholder='페이지명'
+              id='SearchContent'
+              value={searchValue}
+              onChange={handleInputChange}
+              onKeyPress={(event) => {
+                if (event.key === 'Enter') {
+                  search();
+                }
+              }}
+            />
             <button id='Search-btn' onClick={search}>
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
@@ -86,18 +97,21 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
         <div className='board-list-wrap'>
           <div className='board-list'>
             <div className='top'>
-              {contentList.map(({id,content})=>(
-                <div key={id} className='top_content'>{content}</div>
+              {contentList.map(({ id, content }) => (
+                <div key={id} className='top_content'>
+                  {content}
+                </div>
               ))}
             </div>
-            {getPageItems().length === 0 ? 
+            {getPageItems().length === 0 ? (
               <div className='not_found_wrap'>
                 <div className='not_found_text'>
                   <h1>{searchValue}</h1> 페이지는 목록에 없습니다.
                 </div>
               </div>
-             : 
-              getPageItems().map(menu => <PageList key={menu.idx} menu={menu} parentList={parentList} setIsOpen={setIsOpen} dispatch={dispatch} />)}
+            ) : (
+              getPageItems().map((menu) => <PageList key={menu.idx} menu={menu} parentList={parentList} setIsOpen={setIsOpen} dispatch={dispatch} />)
+            )}
           </div>
         </div>
         <div className='board-page'>
@@ -121,5 +135,9 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
 export default Pagement;
 
 const contentList = [
-  {id:"01",content:"페이지명"}, {id:"02",content:"페이지 경로"}, {id:"03",content:"메뉴"}, {id:"04",content:"업데이트 일시"}, {id:"05",content:"관리"}
-]
+  { id: '01', content: '페이지명' },
+  { id: '02', content: '페이지 경로' },
+  { id: '03', content: '메뉴' },
+  { id: '04', content: '업데이트 일시' },
+  { id: '05', content: '관리' },
+];

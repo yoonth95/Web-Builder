@@ -32,14 +32,6 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
       <li className={`selected_option ${isToggle ? 'open' : ''}`}>{resultTitle}</li>
       <ul className={`select_option_wrap ${isToggle ? 'open' : ''}`}>
         <li className='disabled_option' onClick={stopEventBubbling}>
-          공통 페이지
-        </li>
-        {common.map((list) => (
-          <li className='select_option' key={list.id} onClick={(e) => handleButtonClick(e, list.link)}>
-            {list.title}
-          </li>
-        ))}
-        <li className='disabled_option' onClick={stopEventBubbling}>
           사용자 추가 페이지
         </li>
         {type === '복제'

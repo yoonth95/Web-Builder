@@ -131,8 +131,7 @@
 .imageTag {
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: contain;
 }
 
 /* 이미지 블록 css */
@@ -141,11 +140,11 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-height: 300px;
-  background-color: #F3F3F3;
+  max-height: 600px;
+  background-color: #f3f3f3;
 }
 .imageDiv:before {
-  content: "";
+  content: '';
   display: block;
   padding-top: 100%;
 }
@@ -160,10 +159,33 @@
   width: 100%;
   height: 100%;
 }
-.deleteIcon {
+.module_imageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.icon_container {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.imageTag:hover + .icon_container,
+.icon_container:hover {
+  opacity: 1;
+}
+.deleteIcon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,20 +194,57 @@
   flex-shrink: 0;
   font-size: 1.3rem;
   border-radius: 5px;
-  background-color: #999;
+  background-color: #ee7d00;
   color: #fff;
   cursor: pointer;
   z-index: 100;
+}
+.linkIcon {
+  position: absolute;
+  top: 130px;
+  left: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  border-radius: 5px;
+  background-color: #ee7d00;
+  color: #fff;
+  cursor: pointer;
+  z-index: 100;
+}
+.imgIcon {
+  position: absolute;
+  top: 130px;
+  left: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  border-radius: 5px;
+  background-color: #ee7d00;
+  color: #fff;
+  cursor: pointer;
+  z-index: 100;
+}
+.imgIcon input {
+  display: none;
 }
 .downIcon {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
-  color: #B3B3B3;
+  color: #b3b3b3;
 }
 .downIcon svg {
-  color: #B3B3B3;
+  color: #b3b3b3;
 }
 
 .attatchIcon {
@@ -204,7 +263,7 @@
   width: 40px;
   height: 40px;
   border-radius: 5px;
-  background-color: #FF8B0A;
+  background-color: #ff8b0a;
   color: #fff;
   font-size: 1.5rem;
   cursor: pointer;
@@ -245,22 +304,22 @@
   width: 205px;
   height: 205px;
   border-radius: 50%;
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
 }
 .module_rectangle {
   width: 350px;
   height: 200px;
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
 }
 .module_square {
   width: 300px;
   height: 300px;
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
 }
 .module_wideRectangle {
   width: 500px;
   height: 200px;
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
 }
 
 /* 텍스트 블록 css */
@@ -307,11 +366,4 @@
 
 .widthSet {
   max-width: 100%;
-}
-
-
-@media screen and (max-width: 768px) {
-  .module_layout_item_test {
-    flex-direction: column !important;
-  }
 }
