@@ -13,6 +13,7 @@ import Login from 'components/Login/Login';
 import Signup from 'components/Login/Signup';
 
 import Modal from 'components/Modal/Modal';
+import LinkModal from 'components/Modal/LinkModal';
 import Main from 'pages/Main';
 import PrivateRoute from './PrivateRoute';
 import TestCom from 'pages/TestCom'
@@ -33,6 +34,7 @@ const Router = () => {
       <Modal isOpen={isOpen} setIsOpen={setIsOpen} />
       <Routes>
         <Route path='/' element={<Login />} />
+        <Route path='/Modal' element={<LinkModal />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/admin' element={
           <PrivateRoute>

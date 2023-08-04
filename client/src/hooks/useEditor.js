@@ -341,7 +341,7 @@ export const useEditorActions = () => {
     }
   };
 
-  const saveBlockAction = async (page_idx, blocks, setIsLoading, setError) => {
+  const saveBlockAction = async (page_idx, blocks, blockStyle, setIsLoading, setError) => {
     try {
       setIsLoading(true);
       const blockToBase64 = blocks.map(block => {
@@ -355,6 +355,7 @@ export const useEditorActions = () => {
 
         return {
           ...block,
+          block_style: JSON.stringify(blockStyle.find(style => style.block_id === block.block_id)),
           layout_design: layout_design,
           content: content
         };

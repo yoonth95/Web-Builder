@@ -15,7 +15,7 @@
   height: 40px;
   border-radius: 42px;
   background-color: #565656;
-  z-index: 10;
+  z-index: 600;
 }
 
 .block_correction_btn.delete_block_btn {
@@ -131,7 +131,8 @@
 .imageTag {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 /* 이미지 블록 css */
@@ -306,4 +307,11 @@
 
 .widthSet {
   max-width: 100%;
+}
+
+
+@media screen and (max-width: 768px) {
+  .module_layout_item_test {
+    flex-direction: column !important;
+  }
 }

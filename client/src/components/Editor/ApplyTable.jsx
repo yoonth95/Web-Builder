@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import {useLocation} from "react-router-dom"
 import { useTable } from "react-table";
 
 const EditableCell = ({
@@ -8,8 +9,13 @@ const EditableCell = ({
   updateMyData,
 }) => {
   const [value, setValue] = useState(initialValue);
+  const {pathname} = useLocation();
+  const authority = pathname.includes("pages") 
 
   const onChange = (e) => {
+    if(authority){
+      return
+    }
     setValue(e.target.value);
     updateMyData(index, id, e.target.value);
   };
@@ -18,7 +24,9 @@ const EditableCell = ({
     setValue(initialValue);
   }, [initialValue]);
 
-  return <input value={value || ""} onChange={onChange} style={{textAlign:"center" , padding:"10px" , border:"none", width:'100%'}}/>;
+  return (
+  <input value={value || ""} onChange={onChange} disabled={authority}  style={{textAlign:"center" , padding:"10px" , border:"none", width:'100%'}}/>
+  );
 };
 
 const defaultColumn = {
@@ -50,6 +58,8 @@ const MyTable = ({
   });
 
   const inputRef = useRef();
+  const {pathname} = useLocation();
+  const authority = pathname.includes("pages") 
 
   useEffect(() => {
     if (editColumnName !== null) {
@@ -77,7 +87,7 @@ const MyTable = ({
                     style={{width:"100px"}}
                     ref={inputRef}
                     value={newColumnName}
-                    onChange={(e) => setNewColumnName(e.target.value)}
+                    onChange={(e) => {if(authority)return;setNewColumnName(e.target.value)}}
                     onBlur={() => {
                       setColumnNames(
                         columnNames.map((name, i) =>
@@ -91,6 +101,7 @@ const MyTable = ({
                 ) : (
                   <div
                     onClick={() => {
+                      if(authority)return;
                       setEditColumnName(idx);
                       setNewColumnName(columnNames[idx]);
                     }}

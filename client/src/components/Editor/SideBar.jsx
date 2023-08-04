@@ -12,6 +12,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCh
     const blockId = sideBarOpen.block_id;
     if (blockStyle.some((block) => block.block_id === blockId)) {
       setBlockStyle((prev) => prev.map((block) => (block.block_id === blockId ? { ...block, style: { ...block.style, maxWidth: checkBtn ? '100%' : '1240px' } } : block)));
+      return true;
     }
   };
 
@@ -19,6 +20,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCh
     const blockId = sideBarOpen.block_id;
     if (blockStyle.some((block) => block.block_id === blockId)) {
       setBlockStyle((prev) => prev.map((block) => (block.block_id === blockId ? { ...block, style: { ...block.style, paddingTop: `${e.target.value}px` } } : block)));
+      return true;
     }
   };
 
@@ -37,10 +39,9 @@ const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCh
     if (block) {
       const style = JSON.parse(block.block_style);
       if (style.style.maxWidth === '100%') {
-        setCheckBtn((prevCheckBtn) => !prevCheckBtn);
-        console.log('checkBtn', checkBtn);
+        setCheckBtn(true);
       } else if (style.style.maxWidth === '1240px') {
-        setCheckBtn((prevCheckBtn) => !prevCheckBtn);
+        setCheckBtn(false);
       }
     }
   }, [blockList, sideBarOpen]);
@@ -59,7 +60,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCh
         />
       </div>
       <div className='widthSet_wrap' onChange={(e) => setCheckBtn((prevCheckBtn) => !prevCheckBtn)}>
-        <input type='checkbox' />
+        <input type='checkbox' checked={checkBtn} />
         <p>화면 너비에 맞추기</p>
       </div>
       <div style={{ marginTop: '10px' }}>

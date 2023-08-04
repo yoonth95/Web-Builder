@@ -55,29 +55,29 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   };
 
   // 이미지 첨부
-  const attatchImg = ({tag, block_id, idx}) => {
+  const attatchImg = ({tag, block_id, idx, isLayout}) => {
     console.log(tag.target.files[0]);
-    console.log(block_id, idx, '이미지 첨부');
+    console.log(block_id, idx, isLayout, '이미지 첨부');
     if (!tag.target.files[0] || !tag.target.files[0].type.includes('image')) {
       alert('이미지 파일만 첨부해주세요.');
       return;
     }
     const url = URL.createObjectURL(tag.target.files[0]);
     console.log(url);
-    addImageAction({src: url, block_id: block_id, idx: idx});
+
+    addImageAction({src: url, block_id: block_id, idx: idx, isLayout: isLayout});
   }
 
   // 링크 첨부
-  const attatchLink = ({block_id, idx}) => {
+  const attatchLink = ({block_id, idx, isLayout}) => {
     console.log(idx);
-    console.log(block_id, '링크 첨부');
+    console.log(block_id, idx, isLayout, '링크 첨부');
   }
 
   // 이미지 삭제
-  const deleteImage = ({block_id, idx}) => {
-    console.log(idx);
-    console.log(block_id, '이미지 삭제');
-    deleteImageAction({block_id: block_id, idx: idx});
+  const deleteImage = ({block_id, idx, isLayout}) => {
+    console.log(block_id, idx, isLayout, '이미지 삭제');
+    deleteImageAction({block_id: block_id, idx: idx, isLayout: isLayout});
   }
 
   // 툴 바 버튼

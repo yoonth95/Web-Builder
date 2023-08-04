@@ -10,15 +10,23 @@ export const EditorRenderBox = {
   image: ({design, block_id, blockStyle, attatchImg, attatchLink, deleteImage}) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
 
+    let blockId, isLayout;
+    if (block_id.includes('layout')) {
+      [blockId, isLayout] = block_id.split('/');
+    } else {
+      blockId = block_id;
+      isLayout = false;
+    }
+
     return (
-      <div key={block_id} className='module_wrap' style={filter_style}>
+      <div key={block_id} className='module_wrap' style={filter_style?.style}>
         <div className='module_container' style={design?.layout}>
           {[...Array(design?.images.length)].map((_, i) => (
             <div key={i} className={design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} style={design?.style}>
               {design?.images[i].src !== '' 
                 ? (
                     <div style={{position: 'relative'}}>
-                      <span className='deleteIcon' onClick={() => deleteImage({block_id: block_id, idx: i})}><FontAwesomeIcon icon={faTrashCan} /></span>
+                      <span className='deleteIcon' onClick={() => deleteImage({block_id: blockId, idx: i, isLayout: isLayout})}><FontAwesomeIcon icon={faTrashCan} /></span>
                       <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={design?.style}/>
                     </div>
                   )
@@ -30,9 +38,9 @@ export const EditorRenderBox = {
                       <div className='attatchIcon' style={design?.style}>
                         <label>
                           <FontAwesomeIcon icon={faImage} />
-                          <input type="file" accept='image/*' onChange={(e) => attatchImg({tag: e, block_id: block_id, idx: i})}/>
+                          <input type="file" accept='image/*' onChange={(e) => attatchImg({tag: e, block_id: blockId, idx: i, isLayout: isLayout})}/>
                         </label>
-                        <label onClick={() => attatchLink({block_id: block_id, idx: i})}>
+                        <label onClick={() => attatchLink({block_id: blockId, idx: i, isLayout: isLayout})}>
                           <FontAwesomeIcon icon={faPaperclip} />
                         </label>
                       </div>
@@ -83,7 +91,7 @@ export const EditorRenderBox = {
               {design?.images[0].src !== '' 
                 ? (
                     <div style={{position: 'relative'}}>
-                      <span className='deleteIcon' onClick={() => deleteImage({block_id: block_id})}><FontAwesomeIcon icon={faTrashCan} /></span>
+                      <span className='deleteIcon' onClick={() => deleteImage({block_id: blockId, isLayout: isLayout})}><FontAwesomeIcon icon={faTrashCan} /></span>
                       <img className='imageTag' src={`${design?.images[0].src}`} alt='' style={design?.style}/>
                     </div>
                   )
@@ -95,9 +103,9 @@ export const EditorRenderBox = {
                     <div className='attatchIcon' style={design?.style}>
                       <label>
                         <FontAwesomeIcon icon={faImage} />
-                        <input type="file" accept='image/*' onChange={(e) => attatchImg({tag: e, block_id: block_id})}/>
+                        <input type="file" accept='image/*' onChange={(e) => attatchImg({tag: e, block_id: blockId, isLayout: isLayout})}/>
                       </label>
-                      <label onClick={() => attatchLink({block_id: block_id})}>
+                      <label onClick={() => attatchLink({block_id: blockId, isLayout: isLayout})}>
                         <FontAwesomeIcon icon={faPaperclip} />
                       </label>
                     </div>
@@ -156,7 +164,7 @@ export const EditorRenderBox = {
     );
   },
   table: null,
-  layout: ({design, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId}) => {
+  layout: ({design, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, attatchImg, attatchLink, deleteImage}) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     const parsed_layout_design = layout_design ? JSON.parse(layout_design) : null;
 
@@ -231,11 +239,11 @@ export const EditorRenderBox = {
                         >
                           {layout_child ? (
                             layout_child_design_type === 'image' ? (
-                              EditorRenderBox.image({design: child_boxes, block_id: child_index})
+                              EditorRenderBox.image({design: child_boxes, block_id: child_index, attatchImg, attatchLink, deleteImage})
                             ) : layout_child_design_type === 'text' ? (
                               EditorRenderBox.text({design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText})
                             ) : layout_child_design_type === 'list' ? (
-                              EditorRenderBox.list({design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText})
+                              EditorRenderBox.list({design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage})
                             ) : layout_child_design_type === 'table' ? (
                               <ApplyTable design_id={tableDesignId} />
                             ) : layout_child_design_type === 'line' ? (
@@ -249,11 +257,11 @@ export const EditorRenderBox = {
                     })
                   ) : layout ? (
                     layout_design_type === 'image' ? (
-                      EditorRenderBox.image({design: boxes, block_id: index})
+                      EditorRenderBox.image({design: boxes, block_id: index, attatchImg, attatchLink, deleteImage})
                     ) : layout_design_type === 'text' ? (
                       EditorRenderBox.text({design: boxes, block_id: index, handleUpdateText: handleUpdateText})
                     ) : layout_design_type === 'list' ? (
-                      EditorRenderBox.list({design: boxes, block_id: index, handleUpdateText: handleUpdateText})
+                      EditorRenderBox.list({design: boxes, block_id: index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage})
                     ) : layout_design_type === 'table' ? (
                       <ApplyTable design_id={tableDesignId} />
                     ) : layout_design_type === 'line' ? (

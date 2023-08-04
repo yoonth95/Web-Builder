@@ -64,7 +64,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const handleSelectChange = async (e) => {
     const selectedValue = e.target.value;
     if (window.confirm('저장 후 이동하시겠습니까?')) {
-      await saveBlockAction(page_idx, blocks, setIsLoading, setError);
+      await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
       navigate(`/editor/${selectedValue}`);
     }
   };
@@ -76,7 +76,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
 
   // 저장
   const handleSave = async () => {
-    const result = await saveBlockAction(page_idx, blocks, setIsLoading, setError);
+    const result = await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
     console.log(result);
     alert('저장되었습니다.');
   };

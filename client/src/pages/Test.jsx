@@ -1,12 +1,10 @@
-import React from 'react';
+import React  from "react";
 
 import ApplyTable from 'components/Editor/ApplyTable';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
-import './Test.css';
 
-export const EditorRenderBox = {
+export const EditorRenderBoxTest = {
   image: (box, block_id, blockStyle) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     return (
@@ -104,7 +102,7 @@ export const EditorRenderBox = {
     return (
       <div key={block_id} className='module_wrap' style={filter_style?.style}>
         <div className='module_container'>
-          <div className='module_layout_item' style={box?.style}>
+          <div className='module_layout_item_test' style={box?.style}>
             {box?.elements.map((element, i) => {
               const layout = parsed_layout_design && parsed_layout_design?.find((e) => e.layout_id === element.layout_id);
               const layout_design_type = layout && layout?.design_type;
@@ -172,15 +170,15 @@ export const EditorRenderBox = {
                         >
                           {layout_child ? (
                             layout_child_design_type === 'image' ? (
-                              EditorRenderBox.image(child_boxes, child_index, (blockStyle = null))
+                              EditorRenderBoxTest.image(child_boxes, child_index, (blockStyle = null))
                             ) : layout_child_design_type === 'text' ? (
-                              EditorRenderBox.text(child_boxes, child_index, (blockStyle = null), handleUpdateText)
+                              EditorRenderBoxTest.text(child_boxes, child_index, (blockStyle = null), handleUpdateText)
                             ) : layout_child_design_type === 'list' ? (
-                              EditorRenderBox.list(child_boxes, child_index, (blockStyle = null), handleUpdateText)
+                              EditorRenderBoxTest.list(child_boxes, child_index, (blockStyle = null), handleUpdateText)
                             ) : layout_child_design_type === 'table' ? (
                               <ApplyTable design_id={tableDesignId} />
                             ) : layout_child_design_type === 'line' ? (
-                              EditorRenderBox.line(child_boxes, child_index, (blockStyle = null))
+                              EditorRenderBoxTest.line(child_boxes, child_index, (blockStyle = null))
                             ) : null
                           ) : (
                             <ClickDiv />
@@ -190,15 +188,15 @@ export const EditorRenderBox = {
                     })
                   ) : layout ? (
                     layout_design_type === 'image' ? (
-                      EditorRenderBox.image(boxes, index, (blockStyle = null))
+                      EditorRenderBoxTest.image(boxes, index, (blockStyle = null))
                     ) : layout_design_type === 'text' ? (
-                      EditorRenderBox.text(boxes, index, (blockStyle = null), handleUpdateText)
+                      EditorRenderBoxTest.text(boxes, index, (blockStyle = null), handleUpdateText)
                     ) : layout_design_type === 'list' ? (
-                      EditorRenderBox.list(boxes, index, (blockStyle = null), handleUpdateText)
+                      EditorRenderBoxTest.list(boxes, index, (blockStyle = null), handleUpdateText)
                     ) : layout_design_type === 'table' ? (
                       <ApplyTable design_id={tableDesignId} />
                     ) : layout_design_type === 'line' ? (
-                      EditorRenderBox.line(boxes, index, (blockStyle = null))
+                      EditorRenderBoxTest.line(boxes, index, (blockStyle = null))
                     ) : null
                   ) : (
                     <ClickDiv />
@@ -211,7 +209,6 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  // 필요한 만큼 추가
 };
 
 const ClickDiv = () => {
@@ -223,17 +220,8 @@ const ClickDiv = () => {
   );
 };
 
-// const EditToolbar = () => {
-//   <div className='block_correction_btn' style={{ display: showBlockBtn === true ? 'flex' : 'none' }}>
-//     <button className='block_function_btn'>
-//       <span onClick={() => console.log('edit')}><FontAwesomeIcon icon={faEdit} /></span>
-//     </button>
-//     <button className='block_function_btn'>
-//       <span onClick={() => console.log('rotate')}><FontAwesomeIcon icon={faArrowRotateRight} /></span>
-//     </button>
-//   </div>
-// }
-
-EditorRenderBox.defaultProps = {
+EditorRenderBoxTest.defaultProps = {
   blockStyle: [],
 };
+
+

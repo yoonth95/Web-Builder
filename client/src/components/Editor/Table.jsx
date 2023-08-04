@@ -7,6 +7,7 @@ const TableCell = ({ onClick, onMouseEnter, row, col, tableRange, previewRange, 
   const [color, setColor] = useState('white');
   const [borderColor, setBorderColor] = useState('black');
   const [borderStyle, setBorderStyle] = useState('dashed');
+  
 
   useEffect(() => {
     if (activeCell && row === activeCell[0] && col === activeCell[1]) { // 셀 활성화 시 스타일
