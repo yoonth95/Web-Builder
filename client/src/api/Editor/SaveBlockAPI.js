@@ -1,8 +1,8 @@
-export const SaveBlockAPI = async (page_idx, blocks) => {
+export const SaveBlockAPI = async (page_idx, blocks, srcList) => {
   try {
     const res = await fetch('/api/saveBlock', {
       method: 'PUT',
-      body: JSON.stringify({page_idx, blocks}),
+      body: JSON.stringify({page_idx, blocks, srcList}),
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     });

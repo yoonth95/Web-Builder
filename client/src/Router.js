@@ -39,8 +39,8 @@ const Router = () => {
             <Admin setIsOpen={setIsOpen} isLoading={isLoading} setIsLoading={setIsLoading} />
           </PrivateRoute>
         } />
-        <Route path='/editor/:page_idx' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/main' element={<Main isLoading={isLoading} setIsLoading={setIsLoading} />} />
+        <Route path='/editor/*' element={<Editor isLoading={isLoading} setIsLoading={setIsLoading} />} />
         <Route path='/*' element={<NotFound />} />
         <Route path='/pages/:link/:sublink?' element={<Detail isLoading={isLoading} setIsLoading={setIsLoading} />} />
       </Routes>

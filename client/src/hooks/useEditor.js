@@ -344,7 +344,18 @@ export const useEditorActions = () => {
   const saveBlockAction = async (page_idx, blocks, blockStyle, setIsLoading, setError) => {
     try {
       setIsLoading(true);
+      const srcList = [];
       const blockToBase64 = blocks.map(block => {
+        if (block.design_type === 'image' || block.design_type === 'list') {
+          block.content.images.forEach(image => {if (image.src !== '') srcList.push(image.src)});
+        } else if (block.design_type === 'layout') {
+          JSON.parse(block.layout_design).forEach(layout => {
+            layout.boxes.images.forEach(image => {
+              if (image.src !== '') srcList.push(image.src);
+            });
+          });
+        }
+
         const content = block.content
           ? btoa(unescape(encodeURIComponent(JSON.stringify(block.content))))
           : null;
@@ -360,7 +371,7 @@ export const useEditorActions = () => {
           content: content
         };
       });
-      const result = await SaveBlockAPI(page_idx, blockToBase64);
+      const result = await SaveBlockAPI(page_idx, blockToBase64, srcList);
 
       return result;
     } catch (err) {

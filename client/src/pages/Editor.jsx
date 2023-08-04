@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useMatch } from 'react-router-dom';
 
 // redux
 import { useSelector } from 'react-redux';
@@ -19,7 +19,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDesktop, faTabletScreenButton, faMobileScreenButton } from '@fortawesome/free-solid-svg-icons';
 
 const Editor = ({ isLoading, setIsLoading }) => {
-  const { page_idx } = useParams();
+  const match = useMatch('/editor/*');
+  const path = match.params['*'].split('/');
+  const page_idx = path[path.length - 1];
+
   const navigate = useNavigate();
   const { secondList } = useSelector((state) => state.menu);
   const blocks = useSelector((state) => state.editor.blockList);

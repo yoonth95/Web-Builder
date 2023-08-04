@@ -13,6 +13,7 @@ app.use(
     credentials: true,
   })
 );
+app.use('/static/images', express.static('static/images'));
 
 const routesPath = path.join(__dirname, "/routes"); // 라우트 파일들이 있는 디렉토리 경로
 

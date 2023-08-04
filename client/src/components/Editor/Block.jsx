@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // 컴포넌트 및 데이터
@@ -22,10 +23,13 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const { handleUpdateText } = useEditorActions();
   const { addImageAction, deleteImageAction } = useImageActions();
 
+  const location = useLocation();
+
   const [showBlockBtn, setShowBlockBtn] = useState(false);
   const [checkBtn, setCheckBtn] = useState(false);
   const [isLayoutDesign, setIsLayoutDesign] = useState(false);
   const [layoutId, setLayoutId] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [sideBarOpen, setSideBarOpen] = useState({ open: false, block_id: '' });
   const [isModalOpen, setIsModalOpen] = useState({ open: false, block_id: '' });
   const [isOpen, setIsOpen] = useState(false);
@@ -62,19 +66,17 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       alert('이미지 파일만 첨부해주세요.');
       return;
     }
-    const url = URL.createObjectURL(tag.target.files[0]);
-    addImageAction({ tag: tag, src: url, block_id: block_id, idx: idx, isLayout: isLayout });
+    addImageAction({ tag: tag, block_id: block_id, idx: idx, isLayout: isLayout, setProgress: setProgress, location: location.pathname });
   };
 
   // 링크 첨부
   const attatchLink = ({ block_id, idx, isLayout }) => {
-    console.log(idx);
-    console.log(block_id, idx, isLayout, '링크 첨부');
     setIsOpen(!isOpen);
   };
 
   // 이미지 삭제
   const deleteImage = ({ block_id, idx, isLayout }) => {
+    // console.log(block_id, idx, isLayout);
     deleteImageAction({ block_id: block_id, idx: idx, isLayout: isLayout });
   };
 
@@ -180,7 +182,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       <div className={`block_container_side ${sideBarOpen.open ? 'open' : 'close'}`}>
         <SideBar checkBtn={checkBtn} setCheckBtn={setCheckBtn} sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} blockStyle={blockStyle} setBlockStyle={setBlockStyle} />
       </div>
-      {isOpen && <LinkModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+      {isOpen && <LinkModal isOpen={isOpen} setIsOpen={setIsOpen} block_id={block_id} attatchLink={attatchLink}/>}
     </>
   );
 }

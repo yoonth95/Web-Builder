@@ -14,31 +14,31 @@ const PageList = ({menu,parentList,setIsOpen,dispatch}) => {
   };
 
   return (
-                  <div className='info'>
-                    <div className='info_content title' title={menu.title}>
-                      {menu.title}
-                    </div>
-                    <div className='info_content link' title={`/page/${menu.link}`}>
-                      /page/{menu.link}
-                    </div>
-                    <div className='info_content btn'>
-                      <span className='txt_info_content_btn' title={parentList.filter((e) => e.idx === menu.parent_id)[0].title}>
-                        {parentList.filter((e) => e.idx === menu.parent_id)[0].title}
-                      </span>
-                    </div>
-                    <div className='info_content date'>{dateFormat(menu.updated_at)}</div>
-                    <div className='info_content' id='info_btn'>
-                      <button
-                        onClick={() => {
-                          setIsOpen(true);
-                          dispatch(setBtn('복제'));
-                        }}
-                      >
-                        복제
-                      </button>
-                      <button onClick={() => navigate(`/editor/${menu.idx}`)}>편집</button>
-                    </div>
-                  </div>
+    <div className='info'>
+      <div className='info_content title' title={menu.title}>
+        {menu.title}
+      </div>
+      <div className='info_content link' title={`/page/${menu.link}`}>
+        /page/{menu.link}
+      </div>
+      <div className='info_content btn'>
+        <span className='txt_info_content_btn' title={parentList.filter((e) => e.idx === menu.parent_id)[0].title}>
+          {parentList.filter((e) => e.idx === menu.parent_id)[0].title}
+        </span>
+      </div>
+      <div className='info_content date'>{dateFormat(menu.updated_at)}</div>
+      <div className='info_content' id='info_btn'>
+        <button
+          onClick={() => {
+            setIsOpen(true);
+            dispatch(setBtn('복제'));
+          }}
+        >
+          복제
+        </button>
+        <button onClick={() => navigate(`/editor/${menu.link}/${menu.idx}`)}>편집</button>
+      </div>
+    </div>
   );
 };
 
