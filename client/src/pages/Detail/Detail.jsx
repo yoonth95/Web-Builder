@@ -51,21 +51,67 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
       return filteredBoxes?.map((box) => DetailRenderBox[design_type](box, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId));
     }
   };
+  console.log(data, 'data')
 
   return (
     <div className='detail_wrap'>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} windowWidth={windowWidth} />
-
       {data
         ?.sort((a, b) => a.block_order - b.block_order)
+        .filter((block) => block.design_type !== 'default') 
         .map((block) => {
-          const isDefault = block.design_type === 'default';
-          console.log(block, 'block');
-          return (
-            <div key={block.block_id} className='block_container' style={{ height: isDefault ? '160px' : 'auto', outline: 'none' }}>
-              <div>
-                <div className='module_block'>{renderBox(block)}</div>
-                {block.design_type === 'table' && (
+          let layout_design = block.layout_design;
+
+          if (typeof block.layout_design === 'string') {
+            try {
+              layout_design = JSON.parse(block.layout_design);
+            } catch (error) {
+              console.error('Error parsing layout_design:', error);
+            }
+          }
+
+          const elements = block.content?.elements;
+          console.log(elements, 'elements')
+
+          let shouldRender = false;
+
+          const elementsLength = elements?.reduce((count, element) => {
+            if (element.layout_id) {
+              return count + 1;
+            }
+            if (element.children) {
+              return count + element.children.length;
+            }
+            return count;
+          }, 0);
+
+          if (layout_design && elements && layout_design.length === elementsLength) {
+            shouldRender = true;
+
+            const elementsLayoutIds = elements.flatMap(element => {
+              if (element.layout_id) {
+                return [element.layout_id];
+              }
+              if (element.children) {
+                return element.children.map(child => child.layout_id);
+              }
+              return [];
+            });
+
+            for (let i = 0; i < layout_design.length; i++) {
+              if (!elementsLayoutIds.includes(layout_design[i].layout_id)) {
+                shouldRender = false;
+                break;
+              }
+            }
+          } else if (layout_design?.length === elementsLength) {
+            shouldRender = false;
+          }
+
+          const renderBlockByType = (type, block, shouldRender) => {
+            switch (type) {
+              case 'table':
+                return (
                   <div className='module_block'>
                     <div className='module_wrap'>
                       <div className='module_container'>
@@ -73,11 +119,21 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
+                );
+              case 'layout':
+                return shouldRender ? <div className='module_block'>{renderBox(block)}</div> : null;
+              default:
+                return <div className='module_block'>{renderBox(block)}</div>;
+            }
+          };
+
+          return (
+            <div key={block.block_id} className='block_container' style={{ height: 'auto', outline: 'none' }}>
+              {renderBlockByType(block.design_type, block, shouldRender)}
             </div>
           );
-        })}
+        })
+      }
     </div>
   );
 };
