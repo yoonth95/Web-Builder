@@ -1,5 +1,6 @@
 import React from 'react';
 import { setBtn } from 'redux/buttonSlice';
+import { setPageId } from 'redux/pageSlice';
 import {useNavigate} from 'react-router-dom'
 
 
@@ -32,6 +33,7 @@ const PageList = ({menu,parentList,setIsOpen,dispatch}) => {
           onClick={() => {
             setIsOpen(true);
             dispatch(setBtn('복제'));
+            dispatch(setPageId(menu.idx))
           }}
         >
           복제

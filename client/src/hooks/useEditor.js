@@ -12,7 +12,8 @@ import {
   UpdateBlockDesignAPI,
   DeleteBlockAPI,
   UpdateBlockLayoutAPI,
-  SaveBlockAPI
+  SaveBlockAPI,
+  CopyDeisgnAPI
 } from '../api/Editor';
 
 export const useEditorActions = () => {
@@ -29,7 +30,6 @@ export const useEditorActions = () => {
         Navigate('/notfound');
       } else {
         if (data.length === 0) {
-          console.log('dd');
           const block_id = `${page_idx}_${new Date().getTime()}_${Math.floor(Math.random() * 899999) + 100000}`;
           const block_style = {
             style: {
@@ -50,8 +50,9 @@ export const useEditorActions = () => {
             block_order: 1
           };
 
-          await InsertBlockAPI(newBlock);
           dispatch(updateList([newBlock]))
+          await InsertBlockAPI(newBlock);
+          setIsLoading(false);
         } else {
           let blockList = [];
           if (blocks && blocks.length > 0) {
@@ -78,12 +79,12 @@ export const useEditorActions = () => {
             }
           });
           dispatch(updateList(blockList));
+          setIsLoading(false);
         }
       }
     } catch (err) {
       console.error(err.message);
       setError(err);
-    } finally {
       setIsLoading(false);
     }
   }
@@ -341,6 +342,7 @@ export const useEditorActions = () => {
     }
   };
 
+  // 블록 저장
   const saveBlockAction = async (page_idx, blocks, blockStyle, setIsLoading, setError) => {
     try {
       setIsLoading(true);
@@ -382,5 +384,13 @@ export const useEditorActions = () => {
     }
   }
 
-  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction, handleUpdateText };
+  // 블록 복제
+  const designCopyAction = async (sourcePage, targetPage, setIsOpen, reset) => {
+    await CopyDeisgnAPI(sourcePage, targetPage);
+    alert('디자인 복제 완료');
+    setIsOpen(false);
+    reset();
+  }
+
+  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction, handleUpdateText, designCopyAction };
 };

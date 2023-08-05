@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRotateRight, faArrowUp, faEdit, faTrash, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/Block.css';
 
-function Block({ block_id, design_type, design_id, block_order, layout_design, block_content, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, setBlockStyle }) {
+function Block({ block_id, design_type, design_id, block_order, layout_design, block_content, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, setBlockStyle, screenSize }) {
   const isDefault = design_type === 'default';
   const blockContainerRef = useRef(null);
   const { handleUpdateText } = useEditorActions();
@@ -36,7 +36,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
 
   // 블록 마우스 오버 시 툴 바 버튼 보이게
   const handleShowBlockBtn = (e) => {
-    e.type === 'mouseover' ? setShowBlockBtn(true) : setShowBlockBtn(false);
+    e.type === 'mouseover' && screenSize === 'desktop' ? setShowBlockBtn(true) : setShowBlockBtn(false);
   };
 
   // 블록 디자인 렌더링
@@ -48,6 +48,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       design: box, // design box 값
       blockStyle: blockStyle, // 블록 스타일
       layout_design: layout_design, // 레이아웃 디자인
+      screenSize: screenSize, // 스크린 사이즈
       clickHandler: clickHandler, // 모달 열기 (block_id 전달)
       setIsLayoutDesign: setIsLayoutDesign, // 레이아웃 디자인 여부
       setLayoutId: setLayoutId, // 레이아웃 id
@@ -117,7 +118,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
         ref={blockContainerRef}
         onMouseOver={handleShowBlockBtn}
         onMouseLeave={handleShowBlockBtn}
-        style={{ cursor: isDefault ? 'pointer' : '', height: isDefault ? '160px' : 'auto' }}
+        style={{ cursor: isDefault ? 'pointer' : '', height: isDefault ? '200px' : 'auto' }}
       >
         {renderAddBlockButton('before')}
         {isDefault ? (

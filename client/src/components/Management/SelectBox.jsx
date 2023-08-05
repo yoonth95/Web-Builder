@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'styles/Management/SelectBox.css';
 import Dropdown from 'components/DropDown/DropDown';
 
-const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLinkChange }) => {
+const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLinkChange, setSelectIdx, page }) => {
   const [isToggle, setIsToggle] = useState(false);
 
   const parent_id = curMenuData ? (curMenuData.parent_id ? curMenuData.parent_id : curMenuData.idx) : null;
@@ -10,7 +10,7 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
   const filteredLink = secondList?.find((item) => item.link === link || item.link === editedLink);
   const commonLink = common?.find((item) => item.link === link || item.link === editedLink);
 
-  const resultTitle = filteredLink?.title || commonLink?.title || '링크할 페이지를 선택하세요';
+  const resultTitle = filteredLink?.title || commonLink?.title || '디자인을 복제할 페이지를 선택 해주세요.';
 
   const toggle = () => {
     setIsToggle((isToggle) => !isToggle);
@@ -35,8 +35,8 @@ const SelectBox = ({ type, link, curMenuData, secondList, editedLink, handleLink
           사용자 추가 페이지
         </li>
         {type === '복제'
-          ? secondList.map((subMenu) => (
-              <li className='select_option' key={subMenu.idx} onClick={(e) => handleButtonClick(e, subMenu.link)}>
+          ? secondList.filter(e => e.idx !== page).map((subMenu) => (
+              <li className='select_option' key={subMenu.idx} onClick={(e) => {setSelectIdx(subMenu.idx); handleButtonClick(e, subMenu.link)}}>
                 {subMenu.title}
               </li>
             ))

@@ -46,6 +46,16 @@ exports.updateBlockDesign = async (block_id, design_type, design_id, content) =>
     }
 }
 
+// 에디터 전체 블록 삭제
+exports.deleteAllBlocks = async (page_id) => {
+    try {
+        const result = await query(`DELETE FROM blocks where page_id = ?`, page_id);
+        return result;
+    } catch (err) {
+        throw err;
+    }
+}
+
 // 에디터 블록 삭제
 exports.deleteBlock = async (block_id) => {
     try {
@@ -94,6 +104,24 @@ exports.saveBlock = async (page_idx, blocks) => {
 
         blocks.forEach(async item => {
             await query(`UPDATE blocks SET block_style=?, design_type=?, design_id=?, layout_design=?, content=?, block_order=? WHERE page_id=? and block_id=?`, [item.block_style, item.design_type, item.design_id, item.layout_design, item.content, item.block_order, page_idx, item.block_id]);
+        });
+
+        await commit();   // 트랜잭션 수행 
+
+        return true;
+    } catch (err) {
+        await rollback(); // 트랜잭션 롤백
+        throw err;
+    }
+}
+
+// 에디터 블록 복사
+exports.copyDesign = async (page_idx, blocks) => {
+    try {
+        await beginTransaction(); // 트랜잭션 시작 
+
+        blocks.forEach(async item => {
+            await query(`INSERT INTO blocks (page_id, block_id, block_style, design_type, design_id, layout_design, content, block_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [page_idx, item.block_id, item.block_style, item.design_type, item.design_id, item.layout_design, item.content, item.block_order]);
         });
 
         await commit();   // 트랜잭션 수행 

@@ -9,5 +9,6 @@ router.put("/orderBlock", editorController.orderBlock);
 router.put("/updateBlockDesign", editorController.updateBlockDesign);
 router.put("/updateBlockLayout", editorController.updateBlockLayout);
 router.put("/saveBlock", editorController.saveBlock);
+router.post("/copyDesign", editorController.copyDesign);
 
 module.exports = router;

@@ -1,20 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useMenuActions } from 'hooks/useMenu';
+import { useEditorActions } from 'hooks/useEditor';
+
 import SelectBox from 'components/Management/SelectBox';
 import useInputValues from 'hooks/useInput';
 import 'styles/Modal/Modal.css';
 
 const Modal = ({ isOpen, setIsOpen }) => {
   const { btn } = useSelector((state) => state.btn);
+  const { page } = useSelector((state) => state.page);
   const { secondList } = useSelector((state) => state.menu);
   const inputRef = useRef(null);
   const { insertMenuAction } = useMenuActions();
+  const { designCopyAction } = useEditorActions();
   const { inputValues, handleChange, reset } = useInputValues({
     title: '',
     link: '',
     new_window: 0,
   });
+  const [selectIdx, setSelectIdx] = useState(0); // select box index
   const { title, link, new_window } = inputValues;
 
   const parent_id = btn ? Number(btn.slice(2)) : null;
@@ -59,10 +64,11 @@ const Modal = ({ isOpen, setIsOpen }) => {
 
     const saveCopyPage = async () => {
       if (link === '') {
-        alert('링크를 선택 해주세요');
+        alert('디자인 복제할 페이지를 선택 해주세요');
         return;
       }
-      await insertMenuAction(title, link, parent_id, new_window, setIsOpen, reset);
+
+      await designCopyAction(page, selectIdx, setIsOpen, reset);
     };
 
     if (btn === '메뉴') {
@@ -80,7 +86,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
         <div className='modal-overlay' onClick={closeModal}>
           <div className='modal-content' onClick={handleModalContentClick}>
             <div className='modal_infor_box'>
-              <span>{btn !== '메뉴' && btn !== '복제' ? '메뉴 항목 추가' : `페이지 ${btn}`}</span>
+              <span>{btn !== '메뉴' && btn !== '복제' ? '메뉴 항목 추가' : `페이지 디자인 ${btn}`}</span>
               {btn === '메뉴' ? (
                 <input ref={inputRef} type='text' className='pageInput' name='title' placeholder={btn === '메뉴' ? '메뉴 항목' : `페이지 명`} value={title} onChange={handleChange} />
               ) : btn !== '복제' ? (
@@ -96,7 +102,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
                   </div>
                 </>
               ) : (
-                <SelectBox type={'복제'} secondList={secondList} link={link} handleLinkChange={handleChange} />
+                <SelectBox type={'복제'} secondList={secondList} link={link} handleLinkChange={handleChange} setSelectIdx={setSelectIdx} page={page}/>
               )}
             </div>
             <div className='modal_btn_box'>

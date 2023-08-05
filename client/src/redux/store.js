@@ -5,12 +5,14 @@ import ButtonSlice from './buttonSlice';
 import menuSlice from './menuSlice';
 // import selectBoxSlice from './selectBoxSlice';
 import editorSlice from './editorSlice';
+import pageSlice from './pageSlice';
 
 const store = configureStore({
   reducer: {
     user: UserSlice,
     btn: ButtonSlice,
     menu: menuSlice,
+    page: pageSlice,
     // selectBox: selectBoxSlice,
     editor: editorSlice
   },

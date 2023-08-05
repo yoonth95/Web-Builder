@@ -40,7 +40,7 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
 
   const renderBox = (block) => {
     const { design_type, content, block_id, design_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId } = block;
-
+console.log(block, 'block')
     if (content) {
       return DetailRenderBox[design_type](content, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
     } else {
@@ -57,14 +57,13 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
     <div className='detail_wrap'>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} windowWidth={windowWidth} />
       {data
-        ?.sort((a, b) => a.block_order - b.block_order)
-        .filter((block) => block.design_type !== 'default') 
+        ?.sort((a, b) => a.block_order - b.block_order) // block_order 순으로 정렬
+        .filter((block) => block.design_type !== 'default') // design_type이 default가 아닌 것만 필터링
         .map((block) => {
           let layout_design = block.layout_design;
-
-          if (typeof block.layout_design === 'string') {
+          if (typeof block.layout_design === 'string') { 
             try {
-              layout_design = JSON.parse(block.layout_design);
+              layout_design = JSON.parse(block.layout_design); // 디자인 유형이 layout_design인경우 design style을 파싱
             } catch (error) {
               console.error('Error parsing layout_design:', error);
             }

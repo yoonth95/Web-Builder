@@ -7,16 +7,19 @@ import 'styles/Detail/Detail.css';
 
 export const DetailRenderBox = {
   image: (box, block_id, blockStyle) => {
+    console.log('image', box, block_id, blockStyle);
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     return (
       <div key={block_id} className='module_wrap' style={filter_style?.style}>
         <div className='module_container' style={box?.layout}>
-          {[...Array(box?.numImages)].map((_, i) => (
-            <div key={i} style={box?.style}>
+          {/* {[...Array(box?.numImages)].map((_, i) => ( */}
+          {[...Array(box?.images.length)].map((_, i) => (
+            console.log('box?.images[i].src', box?.images[i].src)
+            return(<div key={i} style={box?.style}>
               <div className='module_imageBox'>
-                <img src={`${box?.src}`} alt='' />
+                <img src={`${box?.images[i].src}`} alt='' />
               </div>
-            </div>
+            </div>)
           ))}
         </div>
       </div>

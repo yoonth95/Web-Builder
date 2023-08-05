@@ -138,3 +138,83 @@ exports.saveBlock = async (req, res) => {
         res.status(500).json('저장 오류');
     }
 }
+
+exports.copyDesign = async (req, res) => {
+    const data = req.body;
+    const { sourcePage, targetPage } = data;
+
+    try {
+        await editorDB.deleteAllBlocks(sourcePage);
+        const getBlocks = await editorDB.getBlocks(targetPage);
+        const copyBlocks = getBlocks.map((block) => {
+            if (block.layout_design !== null) {
+                let layout_design = JSON.parse(Buffer.from(Buffer.from(block.layout_design).toString('utf-8'), 'base64').toString('utf-8'));
+                layout_design = layout_design.map((layout) => {
+                    if (layout.design_type === 'image') {
+                        layout.boxes.images = layout.boxes.images.map((image) => {
+                            if (image.src === '') return image;
+                            image.src = image.src.replace(`images/${targetPage}`, `images/${sourcePage}`);
+                            return image;
+                        });
+                    } else if (layout.design_type === 'list') {
+                        if (layout.boxes.images[0] !== '') {
+                            layout.boxes.images[0].src = layout.boxes.images[0].src.replace(`images/${targetPage}`, `images/${sourcePage}`);
+                        }
+                    }
+                    return layout;
+                });
+                block.layout_design = btoa(unescape(encodeURIComponent(JSON.stringify(layout_design))));
+            } 
+            if (block.content !== null) {
+                let content = JSON.parse(Buffer.from(Buffer.from(block.content).toString('utf-8'), 'base64').toString('utf-8'));
+                if (block.design_type === 'image') {
+                    content.images = content.images.map((image) => {
+                        if (image.src === '') return image;
+                        image.src = image.src.replace(`images/${targetPage}`, `images/${sourcePage}`);
+                        return image;
+                    });
+                } else if (block.design_type === 'list') {
+                    if (content.images[0].src !== '') {
+                        content.images[0].src = content.images[0].src.replace(`images/${targetPage}`, `images/${sourcePage}`);
+                    }
+                }
+                block.content = btoa(unescape(encodeURIComponent(JSON.stringify(content))));
+            }
+
+            const split_value = block.block_id.split('_');
+            split_value[0] = sourcePage;
+            block.block_id = split_value.join('_');
+            return block;
+        });
+        const result = await editorDB.copyDesign(sourcePage, copyBlocks);
+        copyFiles(`static/images/${sourcePage}`, `static/images/${targetPage}`);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json('복사 오류');
+    }
+}
+
+// 이미지 폴더 복사
+function copyFiles(sourceDir, targetDir) {
+    // 소스 디렉토리가 존재한다면
+    if (fs.existsSync(targetDir)){
+        // 대상 디렉토리가 존재하지 않으면 생성합니다.
+        if (!fs.existsSync(sourceDir)){
+        fs.mkdirSync(sourceDir, { recursive: true });
+        }
+    
+        // 모든 파일을 읽어옵니다.
+        const files = fs.readdirSync(targetDir);
+    
+        // 각 파일을 복사합니다.
+        for (const file of files) {
+            const srcFile = path.join(targetDir, file);
+            const destFile = path.join(sourceDir, file);
+            
+            // 파일을 복사합니다.
+            fs.copyFileSync(srcFile, destFile);
+            console.log(`Copied file ${file} to ${sourceDir}`);
+        }
+    }
+  }

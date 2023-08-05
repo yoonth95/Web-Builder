@@ -13,7 +13,7 @@
         "layout": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between"
+          "justifyContent": "space-evenly"
         }
       },
       {
@@ -28,7 +28,7 @@
         "layout": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between",
+          "justifyContent": "space-evenly",
           "gap": "10px"
         }
       },
@@ -45,7 +45,7 @@
         "layout": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between",
+          "justifyContent": "space-evenly",
           "gap": "10px"
         }
       },
@@ -63,7 +63,7 @@
         "layout": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between",
+          "justifyContent": "space-evenly",
           "gap": "10px"
         }
       },
@@ -82,7 +82,7 @@
         "layout": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between",
+          "justifyContent": "space-evenly",
           "gap": "10px"
         }
       },
@@ -102,7 +102,7 @@
         "layout": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between",
+          "justifyContent": "space-evenly",
           "gap": "10px"
         }
       }

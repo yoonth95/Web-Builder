@@ -115,6 +115,44 @@
 .module_container {
   padding: 20px 0;
 }
+.container_desktop {
+  min-height: 200px;
+}
+
+.container_tablet, .container_mobile {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+/* downIcon 적응형 */
+.container_tablet .downIcon {
+  font-size: 1.5rem;
+}
+.container_mobile .downIcon {
+  font-size: 1rem;
+}
+
+/* 레이아웃 적응형 */
+.container_desktop .module_layout_item {
+  zoom: 1;
+}
+.container_tablet .module_layout_item {
+  zoom: 0.8;
+}
+.container_mobile .module_layout_item {
+  zoom: 0.5;
+}
+
+/* 텍스트 적응형 */
+.container_desktop .textWidth {
+  max-width: 1200px;
+}
+.container_tablet .textWidth {
+  max-width: 750px;
+}
+.container_mobile .textWidth {
+  max-width: 350px;
+}
 
 .imgHover:hover {
   outline: 2px #3a7fd0 solid;
@@ -125,13 +163,14 @@
 }
 .imgHover:hover .attatchIcon {
   display: flex;
-  /* -webkit-filter: brightness(70%); */
-  /* filter: brightness(70%); */
 }
 .imageTag {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+  border: none;
+  outline: none;
 }
 
 /* 이미지 블록 css */
@@ -140,30 +179,47 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-height: 600px;
+  min-height: 200px;
   background-color: #f3f3f3;
 }
-.imageDiv:before {
+.imageDiv.backgroundNone {
+  height: auto;
+  background-color: #fff !important;
+  max-height: fit-content;
+}
+.imageDiv.boxCircle {
+  width: 15rem;
+  height: 15rem;
+  min-height: revert;
+}
+.imageDiv.boxCircle:before {
   content: '';
   display: block;
   padding-top: 100%;
 }
+.container_mobile .imageDiv.boxCircle {
+  width: 10rem;
+  height: 10rem;
+  min-height: revert;
+}
+
 .backgroundNone {
   background-color: #fff !important;
 }
-
-.module_imageBox {
+.moduleBox {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
 }
-.module_imageBox img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+
+
+.desktop .imageTag:hover + .icon_container, .desktop .icon_container:hover {
+  opacity: 1;
 }
+
 .icon_container {
   position: absolute;
   top: 0;
@@ -175,12 +231,7 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.4s ease-in-out;
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-.imageTag:hover + .icon_container,
-.icon_container:hover {
-  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 .deleteIcon {
   position: absolute;
@@ -189,10 +240,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   border-radius: 5px;
   background-color: #ee7d00;
   color: #fff;
@@ -200,16 +251,13 @@
   z-index: 100;
 }
 .linkIcon {
-  position: absolute;
-  top: 130px;
-  left: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   border-radius: 5px;
   background-color: #ee7d00;
   color: #fff;
@@ -217,21 +265,16 @@
   z-index: 100;
 }
 .imgIcon {
-  position: absolute;
-  top: 130px;
-  left: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  font-size: 1.3rem;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
   border-radius: 5px;
   background-color: #ee7d00;
   color: #fff;
   cursor: pointer;
-  z-index: 100;
 }
 .imgIcon input {
   display: none;
@@ -316,6 +359,11 @@
   height: 300px;
   background-color: #f3f3f3;
 }
+.module_square:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
 .module_wideRectangle {
   width: 500px;
   height: 200px;
@@ -331,7 +379,6 @@
   padding: 20px 0;
 }
 .module_text_line {
-  max-width: 1280px;
   padding: 5px;
 }
 
@@ -339,14 +386,14 @@
 .module_layout_item {
   display: flex;
   align-items: center;
-  padding: 20px 0;
-  min-height: 200px;
+  /* padding: 20px 0; */
+  /* min-height: 200px; */
   gap: 10px;
 }
 .module_layoutBox {
   border: 1px dashed #333;
   background-color: #f3f3f3;
-  min-height: 200px;
+  /* min-height: 200px; */
 }
 
 .layout_wrap {
@@ -354,7 +401,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 200px;
+  /* min-height: 200px; */
   cursor: pointer;
   border: 1px dashed;
 }

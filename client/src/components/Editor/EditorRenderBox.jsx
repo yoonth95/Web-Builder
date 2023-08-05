@@ -7,8 +7,10 @@ import { faWandMagicSparkles, faImage, faPaperclip, faDownload } from '@fortawes
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 export const EditorRenderBox = {
-  image: ({ design, block_id, blockStyle, attatchImg, attatchLink, deleteImage }) => {
+  image: ({ design, block_id, blockStyle, attatchImg, attatchLink, deleteImage, screenSize }) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
+    const isCircle = design?.style.borderRadius === '50%';
+    const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
 
     let blockId, isLayout;
     if (block_id.includes('layout')) {
@@ -20,27 +22,29 @@ export const EditorRenderBox = {
 
     return (
       <div key={block_id} className='module_wrap' style={filter_style?.style}>
-        <div className='module_container' style={design?.layout}>
+        <div className={`module_container ${screen}`} style={design?.layout}>
           {[...Array(design?.images.length)].map((_, i) => (
-            <div key={i} className={design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} style={design?.style}>
+            <div key={i} className={`${design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} ${isCircle ? 'boxCircle' : ''}`} style={design?.style}>
               {design?.images[i].src !== '' ? (
-                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop' : ''}`}>
                   <div className='icon_container'>
                     <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, idx: i, isLayout: isLayout })}>
                       <FontAwesomeIcon icon={faTrashCan} />
                     </span>
-                    <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
-                      <FontAwesomeIcon icon={faPaperclip} />
-                    </span>
-                    <label className='imgIcon'>
-                      <FontAwesomeIcon icon={faImage} />
-                      <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
-                    </label>
+                    <div style={{display: 'flex', gap: '20px'}}>
+                      <label className='imgIcon'>
+                        <FontAwesomeIcon icon={faImage} />
+                        <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
+                      </label>
+                      <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                        <FontAwesomeIcon icon={faPaperclip} />
+                      </span>
+                    </div>
                   </div>
-                  <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={design?.style} />
+                  <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={design?.style} loading='lazy'/>
                 </div>
               ) : (
-                <div className='module_imageBox imgHover' style={design?.style}>
+                <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop imgHover' : ''}`} style={design?.style}>
                   <div className='downIcon'>
                     <FontAwesomeIcon icon={faDownload} />
                   </div>
@@ -82,7 +86,7 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  list: ({ design, block_id, blockStyle, handleUpdateText, attatchImg, attatchLink, deleteImage }) => {
+  list: ({ design, block_id, blockStyle, handleUpdateText, attatchImg, attatchLink, deleteImage, screenSize }) => {
     let blockId, isLayout;
     if (block_id.includes('layout')) {
       [blockId, isLayout] = block_id.split('/');
@@ -90,22 +94,35 @@ export const EditorRenderBox = {
       blockId = block_id;
       isLayout = false;
     }
+    
+    const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
 
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     return (
       <div key={block_id} className='module_wrap font-style' style={filter_style?.style}>
-        <div className='module_container_list'>
+        <div className={`module_container_list ${screen}`}>
           <div className='module_list_item'>
             <div className={`module_${design?.shape}`} style={design?.images[0].src !== '' ? { backgroundColor: '#fff' } : { backgroundColor: '#F3F3F3' }}>
               {design?.images[0].src !== '' ? (
-                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                  <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, isLayout: isLayout })}>
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </span>
-                  <img className='imageTag' src={`${design?.images[0].src}`} alt='' style={design?.style} />
+                <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop' : ''}`}>
+                  <div className='icon_container'>
+                    <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, isLayout: isLayout })}>
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </span>
+                    <div style={{display: 'flex', gap: '20px'}}>
+                      <label className='imgIcon'>
+                        <FontAwesomeIcon icon={faImage} />
+                        <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, isLayout: isLayout })} />
+                      </label>
+                      <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, isLayout: isLayout })}>
+                        <FontAwesomeIcon icon={faPaperclip} />
+                      </span>
+                    </div>
+                  </div>
+                  <img className='imageTag' src={`${design?.images[0].src}`} alt='' style={design?.style} loading='lazy'/>
                 </div>
               ) : (
-                <div className='module_imageBox imgHover' style={design?.style}>
+                <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop imgHover' : ''}`} style={design?.style}>
                   <div className='downIcon'>
                     <FontAwesomeIcon icon={faDownload} />
                   </div>
@@ -128,7 +145,7 @@ export const EditorRenderBox = {
                   contentEditable={true}
                   suppressContentEditableWarning
                   style={{ margin: line.margin, fontFamily: line.fontFamily || 'inherit', fontSize: line.fontSize, fontWeight: line.fontWeight, color: line.color }}
-                  className={line.className}
+                  className={`${line.className} textWidth`}
                   onBlur={(e) => handleUpdateText(blockId, lineIndex, e.target.innerHTML, isLayout)}
                   dangerouslySetInnerHTML={{ __html: line.text }}
                 />
@@ -138,7 +155,7 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  text: ({ design, block_id, blockStyle, handleUpdateText }) => {
+  text: ({ design, block_id, blockStyle, handleUpdateText, screenSize }) => {
     let blockId, isLayout;
     if (block_id.includes('layout')) {
       [blockId, isLayout] = block_id.split('/');
@@ -146,17 +163,18 @@ export const EditorRenderBox = {
       blockId = block_id;
       isLayout = false;
     }
+    const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
 
     const filter_style = blockStyle?.find((block) => block.block_id === blockId);
     return (
       <div key={blockId} className='module_wrap' style={filter_style?.style}>
-        <div className='module_container' style={{ textAlign: `${design?.alignments}` }}>
+        <div className={`module_container ${screen}`} style={{ textAlign: `${design?.alignments}` }}>
           <div className='module_text_item'>
             {design?.lines.map((line, i) => (
               <React.Fragment key={i}>
                 <div
                   key={i}
-                  className='module_text_line'
+                  className='module_text_line textWidth'
                   contentEditable={true}
                   suppressContentEditableWarning
                   style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
@@ -172,13 +190,15 @@ export const EditorRenderBox = {
     );
   },
   table: null,
-  layout: ({ design, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, attatchImg, attatchLink, deleteImage }) => {
+  layout: ({ design, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, attatchImg, attatchLink, deleteImage, screenSize }) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     const parsed_layout_design = layout_design ? JSON.parse(layout_design) : null;
 
+    const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
+
     return (
       <div key={block_id} className='module_wrap' style={filter_style?.style}>
-        <div className='module_container'>
+        <div className={`module_container ${screen}`}>
           <div className='module_layout_item' style={design?.style}>
             {design?.elements.map((element, i) => {
               const layout = parsed_layout_design && parsed_layout_design?.find((e) => e.layout_id === element.layout_id);
@@ -247,11 +267,11 @@ export const EditorRenderBox = {
                         >
                           {layout_child ? (
                             layout_child_design_type === 'image' ? (
-                              EditorRenderBox.image({ design: child_boxes, block_id: child_index, attatchImg, attatchLink, deleteImage })
+                              EditorRenderBox.image({ design: child_boxes, block_id: child_index, attatchImg, attatchLink, deleteImage, screenSize })
                             ) : layout_child_design_type === 'text' ? (
                               EditorRenderBox.text({ design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText })
                             ) : layout_child_design_type === 'list' ? (
-                              EditorRenderBox.list({ design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage })
+                              EditorRenderBox.list({ design: child_boxes, block_id: child_index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage, screenSize })
                             ) : layout_child_design_type === 'table' ? (
                               <ApplyTable design_id={tableDesignId} />
                             ) : layout_child_design_type === 'line' ? (
@@ -265,11 +285,11 @@ export const EditorRenderBox = {
                     })
                   ) : layout ? (
                     layout_design_type === 'image' ? (
-                      EditorRenderBox.image({ design: boxes, block_id: index, attatchImg, attatchLink, deleteImage })
+                      EditorRenderBox.image({ design: boxes, block_id: index, attatchImg, attatchLink, deleteImage, screenSize })
                     ) : layout_design_type === 'text' ? (
                       EditorRenderBox.text({ design: boxes, block_id: index, handleUpdateText: handleUpdateText })
                     ) : layout_design_type === 'list' ? (
-                      EditorRenderBox.list({ design: boxes, block_id: index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage })
+                      EditorRenderBox.list({ design: boxes, block_id: index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage, screenSize })
                     ) : layout_design_type === 'table' ? (
                       <ApplyTable design_id={tableDesignId} />
                     ) : layout_design_type === 'line' ? (

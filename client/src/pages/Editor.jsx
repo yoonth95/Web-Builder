@@ -124,26 +124,29 @@ const Editor = ({ isLoading, setIsLoading }) => {
       </div>
       <div className={screenSize}>
         <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize} type='편집' />
-        {[...blocks]
-          .filter((e) => e.page_id === Number(page_idx))
-          .sort((a, b) => a.block_order - b.block_order)
-          .map((block) => (
-            <div key={block.block_id}>
-              <Block
-                block_id={block.block_id}
-                design_type={block.design_type}
-                design_id={block.design_id}
-                block_order={block.block_order}
-                layout_design={block.layout_design}
-                block_content={block.content}
-                addBlock={addBlock}
-                deleteBlock={deleteBlock}
-                handleChangeBlockOrder={handleChangeBlockOrder}
-                blockStyle={blockStyle}
-                setBlockStyle={setBlockStyle}
-              />
-            </div>
-          ))}
+        <div>
+          {[...blocks]
+            .filter((e) => e.page_id === Number(page_idx))
+            .sort((a, b) => a.block_order - b.block_order)
+            .map((block) => (
+              <div key={block.block_id}>
+                <Block
+                  block_id={block.block_id}
+                  design_type={block.design_type}
+                  design_id={block.design_id}
+                  block_order={block.block_order}
+                  layout_design={block.layout_design}
+                  block_content={block.content}
+                  addBlock={addBlock}
+                  deleteBlock={deleteBlock}
+                  handleChangeBlockOrder={handleChangeBlockOrder}
+                  blockStyle={blockStyle}
+                  setBlockStyle={setBlockStyle}
+                  screenSize={screenSize}
+                />
+              </div>
+            ))}
+        </div>
       </div>
     </>
   );
