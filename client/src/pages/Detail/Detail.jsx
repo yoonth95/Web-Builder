@@ -40,7 +40,6 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
 
   const renderBox = (block) => {
     const { design_type, content, block_id, design_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId } = block;
-console.log(block, 'block')
     if (content) {
       return DetailRenderBox[design_type](content, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
     } else {
@@ -70,7 +69,6 @@ console.log(block, 'block')
           }
 
           const elements = block.content?.elements;
-          console.log(elements, 'elements')
 
           let shouldRender = false;
 

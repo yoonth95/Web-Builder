@@ -6,21 +6,19 @@ import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Detail/Detail.css';
 
 export const DetailRenderBox = {
-  image: (box, block_id, blockStyle) => {
-    console.log('image', box, block_id, blockStyle);
+  image: (content, block_id, blockStyle) => {
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     return (
       <div key={block_id} className='module_wrap' style={filter_style?.style}>
-        <div className='module_container' style={box?.layout}>
-          {/* {[...Array(box?.numImages)].map((_, i) => ( */}
-          {[...Array(box?.images.length)].map((_, i) => (
-            console.log('box?.images[i].src', box?.images[i].src)
-            return(<div key={i} style={box?.style}>
+        <div className='module_container' style={content?.layout}>
+          {[...Array(content?.images.length)].map((_, i) => {
+            return(<div key={i} style={content?.style}>
               <div className='module_imageBox'>
-                <img src={`${box?.images[i].src}`} alt='' />
+                <img src={`${content?.images[i].src}`} alt='' />
               </div>
             </div>)
-          ))}
+          }
+          )}
         </div>
       </div>
     );
@@ -45,14 +43,16 @@ export const DetailRenderBox = {
       </div>
     );
   },
-  list: (box, block_id, blockStyle, handleUpdateText) => {
+  list: (box, block_id, blockStyle) => {
+    console.log("list:","box",box, block_id, blockStyle)
     const filter_style = blockStyle?.find((block) => block.block_id === block_id);
     return (
       <div key={block_id} className='module_wrap font-style' style={filter_style?.style}>
         <div className='module_container_list'>
           <div className='module_list_item'>
             <div className={`module_${box?.shape}`}>
-              <img src={`${box?.src}`} alt='' />
+              {/* <img src={`${box?.src}`} alt='' /> */}
+              <img src={`${box?.images[0].src}`} alt='' />
             </div>
             {box?.lines &&
               box?.lines.map((line, lineIndex) => (
