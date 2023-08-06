@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {useLocation} from "react-router-dom"
 import { useTable } from "react-table";
+import { useSelector } from 'react-redux';
+
 
 const EditableCell = ({
   value: initialValue,
@@ -33,30 +35,9 @@ const defaultColumn = {
   Cell: EditableCell,
 };
 
-const MyTable = ({
-  columns,
-  data,
-  updateMyData,
-  columnNames,
-  setColumnNames,
-  editColumnName,
-  setEditColumnName,
-  newColumnName,
-  setNewColumnName,
-}) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({
-    columns,
-    data,
-    defaultColumn,
-    updateMyData,
-  });
-
+const MyTable = ({ columns,data,updateMyData,columnNames,setColumnNames,editColumnName,setEditColumnName,newColumnName,
+  setNewColumnName,handleCellChange}) => {
+  const { getTableProps,getTableBodyProps,headerGroups,rows,prepareRow,} = useTable({columns,data,defaultColumn,updateMyData,});
   const inputRef = useRef();
   const {pathname} = useLocation();
   const authority = pathname.includes("pages") 
@@ -135,12 +116,17 @@ const MyTable = ({
     </div>
   );
 };
-
-const ApplyTable = ({ design_id }) => {
+const selectTableData = (state, block_id) => {
+  const blockList = state.blockList || [];
+  const block = blockList.find(block => block.block_id === block_id);
+  return block?.content?.rows || [];
+};
+const ApplyTable = ({ design_id, handleCellChange, block_id }) => {
   const [designSize, setDesignSize] = useState(
     design_id.split(",").map(Number)
-  ); 
+  );
   const [rows, cols] = designSize;
+  const tableDataFromRedux = useSelector((state) => selectTableData(state, block_id));
 
   const [columnNames, setColumnNames] = useState(
     Array(cols)
@@ -161,21 +147,55 @@ const ApplyTable = ({ design_id }) => {
     [columnNames, cols]
   );
 
-  const [data, setData] = useState(
-    Array(rows)
-      .fill(0)
-      .map(() =>
-        Array(cols)
-          .fill(0)
-          .reduce(
-            (acc, _, index) => ({
-              ...acc,
-              [`col${index + 1}`]: "Default",
-            }),
-            {}
-          )
-      )
-  );
+  const [data, setData] = useState(() => {
+    if (tableDataFromRedux && tableDataFromRedux.length > 0) {
+      return tableDataFromRedux;
+    } else {
+      return Array(rows)
+        .fill(0)
+        .map(() =>
+          Array(cols)
+            .fill(0)
+            .reduce(
+              (acc, _, index) => ({
+                ...acc,
+                [`col${index + 1}`]: "Default",
+              }),
+              {}
+            )
+        );
+    }
+  });
+  
+  useEffect(() => {
+    if (tableDataFromRedux === null) {  
+        const newData = Array(rows)
+            .fill(0)
+            .map(() =>
+                Array(cols)
+                    .fill(0)
+                    .reduce(
+                        (acc, _, index) => ({
+                            ...acc,
+                            [`col${index + 1}`]: "Default",
+                        }),
+                        {}
+                    )
+            );
+
+        setData(newData);
+        newData.forEach((rowData, rowIndex) => {
+            Object.keys(rowData).forEach((colId) => {
+                handleCellChange(block_id, colId, rowIndex, "Default");
+            });
+        });
+    } else if (tableDataFromRedux && tableDataFromRedux.length > 0) {
+        setData(tableDataFromRedux);
+    }
+}, [tableDataFromRedux, handleCellChange, block_id, rows, cols]);
+
+  
+  
 
   const updateMyData = (rowIndex, columnId, value) => {
     setData((oldData) =>
@@ -189,6 +209,7 @@ const ApplyTable = ({ design_id }) => {
         return row;
       })
     );
+    handleCellChange(block_id, columnId, rowIndex, value);
   };
 
   return (
@@ -202,6 +223,8 @@ const ApplyTable = ({ design_id }) => {
       setEditColumnName={setEditColumnName}
       newColumnName={newColumnName}
       setNewColumnName={setNewColumnName}
+      handleCellChange={handleCellChange}
+      block_id={block_id}
     />
   );
 };

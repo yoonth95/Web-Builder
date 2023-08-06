@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { updateList } from 'redux/editorSlice';
-
+import { showAlert } from 'redux/AlertSlice';
 import designType from 'data/designType';
 
 import {
@@ -88,7 +88,31 @@ export const useEditorActions = () => {
       setIsLoading(false);
     }
   }
-
+  // 테이블 셀별 수정.
+  const updateTableDataInBlock = (blockList, block_id, col, row, content) => {
+    return blockList.map(block => {
+      if (block.block_id === block_id) {
+        const existingRows = block.content?.rows || [];
+        const updatedRows = [...existingRows];
+  
+        const updatedRow = { ...updatedRows[row] }; 
+        updatedRow[col] = content;
+        updatedRows[row] = updatedRow;
+  
+        return {
+          ...block,
+          content: {
+            ...(block.content || {}),
+            rows: updatedRows
+          }
+        };
+      }
+      return block;
+    });
+  };
+  
+  
+  
   // 블록 추가
   const insertBlockAction = async (page_idx, order, dir, setIsLoading, setError) => {
     const block_id = `${page_idx}_${new Date().getTime()}_${Math.floor(Math.random() * 899999) + 100000}`;
@@ -387,10 +411,10 @@ export const useEditorActions = () => {
   // 블록 복제
   const designCopyAction = async (sourcePage, targetPage, setIsOpen, reset) => {
     await CopyDeisgnAPI(sourcePage, targetPage);
-    alert('디자인 복제 완료');
+    dispatch(showAlert('디자인 복제 완료'));
     setIsOpen(false);
     reset();
   }
 
-  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction, handleUpdateText, designCopyAction };
+  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction, handleUpdateText, designCopyAction, updateTableDataInBlock };
 };

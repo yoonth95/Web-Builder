@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateList } from 'redux/editorSlice';
+
 import PropTypes from 'prop-types';
+
+//redux 
+import { showAlert } from 'redux/AlertSlice';
 
 // 컴포넌트 및 데이터
 import designType from 'data/designType';
@@ -12,6 +18,7 @@ import LinkModal from 'components/Modal/LinkModal';
 import { useEditorActions } from 'hooks/useEditor';
 import { useImageActions } from 'hooks/useImage';
 
+
 // icon 및 css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRotateRight, faArrowUp, faEdit, faTrash, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
@@ -20,11 +27,10 @@ import 'styles/Editor/Block.css';
 function Block({ block_id, design_type, design_id, block_order, layout_design, block_content, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, setBlockStyle, screenSize }) {
   const isDefault = design_type === 'default';
   const blockContainerRef = useRef(null);
-  const { handleUpdateText } = useEditorActions();
+  const { handleUpdateText, updateTableDataInBlock } = useEditorActions();
   const { addImageAction, deleteImageAction } = useImageActions();
-
   const location = useLocation();
-
+  const dispatch = useDispatch();
   const [showBlockBtn, setShowBlockBtn] = useState(false);
   const [checkBtn, setCheckBtn] = useState(false);
   const [isLayoutDesign, setIsLayoutDesign] = useState(false);
@@ -33,6 +39,13 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const [sideBarOpen, setSideBarOpen] = useState({ open: false, block_id: '' });
   const [isModalOpen, setIsModalOpen] = useState({ open: false, block_id: '' });
   const [isOpen, setIsOpen] = useState(false);
+  const blocks = useSelector(state => state.editor.blockList);
+
+  const [LinkDic, setLinkDic] = useState({
+    block_id:'',
+    idx:'',
+    isLayout:'',
+  });
 
   // 블록 마우스 오버 시 툴 바 버튼 보이게
   const handleShowBlockBtn = (e) => {
@@ -61,10 +74,14 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
     return EditorRenderBox[design_type](arg);
   };
 
+  const handleCellChange = (block_id, col, row, content) => {
+    const updatedBlockList = updateTableDataInBlock(blocks, block_id, col, row, content);
+    dispatch(updateList(updatedBlockList));
+  };
   // 이미지 첨부
   const attatchImg = ({ tag, block_id, idx, isLayout }) => {
     if (!tag.target.files[0] || !tag.target.files[0].type.includes('image')) {
-      alert('이미지 파일만 첨부해주세요.');
+      dispatch(showAlert('이미지 파일만 첨부해주세요.'));
       return;
     }
     addImageAction({ tag: tag, block_id: block_id, idx: idx, isLayout: isLayout, setProgress: setProgress, location: location.pathname });
@@ -73,6 +90,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   // 링크 첨부
   const attatchLink = ({ block_id, idx, isLayout }) => {
     setIsOpen(!isOpen);
+    setLinkDic({block_id: block_id, idx: idx, isLayout: isLayout});
   };
 
   // 이미지 삭제
@@ -80,7 +98,8 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
     // console.log(block_id, idx, isLayout);
     deleteImageAction({ block_id: block_id, idx: idx, isLayout: isLayout });
   };
-
+  //table style 패딩 적용 
+  const currentStyle = blockStyle.find((block) => block.block_id === block_id)?.style || { paddingTop: '0px', paddingBottom: '0px', maxWidth: '1240px' };
   // 툴 바 버튼
   const correctionBtn = [
     {
@@ -159,9 +178,13 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
             </div>
             {design_type === 'table' ? (
               <div className='module_block'>
-                <div className={`module_wrap ${checkBtn ? 'widthSet' : ''}`}>
+                <div className={`module_wrap ${checkBtn ? 'widthSet' : ''}`}
+                    style={{ 
+                      paddingTop: currentStyle.paddingTop, 
+                      paddingBottom: currentStyle.paddingBottom
+                    }}>
                   <div className='module_container'>
-                    <ApplyTable design_id={design_id} />
+                    <ApplyTable design_id={design_id} block_id={block_id} handleCellChange={handleCellChange} />
                   </div>
                 </div>
               </div>
@@ -183,7 +206,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       <div className={`block_container_side ${sideBarOpen.open ? 'open' : 'close'}`}>
         <SideBar checkBtn={checkBtn} setCheckBtn={setCheckBtn} sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} blockStyle={blockStyle} setBlockStyle={setBlockStyle} />
       </div>
-      {isOpen && <LinkModal isOpen={isOpen} setIsOpen={setIsOpen} block_id={block_id} attatchLink={attatchLink}/>}
+      {isOpen && <LinkModal isOpen={isOpen} setIsOpen={setIsOpen} block_id={block_id} LinkDic={LinkDic}/>}
     </>
   );
 }
