@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
 
 // redux
-import { useSelector } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
+import { showAlert } from 'redux/AlertSlice';
 
 // hooks
 import { useEditorActions } from 'hooks/useEditor';
@@ -11,6 +12,7 @@ import { useEditorActions } from 'hooks/useEditor';
 import Block from 'components/Editor/Block';
 import Nav from 'components/Main/Nav';
 import Spinner from 'components/Spinner/Spinner';
+
 // import SideBar from 'components/Editor/SideBar';
 
 // icon 및 css
@@ -22,7 +24,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const match = useMatch('/editor/*');
   const path = match.params['*'].split('/');
   const page_idx = path[path.length - 1];
-
+const dispatch = useDispatch();
   const navigate = useNavigate();
   const { secondList } = useSelector((state) => state.menu);
   const blocks = useSelector((state) => state.editor.blockList);
@@ -47,7 +49,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
   // 블록 삭제
   const deleteBlock = (id) => {
     if (blocks.length === 1) {
-      alert('최소 한 개의 블록은 있어야 합니다.');
+      dispatch(showAlert('최소 한 개의 블록은 있어야 합니다.'));
       return;
     }
     if (window.confirm('해당 블록을 삭제하시겠습니까?')) deleteBlockAction(id, setIsLoading, setError);
@@ -74,20 +76,20 @@ const Editor = ({ isLoading, setIsLoading }) => {
 
   // 미리보기
   const handlePreview = () => {
-    alert('미리보기');
+    dispatch(showAlert('미리보기'));
   };
 
   // 저장
   const handleSave = async () => {
     const result = await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
     console.log(result);
-    alert('저장되었습니다.');
+    dispatch(showAlert('저장되었습니다.'));
   };
 
   if (isLoading) return <Spinner />;
 
   if (error) {
-    alert('에러', error);
+    dispatch(showAlert('에러', error));
     navigate(-1);
   }
 

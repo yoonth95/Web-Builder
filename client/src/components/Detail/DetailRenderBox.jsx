@@ -51,7 +51,6 @@ export const DetailRenderBox = {
         <div className='module_container_list'>
           <div className='module_list_item'>
             <div className={`module_${box?.shape}`}>
-              {/* <img src={`${box?.src}`} alt='' /> */}
               <img src={`${box?.images[0].src}`} alt='' />
             </div>
             {box?.lines &&

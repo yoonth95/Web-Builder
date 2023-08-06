@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { useMenuActions } from 'hooks/useMenu';
 import { useEditorActions } from 'hooks/useEditor';
+import { showAlert } from 'redux/AlertSlice';
 
 import SelectBox from 'components/Management/SelectBox';
 import useInputValues from 'hooks/useInput';
 import 'styles/Modal/Modal.css';
 
 const Modal = ({ isOpen, setIsOpen }) => {
+  const dispatch = useDispatch();
   const { btn } = useSelector((state) => state.btn);
   const { page } = useSelector((state) => state.page);
   const { secondList } = useSelector((state) => state.menu);
@@ -21,7 +23,6 @@ const Modal = ({ isOpen, setIsOpen }) => {
   });
   const [selectIdx, setSelectIdx] = useState(0); // select box index
   const { title, link, new_window } = inputValues;
-
   const parent_id = btn ? Number(btn.slice(2)) : null;
 
   const closeModal = () => {
@@ -47,7 +48,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
   const addMenu = () => {
     const saveParentMenu = async () => {
       if (title === '') {
-        alert('페이지 명을 정해 주세요');
+        dispatch(showAlert('페이지 명을 정해 주세요'));
         return;
       }
       await insertMenuAction(title, link, parent_id, new_window, setIsOpen, reset);
@@ -56,7 +57,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
 
     const savedownMenu = async () => {
       if (title === '' || link === '') {
-        alert('페이지 명 또는 링크를 적어주세요');
+        dispatch(showAlert('페이지 명 또는 링크를 적어주세요'));
         return;
       }
       await insertMenuAction(title, link, parent_id, new_window, setIsOpen, reset);
@@ -64,7 +65,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
 
     const saveCopyPage = async () => {
       if (link === '') {
-        alert('디자인 복제할 페이지를 선택 해주세요');
+        dispatch(showAlert('디자인 복제할 페이지를 선택 해주세요'));
         return;
       }
 
@@ -110,6 +111,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
               <button onClick={addMenu}>저장</button>
             </div>
           </div>
+
         </div>
       )}
     </>

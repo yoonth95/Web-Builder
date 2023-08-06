@@ -13,9 +13,17 @@ const useInput = (initialState) => {
     }));
   };
 
-  const reset = () => {
-    setInputValues(initialState);
+  const reset = (field) => {
+    if (field && initialState.hasOwnProperty(field)) {
+      setInputValues(prev => ({
+        ...prev,
+        [field]: initialState[field]
+      }));
+    } else {
+      setInputValues(initialState);
+    }
   };
+
 
   return {
     inputValues,

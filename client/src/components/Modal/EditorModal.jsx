@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+
+//redux 
+import { showAlert } from 'redux/AlertSlice';
 
 // hooks
 import { useEditorActions } from 'hooks/useEditor';
+
 
 // 컴포넌트 및 데이터
 import designType from 'data/designType';
@@ -16,7 +21,7 @@ import 'styles/Modal/EditorModal.css';
 
 const EditorModal = ({ design_type, isModalOpen, setIsModalOpen, isLayoutDesign, layoutId }) => {
   const defaultType = design_type === 'default' ? 'image' : isLayoutDesign ? 'image' : design_type;
-
+  const dispatch = useDispatch();
   const [selectedDesignId, setSelectedDesignId] = useState(0);
   const [selectedDesignType, setSelectedDesignType] = useState(defaultType);
   const [activeCell, setActiveCell] = useState(null);
@@ -28,14 +33,13 @@ const EditorModal = ({ design_type, isModalOpen, setIsModalOpen, isLayoutDesign,
     setSelectedDesignId(0);
     setActiveCell(null);
   };
-
   const designSelectId = (id) => {
     setSelectedDesignId(id);
   };
 
   const handleGetBlock = async () => {
     if (selectedDesignId === 0 && !activeCell) {
-      alert('디자인을 선택해주세요.');
+      dispatch(showAlert('디자인을 선택해주세요.'));
       return;
     }
 

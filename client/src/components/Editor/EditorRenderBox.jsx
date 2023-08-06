@@ -142,7 +142,7 @@ export const EditorRenderBox = {
               design?.lines.map((line, lineIndex) => (
                 <div
                   key={lineIndex}
-                  contentEditable={true}
+                  contentEditable={screenSize === 'desktop' ? true : false}
                   suppressContentEditableWarning
                   style={{ margin: line.margin, fontFamily: line.fontFamily || 'inherit', fontSize: line.fontSize, fontWeight: line.fontWeight, color: line.color }}
                   className={`${line.className} textWidth`}
@@ -175,7 +175,7 @@ export const EditorRenderBox = {
                 <div
                   key={i}
                   className='module_text_line textWidth'
-                  contentEditable={true}
+                  contentEditable={screenSize === 'desktop' ? true : false}
                   suppressContentEditableWarning
                   style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
                   onBlur={(e) => handleUpdateText(blockId, i, e.target.innerHTML, isLayout)}

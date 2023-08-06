@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 // redux
 import { useDispatch } from 'react-redux';
 import { updateList } from 'redux/editorSlice';
+import { showAlert } from 'redux/AlertSlice';
+
 
 // 컴포넌트
 import Spinner from 'components/Spinner/Spinner';
@@ -11,6 +13,8 @@ import PageList from 'components/Pagement/PageList';
 
 // api
 import { GetMenuAPI } from 'api/Admin/GetMenuAPI';
+
+//hook
 
 // icon 및 css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -35,7 +39,7 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
-      alert('조회 오류');
+      dispatch(showAlert('조회 오류'));
     }
   };
 
@@ -50,8 +54,9 @@ const Pagement = ({ setIsOpen, setIsLoading, isLoading }) => {
   const getPageItems = () => {
     const Last = currentPage * Page;
     const First = Last - Page;
-    return pageList.slice(First, Last);
-  };
+    const sortedList = [...pageList].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+    return sortedList.slice(First, Last);
+};
 
   const totalPages = Math.ceil(pageList.length / Page);
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);

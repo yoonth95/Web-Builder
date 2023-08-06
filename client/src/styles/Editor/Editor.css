@@ -94,13 +94,13 @@
 }
 
 .tablet {
-  width: 785px;
+  width: 768px;
   min-height: 100%;
   margin: 0 auto;
 }
 
 .mobile {
-  width: 370px;
+  width: 375px;
   min-height: 100%;
   margin: 0 auto;
 }

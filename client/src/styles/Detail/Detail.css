@@ -5,6 +5,26 @@
   height: 200px;
 }
 
+.module_rectangle > img{
+  width: 100%;
+}
+.module_square{
+  width: 100%;
+}
+.module_circle > img{
+  width: 100%;
+}
+
+.module_square::before {
+  content: "";
+  display: none;
+  padding-top: none;
+}
+
+.module_container{
+  justify-content: center !important;
+}
+
 @media screen and (max-width: 1024px) {
   .detail_wrap {
     max-width: 640px;
@@ -24,9 +44,7 @@
   .module_rectangle {
     width: 100%;
   }
-  .module_square {
-    width: 100%;
-  }
+  
 
   .module_wideRectangle {
     width: 100%;
@@ -36,5 +54,14 @@
     justify-content: center;
     align-items: center;
     height: 100px;
+  }
+  .block_container > img{
+    width: 100%;
+  }
+  .module_imageBox > img{
+    width: 100%;
+  }
+  .module_imageBox{
+    text-align: center;
   }
 }

@@ -134,12 +134,14 @@
 
 /* 레이아웃 적응형 */
 .container_desktop .module_layout_item {
-  zoom: 1;
+  zoom: 0.9;
 }
 .container_tablet .module_layout_item {
+  flex-wrap: wrap;
   zoom: 0.8;
 }
 .container_mobile .module_layout_item {
+  flex-wrap: wrap;
   zoom: 0.5;
 }
 
@@ -195,7 +197,7 @@
 .imageDiv.boxCircle:before {
   content: '';
   display: block;
-  padding-top: 100%;
+  /* padding-top: 100%; */
 }
 .container_mobile .imageDiv.boxCircle {
   width: 10rem;

@@ -4,7 +4,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/SideBar.css';
 import { useSelector } from 'react-redux';
 
-const SideBar = ({ sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle, setCheckBtn, checkBtn }) => {
+const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle }) => {
   const [iconColor, setIconColor] = useState('#8f8f8f');
   const blockList = useSelector((state) => state.editor.blockList);
 

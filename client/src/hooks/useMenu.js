@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { updateList } from 'redux/menuSlice';
+import { showAlert } from 'redux/AlertSlice';
 import { GetMenuAPI, DeleteMenuAPI, UpdateMenuAPI, InsertMenuAPI, OrderMenuAPI } from '../api/Admin';
 import { useState } from 'react';
 
@@ -21,7 +22,7 @@ export const useMenuActions = () => {
       setIsLoading(false);
     } catch (err) {
       console.error(err.message);
-      alert('조회 오류');
+      dispatch(showAlert('조회 오류'));
       setIsLoading(true);
     }
   };
@@ -34,10 +35,10 @@ export const useMenuActions = () => {
       const newSecondList = secondList.filter((item) => item.idx !== id);
       dispatch(updateList({ listName: 'firstList', newList: newFirstList }));
       dispatch(updateList({ listName: 'secondList', newList: newSecondList }));
-      alert('삭제 완료');
+      dispatch(showAlert('삭제 완료'));
     } catch (err) {
       console.error(err.message);
-      alert('삭제 오류');
+      dispatch(showAlert('삭제 오류'));
     }
   };
 
@@ -49,10 +50,10 @@ export const useMenuActions = () => {
       const updatedSecondList = secondList.map((item) => (item.idx === formData.idx ? { ...item, ...formData } : item));
       dispatch(updateList({ listName: 'firstList', newList: updatedFirstList }));
       dispatch(updateList({ listName: 'secondList', newList: updatedSecondList }));
-      alert('수정 완료');
+      dispatch(showAlert('수정 완료'));
     } catch (err) {
       console.error(err.message);
-      alert('수정 오류');
+      dispatch(showAlert('수정 오류'));
     }
   };
 
@@ -60,7 +61,7 @@ export const useMenuActions = () => {
   const insertMenuAction = async (title, link, parent_id, new_window, setIsOpen, reset) => {
     try {
       const data = await InsertMenuAPI(title, link, parent_id, new_window);
-      alert('메뉴를 추가하였습니다.');
+      dispatch(showAlert('메뉴를 추가하였습니다.'));
       setIsOpen(false);
       reset();
 
@@ -70,7 +71,7 @@ export const useMenuActions = () => {
         dispatch(updateList({ listName: 'firstList', newList: [...firstList, data] }));
       }
     } catch (err) {
-      alert('수정 오류');
+      dispatch(showAlert('수정 오류'));
       console.log(err.message);
     }
   };
@@ -90,7 +91,7 @@ export const useMenuActions = () => {
       await OrderMenuAPI(newReorderedList);
     } catch (err) {
       dispatch(updateList({ listName: listName, newList: oldList }));
-      alert("순서 변경 오류");
+      dispatch(showAlert("순서 변경 오류"));
       console.log(err.message);
     }
   }

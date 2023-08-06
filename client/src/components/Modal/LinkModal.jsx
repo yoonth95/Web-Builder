@@ -3,12 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateList } from 'redux/editorSlice';
 import 'styles/Modal/LinkModal.css';
 
-const LinkModal = ({ block_id, idx, setIsOpen, isOpen }) => {
+const LinkModal = ({ block_id, idx, setIsOpen, isOpen, LinkDic }) => {
   const [isNoLinkChecked, setNoLinkChecked] = useState(true);
   const [isInternalLinkChecked, setInternalLinkChecked] = useState(false);
   const [isUrlChecked, setUrlChecked] = useState(false);
   const [selectedLink, setSelectedLink] = useState('');
-  console.log(block_id);
+  const [inputURL, setInputURL] = useState('');
+  const [validationError, setValidationError] = useState('');
+
   const { secondList } = useSelector((state) => state.menu);
   const blocks = useSelector(state => state.editor.blockList);
 
@@ -18,26 +20,32 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen }) => {
     setNoLinkChecked(true);
     setInternalLinkChecked(false);
     setUrlChecked(false);
+    setValidationError(''); 
+    setInputURL('');
   };
 
   const handleInternalLinkCheckboxChange = () => {
     setNoLinkChecked(false);
     setInternalLinkChecked(true);
     setUrlChecked(false);
+    setValidationError(''); 
+    setInputURL('');
   };
 
   const handleUrlCheckboxChange = () => {
     setNoLinkChecked(false);
     setInternalLinkChecked(false);
     setUrlChecked(true);
+    setValidationError(''); 
+    setInputURL('');
   };
 
   const updateLink = (images, href) => {
-    if (idx === undefined) {
+    if (LinkDic.idx === undefined) {
       return images.map(image => ({ ...image, href }));
     } else {
       return images.map((image, i) =>
-        i === idx ? { ...image, href } : image
+        i === LinkDic.idx ? { ...image, href } : image
       );
     }
   }
@@ -95,18 +103,35 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen }) => {
             <input type='checkbox' className='notUse' checked={isUrlChecked} onChange={handleUrlCheckboxChange} />
             <label className={isUrlChecked ? '' : 'strikethrough'}>URL 입력</label>
           </div>
-          <input type='text' className='pageInput' placeholder='http://로 시작되는 링크 주소 입력' disabled={isNoLinkChecked} style={{ marginBottom: '40px', paddingLeft: '20px' }} />
+          <input type='text' className='pageInput' placeholder='https://로 시작되는 링크 주소 입력' disabled={isNoLinkChecked} style={{ marginBottom: '40px', paddingLeft: '20px' }} onChange={(e) => setInputURL(e.target.value)} value={inputURL}  />
         </div>
+        {
+          validationError && 
+          <div style={{ color: '#EE7D00', paddingLeft:'22px',position:'relative', top:'-35px' }}>{validationError}</div>
+        }
         <div className='modal_btn_box'>
           <button onClick={() => setIsOpen(false)}>닫기</button>
-          <button onClick={() => {
-            if (selectedLink) {
-              const link = `/page/${selectedLink}`;
-              updateBlockLink(link);
-              console.log('완료');
-            }
-            setIsOpen(false);
-          }}>확인</button>
+          <button 
+            onClick={() => {
+              if (isUrlChecked) {
+                if (inputURL.startsWith('https://')) {
+                  updateBlockLink(inputURL);
+                  console.log('URL 디스패치 완료');
+                  setValidationError('');
+                } else {
+                  setValidationError('URL은 "https://"로 시작해야 합니다.');
+                  return;
+                }
+              } else if (selectedLink) {
+                const link = `/page/${selectedLink}`;
+                updateBlockLink(link);
+                console.log('내부 링크 디스패치 완료');
+              }
+              setIsOpen(false);
+            }}
+          >
+            확인
+          </button>
         </div>
       </div>
     </div>

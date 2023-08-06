@@ -6,6 +6,7 @@ import menuSlice from './menuSlice';
 // import selectBoxSlice from './selectBoxSlice';
 import editorSlice from './editorSlice';
 import pageSlice from './pageSlice';
+import alertSlice from './AlertSlice';
 
 const store = configureStore({
   reducer: {
@@ -14,7 +15,8 @@ const store = configureStore({
     menu: menuSlice,
     page: pageSlice,
     // selectBox: selectBoxSlice,
-    editor: editorSlice
+    editor: editorSlice,
+    alert: alertSlice
   },
   // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
 });

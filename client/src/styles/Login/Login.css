@@ -64,7 +64,7 @@ input[type='password'] {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  margin-bottom: 53px;
+  margin-bottom: 40px;
   font-size: 12px;
   font-weight: 400;
 }

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React  from 'react';
+import { useDispatch } from 'react-redux';
+import { showAlert } from 'redux/AlertSlice';
 import { useNavigate } from 'react-router-dom';
 import 'styles/Login/Login.css';
 import { signupAPI } from 'api/User/signupAPI';
@@ -11,7 +13,7 @@ const Signup = () => {
     pw: '',
   });
   const { name, id, pw } = inputValues;
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const submitBtn = async (e) => {
@@ -20,19 +22,19 @@ const Signup = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (name === '' || id === '' || pw === '') {
-      alert('이름, 아이디, 비밀번호는 필수 입력입니다.');
+      dispatch(showAlert('이름, 아이디, 비밀번호는 필수 입력입니다.'));
       return;
     } else if (!emailRegex.test(id)) {
-      alert('이메일 형식으로 입력해주시기 바랍니다.');
+      dispatch(showAlert('이메일 형식으로 입력해주시기 바랍니다.'));
       return;
     }
 
     try {
       await signupAPI(name, id, pw);
-      alert('회원가입 성공');
+      dispatch(showAlert('회원가입 성공'));
       navigate('/');
     } catch (err) {
-      alert('회원가입 실패');
+      dispatch(showAlert('회원가입 실패'));
       reset();
       return;
     }
