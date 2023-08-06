@@ -1,29 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'redux/userSlice';
 import { verifyTokenAPI } from 'api/User';
 
-const useAuth = () => {
-  const [loading, setLoading] = useState(true);
+const useAuth = async (setIsLoading, setIsAuthenticated) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getUser = async () => {
+      setIsLoading(true);
       try {
-        const userInfo = await verifyTokenAPI(); // Modify this line
+        const userInfo = await verifyTokenAPI();
         dispatch(setUser(userInfo));
-        setLoading(false);
+        setIsAuthenticated(true);
       } catch (err) {
         console.error(err);
+        setIsAuthenticated(false);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     getUser();
   }, [dispatch]);
-
-  return { loading };
-};
+};  
 
 export default useAuth;
