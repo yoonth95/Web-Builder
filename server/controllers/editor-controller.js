@@ -144,9 +144,9 @@ exports.copyDesign = async (req, res) => {
     const { sourcePage, targetPage } = data;
 
     try {
-        await editorDB.deleteAllBlocks(sourcePage);
         const getBlocks = await editorDB.getBlocks(targetPage);
         const copyBlocks = getBlocks.map((block) => {
+            // 블록 레이아웃 디자인 이미지 경로 변경
             if (block.layout_design !== null) {
                 let layout_design = JSON.parse(Buffer.from(Buffer.from(block.layout_design).toString('utf-8'), 'base64').toString('utf-8'));
                 layout_design = layout_design.map((layout) => {
@@ -165,6 +165,7 @@ exports.copyDesign = async (req, res) => {
                 });
                 block.layout_design = btoa(unescape(encodeURIComponent(JSON.stringify(layout_design))));
             } 
+            // 블록 디자인 이미지 경로 변경
             if (block.content !== null) {
                 let content = JSON.parse(Buffer.from(Buffer.from(block.content).toString('utf-8'), 'base64').toString('utf-8'));
                 if (block.design_type === 'image') {
@@ -181,11 +182,25 @@ exports.copyDesign = async (req, res) => {
                 block.content = btoa(unescape(encodeURIComponent(JSON.stringify(content))));
             }
 
+            // block_id 변경
             const split_value = block.block_id.split('_');
             split_value[0] = sourcePage;
             block.block_id = split_value.join('_');
+
+            // block_style block_id 변경
+            if (block.block_style !== null) {
+                let block_style = JSON.parse(block.block_style);
+
+                const style_split_value = block_style.block_id.split('_');
+                style_split_value[0] = sourcePage;
+                block_style.block_id = style_split_value.join('_');
+
+                block.block_style = JSON.stringify(block_style);
+            }
+
             return block;
         });
+        await editorDB.deleteAllBlocks(sourcePage);
         const result = await editorDB.copyDesign(sourcePage, copyBlocks);
         copyFiles(`static/images/${sourcePage}`, `static/images/${targetPage}`);
         res.status(200).json(result);
