@@ -21,7 +21,7 @@ export const useEditorActions = () => {
   const dispatch = useDispatch();
 
   // 에디터 블록 조회
-  const getBlocksAction = async (page_idx, setIsLoading, setError, setBlockStyle) => {
+  const getBlocksAction = async (page_idx, setIsLoading, setError, setBlockStyle, setHistoryList) => {
     try {
       setIsLoading(true);
       const data = await GetBlocksAPI(page_idx);
@@ -36,7 +36,7 @@ export const useEditorActions = () => {
               maxWidth: "1240px",
               paddingTop: "0px",
               paddingBottom: "0px",
-              backgroundColor: "#ffffff",
+              backgroundColor: "revert",
             },
             block_id: block_id,
           }
@@ -59,7 +59,9 @@ export const useEditorActions = () => {
           if (blocks && blocks.length > 0) {
             blockList = [...blocks];
           }
+          const saveData = [];
           data.forEach(block => {
+            saveData.push(block.save_date);
             if (!blockList.find(b => b.block_id === block.block_id)) {
               blockList.push(block);
 
@@ -69,7 +71,7 @@ export const useEditorActions = () => {
                     maxWidth: "1240px",
                     paddingTop: "0px",
                     paddingBottom: "0px",
-                    backgroundColor: "#ffffff",
+                    backgroundColor: "revert",
                   },
                   block_id: block.block_id,
                 }
@@ -80,6 +82,8 @@ export const useEditorActions = () => {
               }
             }
           });
+          const dupSaveData = [...new Set(saveData)]
+          setHistoryList(dupSaveData);
           dispatch(updateList(blockList));
           setIsLoading(false);
         }
@@ -123,7 +127,7 @@ export const useEditorActions = () => {
         maxWidth: "1240px",
         paddingTop: "0px",
         paddingBottom: "0px",
-        backgroundColor: "#ffffff",
+        backgroundColor: "revert",
       },
       block_id: block_id,
     }
@@ -147,11 +151,11 @@ export const useEditorActions = () => {
         return block;
       });
 
-      for (const updateBlock of updatedBlocks) {
-        if (blocks.find(block => block.block_id === updateBlock.block_id).block_order !== updateBlock.block_order) {
-          await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
-        }
-      }
+      // for (const updateBlock of updatedBlocks) {
+      //   if (blocks.find(block => block.block_id === updateBlock.block_id).block_order !== updateBlock.block_order) {
+      //     await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
+      //   }
+      // }
 
       await InsertBlockAPI(newBlock);
 
@@ -266,14 +270,14 @@ export const useEditorActions = () => {
         return block;
       });
 
-      for (const updateBlock of updatedBlocks) {
-        if (blocks.find(block => block.block_id === updateBlock.block_id).block_order !== updateBlock.block_order) {
-          const result2 = await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
-          if (!result2) {
-            error = true;
-          }
-        }
-      }
+      // for (const updateBlock of updatedBlocks) {
+      //   if (blocks.find(block => block.block_id === updateBlock.block_id).block_order !== updateBlock.block_order) {
+      //     const result2 = await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
+      //     if (!result2) {
+      //       error = true;
+      //     }
+      //   }
+      // }
 
       if (!error) dispatch(updateList(updatedBlocks.filter(block => block.block_id !== block_id)));
 
@@ -306,10 +310,10 @@ export const useEditorActions = () => {
         blockToMove.block_order -= 1;
 
         // 서버에 블록 순서 업데이트
-        await Promise.allSettled([
-          UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
-          UpdateBlockOrderAPI(blockAbove.block_id, blockAbove.block_order)
-        ]);
+        // await Promise.allSettled([
+        //   UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
+        //   UpdateBlockOrderAPI(blockAbove.block_id, blockAbove.block_order)
+        // ]);
 
         newBlocks[blockToMoveIndex] = blockToMove;
         newBlocks[blockAboveIndex] = blockAbove;
@@ -324,10 +328,10 @@ export const useEditorActions = () => {
         blockToMove.block_order += 1;
 
         // 서버에 블록 순서 업데이트
-        await Promise.all([
-          UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
-          UpdateBlockOrderAPI(blockBelow.block_id, blockBelow.block_order)
-        ]);
+        // await Promise.all([
+        //   UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
+        //   UpdateBlockOrderAPI(blockBelow.block_id, blockBelow.block_order)
+        // ]);
 
         // 새로운 상태를 Redux store에 반영
         newBlocks[blockToMoveIndex] = blockToMove;
@@ -370,20 +374,21 @@ export const useEditorActions = () => {
   };
 
   // 블록 저장
-  const saveBlockAction = async (page_idx, blocks, blockStyle, setIsLoading, setError) => {
+  const saveBlockAction = async (page_idx, blocks, setIsLoading, setError) => {
     try {
       setIsLoading(true);
-      const srcList = [];
+      // const save_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      // const srcList = [];
       const blockToBase64 = blocks.map(block => {
-        if (block.design_type === 'image' || block.design_type === 'list') {
-          block.content.images.forEach(image => {if (image.src !== '') srcList.push(image.src)});
-        } else if (block.design_type === 'layout') {
-          JSON.parse(block.layout_design).forEach(layout => {
-            layout.boxes.images.forEach(image => {
-              if (image.src !== '') srcList.push(image.src);
-            });
-          });
-        }
+        // if (block.design_type === 'image' || block.design_type === 'list') {
+        //   block.content.images.forEach(image => {if (image.src !== '') srcList.push(image.src)});
+        // } else if (block.design_type === 'layout') {
+        //   JSON.parse(block.layout_design).forEach(layout => {
+        //     layout.boxes.images.forEach(image => {
+        //       if (image.src !== '') srcList.push(image.src);
+        //     });
+        //   });
+        // }
 
         const content = block.content
           ? btoa(unescape(encodeURIComponent(JSON.stringify(block.content))))
@@ -395,12 +400,11 @@ export const useEditorActions = () => {
 
         return {
           ...block,
-          block_style: JSON.stringify(blockStyle.find(style => style.block_id === block.block_id)),
           layout_design: layout_design,
           content: content
         };
       });
-      const result = await SaveBlockAPI(page_idx, blockToBase64, srcList);
+      const result = await SaveBlockAPI(page_idx, blockToBase64);
 
       return result;
     } catch (err) {
@@ -418,6 +422,7 @@ export const useEditorActions = () => {
     setIsOpen(false);
     reset();
   }
+
 
   return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction, handleUpdateText, designCopyAction, updateTableDataInBlock };
 };

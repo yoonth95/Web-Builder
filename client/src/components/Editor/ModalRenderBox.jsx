@@ -9,11 +9,14 @@ export const ModalRenderBox = {
     return (
       <div key={index} className='typeBox' onClick={() => designSelectId(box.id)} style={{ border: isSelected ? '2px solid #ee7d00' : '' }}>
         <div className='parentBox' style={box.layout}>
-          {[...Array(box.images.length)].map((_, i) => (
-            <div key={i} style={box.style} className='imageBox'>
-              <FontAwesomeIcon icon={faImage} />
-            </div>
-          ))}
+          {[...Array(box.images.length)].map((_, i) => {
+            const shape = box.images[i].shape === 'circle' ? '50%' : '0%';
+            return (
+              <div key={i} style={{ borderRadius: shape }} className='imageBox'>
+                <FontAwesomeIcon icon={faImage} />
+              </div>          
+            )
+          })}
         </div>
       </div>
     );

@@ -1,66 +1,117 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateList } from 'redux/editorSlice';
+
 import 'styles/Editor/SideBar.css';
-import { useSelector } from 'react-redux';
 
-const updateBlockStyle = (blockId, styleUpdater, blockStyle, setBlockStyle) => {
-  if (blockStyle.some((block) => block.block_id === blockId)) {
-    setBlockStyle((prev) =>
-      prev.map((block) =>
-        block.block_id === blockId ? { ...block, style: styleUpdater(block.style) } : block
-      )
-    );
-  }
-};
-
-const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle }) => {
+const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const [iconColor, setIconColor] = useState('#8f8f8f');
   const blockList = useSelector((state) => state.editor.blockList);
+  const [blockPaddingTop, setBlockPaddingTop] = useState(0);
+  const [blockPaddingBottom, setBlockPaddingBottom] = useState(0);
+  const [blockBackgroundColor, setBlockBackgroundColor] = useState('#ffffff');
+  const [blockCheckBtn, setBlockCheckBtn] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleChange = (field, value) => {
-    const blockId = sideBarOpen.block_id;
-    const styleUpdater = (style) => ({ ...style, [field]: value });
-
-    updateBlockStyle(blockId, styleUpdater, blockStyle, setBlockStyle);
-  };
+  useEffect(() => {
+    if (sideBarOpen.block_id) {
+      const block_style = JSON.parse(blockList.find((block) => block.block_id === sideBarOpen.block_id).block_style);
+      setBlockPaddingTop(parseInt(block_style.style.paddingTop) || 0);
+      setBlockPaddingBottom(parseInt(block_style.style.paddingBottom) || 0);
+      setBlockBackgroundColor(block_style.style.backgroundColor || '#ffffff');
+      setBlockCheckBtn(block_style.style.maxWidth === '1240px' ? false : true);
+    }
+  }, [sideBarOpen]);
 
   // 블록 너비 설정
-  const handleWidthChange = () => {
-    handleChange("maxWidth", checkBtn ? '100%' : '1240px');
+  const handleWidthChange = (e) => {
+    setBlockCheckBtn(e);
+    const block_style = {
+      style: {
+        maxWidth: e ? '100%' : '1240px',
+        paddingTop: `${blockPaddingTop}px`,
+        paddingBottom: `${blockPaddingBottom}px`,
+        backgroundColor: blockBackgroundColor,
+      },
+      block_id: sideBarOpen.block_id,
+    }
+
+    dispatch(updateList(blockList.map(block => {
+      if (block.block_id === sideBarOpen.block_id) {
+        return { ...block, block_style: JSON.stringify(block_style) };
+      } else {
+        return block;
+      }
+    })));
   };
 
   // 블록 padding top 설정
   const handleTopPaddingChange = (e) => {
-    handleChange("paddingTop", `${e.target.value}px`);
+    setBlockPaddingTop(e);
+    const block_style = {
+      style: {
+        maxWidth: blockCheckBtn ? '100%' : '1240px',
+        paddingTop: `${e}px`,
+        paddingBottom: `${blockPaddingBottom}px`,
+        backgroundColor: blockBackgroundColor,
+      },
+      block_id: sideBarOpen.block_id,
+    }
+
+    dispatch(updateList(blockList.map(block => {
+      if (block.block_id === sideBarOpen.block_id) {
+        return { ...block, block_style: JSON.stringify(block_style) };
+      } else {
+        return block;
+      }
+    })));
   };
 
   // 블록 padding bottom 설정
   const handleBottomPaddingChange = (e) => {
-    handleChange("paddingBottom", `${e.target.value}px`);
+    setBlockPaddingBottom(e);
+    const block_style = {
+      style: {
+        maxWidth: blockCheckBtn ? '100%' : '1240px',
+        paddingTop: `${blockPaddingTop}px`,
+        paddingBottom: `${e}px`,
+        backgroundColor: blockBackgroundColor,
+      },
+      block_id: sideBarOpen.block_id,
+    }
+
+    dispatch(updateList(blockList.map(block => {
+      if (block.block_id === sideBarOpen.block_id) {
+        return { ...block, block_style: JSON.stringify(block_style) };
+      } else {
+        return block;
+      }
+    })));
   };
 
   // 블록 배경색 설정
   const handleBackgroundColorChange = (e) => {
-    handleChange("backgroundColor", e.target.value);
+    setBlockBackgroundColor(e);
+    const block_style = {
+      style: {
+        maxWidth: blockCheckBtn ? '100%' : '1240px',
+        paddingTop: `${blockPaddingTop}px`,
+        paddingBottom: `${blockPaddingBottom}px`,
+        backgroundColor: e,
+      },
+      block_id: sideBarOpen.block_id,
+    }
+
+    dispatch(updateList(blockList.map(block => {
+      if (block.block_id === sideBarOpen.block_id) {
+        return { ...block, block_style: JSON.stringify(block_style) };
+      } else {
+        return block;
+      }
+    })));
   };
-
-  // useEffect(() => {
-  //   handleWidthChange();
-  // }, [checkBtn]);
-
-  // useEffect(() => {
-  //   const block = blockList.find((block) => block.block_id === sideBarOpen.block_id);
-  //   if (block) {
-  //     console.log(JSON.parse(block.block_style));
-  //     const style = JSON.parse(block.block_style);
-  //     if (style.style.maxWidth === '100%') {
-  //       setCheckBtn(true);
-  //     } else if (style.style.maxWidth === '1240px') {
-  //       setCheckBtn(false);
-  //     }
-  //   }
-  // }, [blockList, sideBarOpen]);
 
   return (
     <div className='subMenu sub_menu' style={{ display: 'block' }}>
@@ -76,9 +127,9 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
         />
       </div>
       {/* 블록 너비 설정 */}
-      <div className='widthSet_wrap' onChange={(e) => setCheckBtn((prevCheckBtn) => !prevCheckBtn)}>
-        <input type='checkbox' defaultChecked={checkBtn} />
-        <p>화면 너비에 맞추기</p>
+      <div className='widthSet_wrap' onChange={() => handleWidthChange(!blockCheckBtn)}>
+        <input type='checkbox' id='widthCheck' checked={blockCheckBtn} readOnly/>
+        <label htmlFor='widthCheck'>화면 너비에 맞추기</label>
       </div>
       {/* 블록 패딩 설정 */}
       <div style={{ marginTop: '10px' }}>
@@ -89,7 +140,7 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
           <p className='title1' style={{ width: '100%' }}>
             상
             <span id='paddingTopVal' className='num'>
-              {blockStyle.find((block) => block.block_id === sideBarOpen.block_id)?.style.paddingTop || 0}
+              {blockPaddingTop}px
             </span>
           </p>
           <div style={{ padding: '5px 0 0 10px', marginBottom: '10px' }}>
@@ -98,8 +149,9 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
               className='radioCheckSelect range_style1'
               name='padding_top'
               min='0' max='400' step='10'
-              value={Number(blockStyle.find((block) => block.block_id === sideBarOpen.block_id)?.style.paddingTop.replace('px', '')) || 0}
-              onChange={handleTopPaddingChange}
+              value={blockPaddingTop}
+              onChange={(e) => setBlockPaddingTop(e.target.value)}
+              onMouseUp={(e) => handleTopPaddingChange(e.target.value)}
             />
             <ol className='range_datalist'>
               <li>0</li>
@@ -112,7 +164,7 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
           <p className='title1' style={{ width: '100%' }}>
             하
             <span id='paddingBottomVal' className='num'>
-              {blockStyle.find((block) => block.block_id === sideBarOpen.block_id)?.style.paddingBottom || 0}
+              {blockPaddingBottom}px
             </span>
           </p>
           <div style={{ padding: '5px 0 0 10px' }}>
@@ -121,8 +173,9 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
               className='radioCheckSelect range_style1'
               name='padding_bottom'
               min='0' max='400' step='10'
-              value={Number(blockStyle.find((block) => block.block_id === sideBarOpen.block_id)?.style.paddingBottom.replace('px', '')) || 0}
-              onChange={handleBottomPaddingChange}
+              value={blockPaddingBottom}
+              onChange={(e) => setBlockPaddingBottom(e.target.value)}
+              onMouseUp={(e) => handleBottomPaddingChange(e.target.value)}
             />
             <ol className='range_datalist'>
               <li>0</li>
@@ -137,7 +190,12 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
         <p className='title1'>배경색 설정</p>
       </div>
       <div style={{ padding: '20px' }}>
-        <input type="color" value={blockStyle.find(block => block.block_id === sideBarOpen.block_id)?.style.backgroundColor || '#ffffff'} onChange={handleBackgroundColorChange}/>
+        <input 
+          type="color" 
+          className='sidebarColor' 
+          defaultValue={blockBackgroundColor} 
+          onBlur={(e) => handleBackgroundColorChange(e.target.value)}
+        />
       </div>
     </div>
   );

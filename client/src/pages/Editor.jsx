@@ -24,19 +24,22 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const match = useMatch('/editor/*');
   const path = match.params['*'].split('/');
   const page_idx = path[path.length - 1];
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { secondList } = useSelector((state) => state.menu);
   const blocks = useSelector((state) => state.editor.blockList);
   const [error, setError] = useState(null);
   const [screenSize, setScreenSize] = useState('desktop');
   const [blockStyle, setBlockStyle] = useState([]); // 블록 스타일 상태 값
+  const [historyList, setHistoryList] = useState([]); // 히스토리 리스트
+  const [isToggle, setIsToggle] = useState(false); // 히스토리 토글
+
   const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction, saveBlockAction } = useEditorActions();
 
   useEffect(() => {
     // 블록 조회
     const getBlocks = async () => {
-      await getBlocksAction(Number(page_idx), setIsLoading, setError, setBlockStyle);
+      await getBlocksAction(Number(page_idx), setIsLoading, setError, setBlockStyle, setHistoryList);
     };
     getBlocks();
   }, [page_idx]);
@@ -74,12 +77,15 @@ const dispatch = useDispatch();
     dispatch(showConfirm({
       message: '저장 후 이동하시겠습니까?',
       onConfirm: async () => {
-        await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
-        navigate(`/editor/${selectedValue}`);
+        await saveBlockAction(page_idx, blocks, setIsLoading, setError);
+        dispatch(showToast({ message: '저장 되었습니다.', timer: 3000 }));
+        setTimeout(() => {
+            navigate(`/editor/${selectedValue}`);
+        }, 3000);
       },
       onCancel: () => {
         navigate(`/editor/${selectedValue}`);
-    }
+      }
     }));
 };
 
@@ -89,19 +95,12 @@ const dispatch = useDispatch();
   };
 
   
-  // const handleSave = async () => {
-  //   const result = await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
-  //   console.log(result);
-  //   alert('저장되었습니다.')
-  // };
-
   const handleSave = async () => {
     dispatch(showToast({ message: '저장 되었습니다.', timer: 3000 }));
-    const [result] = await Promise.all([
-      saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError),
-      new Promise(resolve => setTimeout(resolve, 3300)) 
-    ]); 
-    dispatch(hideToast());
+      const [result] = await Promise.all([
+        saveBlockAction(page_idx, blocks, setIsLoading, setError),
+        new Promise(resolve => setTimeout(resolve, 3000)) 
+      ]); 
   };
 
   // if (isLoading) return <Spinner />;
@@ -115,6 +114,21 @@ const dispatch = useDispatch();
     <>
       <div className='editor_wrap'>
         <div className='editor_pages_wrap'>
+          <div className='editor_backup'>
+            <button onClick={() => setIsToggle(!isToggle)}>복원하기</button>
+            {isToggle && (
+              <div className='history_menu_content'>
+                <ul className='history_menu_list'>
+                  {historyList.map((item, index) => (
+                    <li key={index}>
+                      <button >{item}</button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          
           <div className='editor_pages'>
             <label className='editor_pageList_Label'>현재 페이지</label>
             <select className='editor_pageList' value={page_idx} onChange={handleSelectChange}>
@@ -144,7 +158,7 @@ const dispatch = useDispatch();
       </div>
       <div className={screenSize}>
         <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize} type='편집' />
-        <div>
+        <div style={{marginBottom: '30px'}}>
           {[...blocks]
             .filter((e) => e.page_id === Number(page_idx))
             .sort((a, b) => a.block_order - b.block_order)
@@ -160,8 +174,7 @@ const dispatch = useDispatch();
                   addBlock={addBlock}
                   deleteBlock={deleteBlock}
                   handleChangeBlockOrder={handleChangeBlockOrder}
-                  blockStyle={blockStyle}
-                  setBlockStyle={setBlockStyle}
+                  blockStyle={JSON.parse(block.block_style)}
                   screenSize={screenSize}
                 />
               </div>

@@ -107,28 +107,28 @@ exports.updateBlockLayout = async (req, res) => {
 // 에디터 블록 저장
 exports.saveBlock = async (req, res) => {
     const data = req.body;
-    const { page_idx, blocks, srcList } = data;
+    const { page_idx, blocks } = data;
 
     // 에디터 블록 저장 시, 에디터 블록에 포함되지 않은 이미지 파일 전부 삭제
-    const imagesDirPath = path.join('static/images', String(page_idx));
-    fs.readdir(imagesDirPath, (err, files) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        files.forEach((file) => {
-            const filePath = path.join(imagesDirPath, file);
-            const fileUrl = `http://${req.headers.host}/${filePath.replace(/\\/g, '/')}`;
-            if (!srcList.includes(fileUrl)) {
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error(err);
-                        return;
-                    }
-                });
-            }
-        });
-    });
+    // const imagesDirPath = path.join('static/images', String(page_idx));
+    // fs.readdir(imagesDirPath, (err, files) => {
+    //     if (err) {
+    //         console.error(err);
+    //         return;
+    //     }
+    //     files.forEach((file) => {
+    //         const filePath = path.join(imagesDirPath, file);
+    //         const fileUrl = `http://${req.headers.host}/${filePath.replace(/\\/g, '/')}`;
+    //         if (!srcList.includes(fileUrl)) {
+    //             fs.unlink(filePath, (err) => {
+    //                 if (err) {
+    //                     console.error(err);
+    //                     return;
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
     
     try {
         const result = await editorDB.saveBlock(page_idx, blocks);

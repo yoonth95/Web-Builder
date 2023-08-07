@@ -24,7 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRotateRight, faArrowUp, faEdit, faTrash, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/Block.css';
 
-function Block({ block_id, design_type, design_id, block_order, layout_design, block_content, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, setBlockStyle, screenSize }) {
+function Block({ block_id, design_type, design_id, block_order, layout_design, block_content, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, screenSize }) {
   const isDefault = design_type === 'default';
   const blockContainerRef = useRef(null);
   const { handleUpdateText, updateTableDataInBlock } = useEditorActions();
@@ -32,7 +32,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const location = useLocation();
   const dispatch = useDispatch();
   const [showBlockBtn, setShowBlockBtn] = useState(false);
-  const [checkBtn, setCheckBtn] = useState((blockStyle.find((block) => block.block_id === block_id)?.style.maxWidth === '100%' ? true : false) || false);
+  const [checkBtn, setCheckBtn] = useState((blockStyle?.style.maxWidth === '100%' ? true : false) || false);
   const [isLayoutDesign, setIsLayoutDesign] = useState(false);
   const [layoutId, setLayoutId] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -42,6 +42,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const blocks = useSelector(state => state.editor.blockList);
 
   const [LinkDic, setLinkDic] = useState({
+    layout_id: '',  
     block_id:'',
     idx:'',
     isLayout:'',
@@ -56,10 +57,17 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const renderBox = (box, id) => {
     const clickHandler = () => setIsModalOpen({ open: true, block_id: id });
 
+    const defaultStyle = {
+      maxWidth: '1240px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
+      backgroundColor: '#ffffff',
+    }
+
     const arg = {
       block_id: id, // 블록 id
       design: box, // design box 값
-      blockStyle: blockStyle, // 블록 스타일
+      blockStyle: blockStyle || defaultStyle, // 블록 스타일
       layout_design: layout_design, // 레이아웃 디자인
       screenSize: screenSize, // 스크린 사이즈
       clickHandler: clickHandler, // 모달 열기 (block_id 전달)
@@ -87,24 +95,17 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const attatchLink = ({ block_id, idx, isLayout }) => {
     setIsOpen(!isOpen);
     setLinkDic({block_id: block_id, idx: idx, isLayout: isLayout});
+    console.log(LinkDic);
   };
 
-  // 이미지 삭제
+  // 이미지 삭제 & 링크 삭제
   const deleteImage = ({ block_id, idx, isLayout }) => {
     deleteImageAction({ block_id: block_id, idx: idx, isLayout: isLayout });
   };
 
-  //table style 패딩 적용 
-  const currentStyle = blockStyle.find((block) => block.block_id === block_id)?.style || { paddingTop: '0px', paddingBottom: '0px', maxWidth: '1240px', backgroundColor: '#ffffff' };
   // 툴 바 버튼
   const correctionBtn = [
-    {
-      icon: faEdit,
-      clickFunc: () => {
-        setSideBarOpen({ open: true, block_id: block_id });
-        // setCheckBtn((prevCheckBtn) => !prevCheckBtn);
-      },
-    },
+    { icon: faEdit, clickFunc: () => setSideBarOpen({ open: true, block_id: block_id }) } ,
     { icon: faArrowRotateRight, clickFunc: () => setIsModalOpen({ open: true, block_id: block_id }) },
     { icon: faArrowUp, clickFunc: (id) => handleChangeBlockOrder(id, 'up') },
     { icon: faArrowDown, clickFunc: (id) => handleChangeBlockOrder(id, 'down') },
@@ -202,12 +203,9 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
             </div>
             {design_type === 'table' ? (
               <div className='module_block'>
-                <div className='normal_module' style={{backgroundColor:currentStyle.backgroundColor}} >
+                <div className='normal_module' style={{backgroundColor: blockStyle.style.backgroundColor}} >
                   <div className={`module_wrap ${checkBtn ? 'widthSet' : ''}`}
-                      style={{ 
-                        paddingTop: currentStyle.paddingTop, 
-                        paddingBottom: currentStyle.paddingBottom
-                      }}>
+                      style={{ paddingTop: blockStyle.style.paddingTop, paddingBottom: blockStyle.style.paddingBottom, maxWidth: blockStyle.style.maxWidth }}>
                     <div className='module_container'>
                       <ApplyTable design_id={design_id} block_id={block_id} handleCellChange={handleCellChange} handleColumnNameChange={handleColumnNameChange} />
                     </div>
@@ -230,7 +228,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       </div>
       {isModalOpen.open && <EditorModal design_type={design_type} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} isLayoutDesign={isLayoutDesign} layoutId={layoutId} />}
       <div className={`block_container_side ${sideBarOpen.open ? 'open' : 'close'}`}>
-        <SideBar checkBtn={checkBtn} setCheckBtn={setCheckBtn} sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} blockStyle={blockStyle} setBlockStyle={setBlockStyle} />
+        <SideBar sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} />
       </div>
       {isOpen && <LinkModal isOpen={isOpen} setIsOpen={setIsOpen} block_id={block_id} LinkDic={LinkDic}/>}
     </>
@@ -250,5 +248,4 @@ Block.propTypes = {
   deleteBlock: PropTypes.func.isRequired,
   handleChangeBlockOrder: PropTypes.func.isRequired,
   // blockStyle: PropTypes.object.isRequired,
-  setBlockStyle: PropTypes.func.isRequired,
 };

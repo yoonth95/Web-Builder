@@ -8,17 +8,21 @@ import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 export const EditorRenderBox = {
   image: ({ design, block_id, blockStyle, attatchImg, attatchLink, deleteImage, screenSize }) => {
-    const filter_style = blockStyle?.find((block) => block.block_id === block_id);
-    
-    let backgroundColor;
-    let restOfStyles;
-    if (filter_style?.style) {
-      const {style: {backgroundColor: bgColor, ...rest}} = filter_style;
-      backgroundColor = bgColor;
-      restOfStyles = rest;
+    let backgroundColor = 'revert';
+    let restOfStyles = {
+      maxWidth: '1240px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
+    };
+    if (blockStyle) {
+      restOfStyles = {
+        maxWidth: blockStyle.style.maxWidth,
+        paddingTop: blockStyle.style.paddingTop,
+        paddingBottom: blockStyle.style.paddingBottom,
+      }
+      backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
 
-    const isCircle = design?.style.borderRadius === '50%';
     const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
 
     let blockId, isLayout;
@@ -33,59 +37,72 @@ export const EditorRenderBox = {
       <div key={block_id} className='normal_module' style={{backgroundColor: backgroundColor}}>
         <div className='module_wrap' style={restOfStyles}>
           <div className={`module_container ${screen}`} style={design?.layout}>
-            {[...Array(design?.images.length)].map((_, i) => (
-              <div key={i} className={`${design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} ${isCircle ? 'boxCircle' : ''}`} style={design?.style}>
-                {design?.images[i].src !== '' ? (
-                  <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop' : ''}`}>
-                    <div className='icon_container'>
-                      <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, idx: i, isLayout: isLayout })}>
-                        <FontAwesomeIcon icon={faTrashCan} />
-                      </span>
-                      <div style={{display: 'flex', gap: '20px'}}>
-                        <label className='imgIcon'>
+            {[...Array(design?.images.length)].map((_, i) => {
+              let shape = '', isCircle = false;
+              if (design?.images[i].shape === 'circle') {
+                shape = '50%';
+                isCircle = true;
+              }
+              return (
+                <div key={i} className={`${design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} ${isCircle ? 'boxCircle' : ''}`} style={{borderRadius: shape}}>
+                  {design?.images[i].src !== '' ? (
+                    <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop' : ''}`}>
+                      <div className='icon_container' >
+                        <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                          <FontAwesomeIcon icon={faTrashCan} />
+                        </span>
+                        <div style={{display: 'flex', gap: '20px'}}>
+                          <label className='imgIcon'>
+                            <FontAwesomeIcon icon={faImage} />
+                            <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
+                          </label>
+                          <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                            <FontAwesomeIcon icon={faPaperclip} />
+                          </span>
+                        </div>
+                      </div>
+                      <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={{borderRadius: shape}} loading='lazy'/>
+                    </div>
+                  ) : (
+                    <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop imgHover' : ''}`} style={{borderRadius: shape}}>
+                      <div className='downIcon'>
+                        <FontAwesomeIcon icon={faDownload} />
+                      </div>
+                      <div className='attatchIcon' style={{borderRadius: shape}}>
+                        <label>
                           <FontAwesomeIcon icon={faImage} />
                           <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
                         </label>
-                        <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                        <label onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
                           <FontAwesomeIcon icon={faPaperclip} />
-                        </span>
+                        </label>
                       </div>
                     </div>
-                    <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={design?.style} loading='lazy'/>
-                  </div>
-                ) : (
-                  <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop imgHover' : ''}`} style={design?.style}>
-                    <div className='downIcon'>
-                      <FontAwesomeIcon icon={faDownload} />
-                    </div>
-                    <div className='attatchIcon' style={design?.style}>
-                      <label>
-                        <FontAwesomeIcon icon={faImage} />
-                        <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
-                      </label>
-                      <label onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
-                        <FontAwesomeIcon icon={faPaperclip} />
-                      </label>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
     );
   },
-  line: ({ design, block_id, blockStyle }) => {
-    const filter_style = blockStyle?.find((block) => block.block_id === block_id);
-    
-    let backgroundColor;
-    let restOfStyles;
-    if (filter_style?.style) {
-        const {style: {backgroundColor: bgColor, ...rest}} = filter_style;
-        backgroundColor = bgColor;
-        restOfStyles = rest;
+  line: ({ design, block_id, blockStyle }) => {    
+    let backgroundColor = 'revert';
+    let restOfStyles = {
+      maxWidth: '1240px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
+    };
+    if (blockStyle) {
+      restOfStyles = {
+        maxWidth: blockStyle.style.maxWidth,
+        paddingTop: blockStyle.style.paddingTop,
+        paddingBottom: blockStyle.style.paddingBottom,
+      }
+      backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
+
 
     const isDotted = design?.style === 'dotted';
     return (
@@ -118,15 +135,21 @@ export const EditorRenderBox = {
     
     const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
 
-    const filter_style = blockStyle?.find((block) => block.block_id === block_id);
-
-    let backgroundColor;
-    let restOfStyles;
-    if (filter_style?.style) {
-        const {style: {backgroundColor: bgColor, ...rest}} = filter_style;
-        backgroundColor = bgColor;
-        restOfStyles = rest;
+    let backgroundColor = 'revert';
+    let restOfStyles = {
+      maxWidth: '1240px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
+    };
+    if (blockStyle) {
+      restOfStyles = {
+        maxWidth: blockStyle.style.maxWidth,
+        paddingTop: blockStyle.style.paddingTop,
+        paddingBottom: blockStyle.style.paddingBottom,
+      }
+      backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
+
     return (
       <div key={block_id} className='normal_module' style={{backgroundColor: backgroundColor}}>
         <div className='module_wrap font-style' style={restOfStyles}>
@@ -195,16 +218,22 @@ export const EditorRenderBox = {
       isLayout = false;
     }
     const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
-
-    const filter_style = blockStyle?.find((block) => block.block_id === blockId);
     
-    let backgroundColor;
-    let restOfStyles;
-    if (filter_style?.style) {
-        const {style: {backgroundColor: bgColor, ...rest}} = filter_style;
-        backgroundColor = bgColor;
-        restOfStyles = rest;
+    let backgroundColor = 'revert';
+    let restOfStyles = {
+      maxWidth: '1240px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
+    };
+    if (blockStyle) {
+      restOfStyles = {
+        maxWidth: blockStyle.style.maxWidth,
+        paddingTop: blockStyle.style.paddingTop,
+        paddingBottom: blockStyle.style.paddingBottom,
+      }
+      backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
+
     return (
       <div key={block_id} className='normal_module' style={{backgroundColor: backgroundColor}}>
         <div className='module_wrap' style={restOfStyles}>
@@ -231,15 +260,20 @@ export const EditorRenderBox = {
     );
   },
   table: null,
-  layout: ({ design, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, attatchImg, attatchLink, deleteImage, screenSize }) => {
-    const filter_style = blockStyle?.find((block) => block.block_id === block_id);
-    
-    let backgroundColor;
-    let restOfStyles;
-    if (filter_style?.style) {
-        const {style: {backgroundColor: bgColor, ...rest}} = filter_style;
-        backgroundColor = bgColor;
-        restOfStyles = rest;
+  layout: ({ design, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId, attatchImg, attatchLink, deleteImage, screenSize }) => { 
+    let backgroundColor = 'revert';
+    let restOfStyles = {
+      maxWidth: '1240px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
+    };
+    if (blockStyle) {
+      restOfStyles = {
+        maxWidth: blockStyle.style.maxWidth,
+        paddingTop: blockStyle.style.paddingTop,
+        paddingBottom: blockStyle.style.paddingBottom,
+      }
+      backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
 
     const parsed_layout_design = layout_design ? JSON.parse(layout_design) : null;

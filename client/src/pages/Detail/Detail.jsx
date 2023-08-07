@@ -38,19 +38,41 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
     fetchData();
   }, [filterData]);
 
+  console.log(data, 'data')
+
   const renderBox = (block) => {
     const { design_type, content, block_id, design_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId } = block;
+
     if (content) {
-      return DetailRenderBox[design_type](content, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId);
+      const arg = {
+        content: content,
+        block_id: block_id,
+        blockStyle: JSON.parse(block.block_style),
+        handleUpdateText: handleUpdateText,
+        layout_design: layout_design,
+        clickHandler: clickHandler,
+        setIsLayoutDesign: setIsLayoutDesign,
+        setLayoutId: setLayoutId,
+      }
+
+      return DetailRenderBox[design_type](arg);
     } else {
       const typeItem = designType.find((item) => item.type === design_type);
 
       const filteredBoxes = typeItem && typeItem.boxes?.filter((box) => box.id === design_id);
 
-      return filteredBoxes?.map((box) => DetailRenderBox[design_type](box, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId));
+      return filteredBoxes?.map((box) => DetailRenderBox[design_type]({
+        box: box,
+        block_id: block_id,
+        blockStyle: JSON.parse(block.block_style),
+        handleUpdateText: handleUpdateText,
+        layout_design: layout_design,
+        clickHandler: clickHandler,
+        setIsLayoutDesign: setIsLayoutDesign,
+        setLayoutId: setLayoutId,
+      }));
     }
   };
-  console.log(data, 'data')
 
   return (
     <div className='detail_wrap'>
@@ -106,13 +128,30 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
           }
 
           const renderBlockByType = (type, block, shouldRender) => {
+            const block_style = JSON.parse(block.block_style);
+            let backgroundColor = '#ffffff';
+            let restOfStyles = {
+              maxWidth: '1240px',
+              paddingTop: '0px',
+              paddingBottom: '0px',
+            };
+            if (block_style) {
+              restOfStyles = {
+                maxWidth: block_style.style.maxWidth,
+                paddingTop: block_style.style.paddingTop,
+                paddingBottom: block_style.style.paddingBottom,
+              }
+              backgroundColor = block_style.style.backgroundColor || backgroundColor;
+            }
             switch (type) {
               case 'table':
                 return (
                   <div className='module_block'>
-                    <div className='module_wrap'>
-                      <div className='module_container'>
-                        <ApplyTable design_id={block.design_id} />
+                    <div className='normal_wrap' style={{backgroundColor: backgroundColor}}>
+                      <div className='module_wrap' style={restOfStyles}>
+                        <div className='module_container'>
+                          <ApplyTable design_id={block.design_id} />
+                        </div>
                       </div>
                     </div>
                   </div>
