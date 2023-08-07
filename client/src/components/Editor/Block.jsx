@@ -32,7 +32,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const location = useLocation();
   const dispatch = useDispatch();
   const [showBlockBtn, setShowBlockBtn] = useState(false);
-  const [checkBtn, setCheckBtn] = useState(false);
+  const [checkBtn, setCheckBtn] = useState((blockStyle.find((block) => block.block_id === block_id)?.style.maxWidth === '100%' ? true : false) || false);
   const [isLayoutDesign, setIsLayoutDesign] = useState(false);
   const [layoutId, setLayoutId] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -74,10 +74,6 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
     return EditorRenderBox[design_type](arg);
   };
 
-  const handleCellChange = (block_id, col, row, content) => {
-    const updatedBlockList = updateTableDataInBlock(blocks, block_id, col, row, content);
-    dispatch(updateList(updatedBlockList));
-  };
   // 이미지 첨부
   const attatchImg = ({ tag, block_id, idx, isLayout }) => {
     if (!tag.target.files[0] || !tag.target.files[0].type.includes('image')) {
@@ -95,18 +91,18 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
 
   // 이미지 삭제
   const deleteImage = ({ block_id, idx, isLayout }) => {
-    // console.log(block_id, idx, isLayout);
     deleteImageAction({ block_id: block_id, idx: idx, isLayout: isLayout });
   };
+
   //table style 패딩 적용 
-  const currentStyle = blockStyle.find((block) => block.block_id === block_id)?.style || { paddingTop: '0px', paddingBottom: '0px', maxWidth: '1240px' };
+  const currentStyle = blockStyle.find((block) => block.block_id === block_id)?.style || { paddingTop: '0px', paddingBottom: '0px', maxWidth: '1240px', backgroundColor: '#ffffff' };
   // 툴 바 버튼
   const correctionBtn = [
     {
       icon: faEdit,
       clickFunc: () => {
         setSideBarOpen({ open: true, block_id: block_id });
-        setCheckBtn((prevCheckBtn) => !prevCheckBtn);
+        // setCheckBtn((prevCheckBtn) => !prevCheckBtn);
       },
     },
     { icon: faArrowRotateRight, clickFunc: () => setIsModalOpen({ open: true, block_id: block_id }) },
@@ -114,6 +110,34 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
     { icon: faArrowDown, clickFunc: (id) => handleChangeBlockOrder(id, 'down') },
     { icon: faTrash, clickFunc: (id) => deleteBlock(id) },
   ];
+
+  const updateColumnNamesInBlock = (blocks, block_id, col, newName) => {
+    return blocks.map(block => {
+      if (block.block_id === block_id) {
+        const updatedContent = {
+          ...block.content,
+          cols: {
+            ...block.content.cols,
+            [col]: newName
+          }
+        };
+        return {
+          ...block,
+          content: updatedContent
+        };
+      }
+      return block;
+    });
+  };
+
+  const handleColumnNameChange = (block_id, col, newName) => {
+    const updatedBlockList = updateColumnNamesInBlock(blocks, block_id, col, newName);
+    dispatch(updateList(updatedBlockList));
+  };
+  const handleCellChange = (block_id, col, row, content) => {
+    const updatedBlockList = updateTableDataInBlock(blocks, block_id, col, row, content);
+    dispatch(updateList(updatedBlockList));
+  };
 
   // 블록 추가 버튼 렌더링
   const renderAddBlockButton = (a) => {
@@ -159,9 +183,9 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
               }}
             >
               <FontAwesomeIcon className='icon_design_select' icon={faWandMagicSparkles} size='2x' />
-              <p>
+              {/* <p>
                 {block_order} {block_id}
-              </p>
+              </p> */}
               <p className='txt_design_select'>디자인을 선택하세요</p>
             </div>
           </>
@@ -178,13 +202,15 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
             </div>
             {design_type === 'table' ? (
               <div className='module_block'>
-                <div className={`module_wrap ${checkBtn ? 'widthSet' : ''}`}
-                    style={{ 
-                      paddingTop: currentStyle.paddingTop, 
-                      paddingBottom: currentStyle.paddingBottom
-                    }}>
-                  <div className='module_container'>
-                    <ApplyTable design_id={design_id} block_id={block_id} handleCellChange={handleCellChange} />
+                <div className='normal_module' style={{backgroundColor:currentStyle.backgroundColor}} >
+                  <div className={`module_wrap ${checkBtn ? 'widthSet' : ''}`}
+                      style={{ 
+                        paddingTop: currentStyle.paddingTop, 
+                        paddingBottom: currentStyle.paddingBottom
+                      }}>
+                    <div className='module_container'>
+                      <ApplyTable design_id={design_id} block_id={block_id} handleCellChange={handleCellChange} handleColumnNameChange={handleColumnNameChange} />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -123,7 +123,7 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen, LinkDic }) => {
                   return;
                 }
               } else if (selectedLink) {
-                const link = `/page/${selectedLink}`;
+                const link = `/pages/${selectedLink}`;
                 updateBlockLink(link);
                 console.log('내부 링크 디스패치 완료');
               }
