@@ -3,8 +3,12 @@ import { useMenuActions } from 'hooks/useMenu';
 import useInputValues from 'hooks/useInput';
 import SelectBox from './SelectBox';
 import 'styles/Management/EditForm.css';
+import { useDispatch } from 'react-redux';
+import { showConfirm } from 'redux/AlertSlice'; 
 
 const EditForm = ({ curMenuData, secondList, editMenu }) => {
+
+  const dispatch = useDispatch();
 
   const { inputValues, handleChange } = useInputValues({
     editedTitle: curMenuData.title,
@@ -29,8 +33,19 @@ const EditForm = ({ curMenuData, secondList, editMenu }) => {
       await updateMenuAction(formData);
     };
 
-    if (window.confirm('해당 메뉴를 수정 하시겠습니까?')) updateFetch();
-    editMenu(idx);
+    // if (window.confirm('해당 메뉴를 수정 하시겠습니까?')) updateFetch();
+
+    dispatch(showConfirm({
+      message: '해당 메뉴를 수정 하시겠습니까?',
+      onConfirm: async () => {
+          await updateFetch(dispatch);
+          editMenu(idx);
+      },
+      onCancel: () => {
+          editMenu(idx);
+      }
+  }));
+
   };
 
   return (

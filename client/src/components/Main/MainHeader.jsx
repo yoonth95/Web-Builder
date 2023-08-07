@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import 'styles/Admin/AdminHeader.css';
 import {  useNavigate, useSearchParams } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
-import { useDispatch } from 'react-redux';
+
 import { logoutAPI } from 'api/User/logoutAPI';
+import { useDispatch } from 'react-redux';
+import { showConfirm } from 'redux/AlertSlice'; 
 
 const MainHeader = () => {
   const [tab, setTab] = useState('menu');
@@ -22,9 +24,12 @@ const MainHeader = () => {
   };
 
   const logout = () => {
-    if (window.confirm('로그아웃 하시겠습니까?')) {
-      logoutAPI(dispatch);
-    }
+    dispatch(showConfirm({
+      message: '로그아웃 하시겠습니까?',
+      onConfirm: () => {
+          logoutAPI(dispatch);
+      } 
+    }))
   };
 
   useEffect(() => {

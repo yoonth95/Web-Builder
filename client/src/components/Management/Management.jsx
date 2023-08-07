@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBtn } from 'redux/buttonSlice';
 import { useMenuActions } from 'hooks/useMenu';
+import { showConfirm } from 'redux/AlertSlice';
 
 // 컴포넌트
 import SubMenu from './SubMenu';
@@ -49,8 +50,13 @@ const Management = ({ setIsOpen, setIsLoading, isLoading }) => {
   };
 
   // 메뉴 삭제
-  const deleteMenu = async (id, order_num, parent_id) => {
-    if (window.confirm('해당 메뉴를 삭제 하시겠습니까?')) await deleteMenuAction(id, order_num, parent_id);
+  const deleteMenu = (id, order_num, parent_id) => {
+    dispatch(showConfirm({
+      message: '해당 메뉴를 삭제 하시겠습니까?',
+      onConfirm: async () => {
+       await deleteMenuAction(id, order_num, parent_id);
+      },
+    }));
   };
 
   // 메뉴 drag and drop

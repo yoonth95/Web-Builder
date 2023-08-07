@@ -3,7 +3,7 @@ import { useNavigate, useMatch } from 'react-router-dom';
 
 // redux
 import { useDispatch,useSelector } from 'react-redux';
-import { showAlert } from 'redux/AlertSlice';
+import { showAlert,showConfirm,showToast,hideToast } from 'redux/AlertSlice';
 
 // hooks
 import { useEditorActions } from 'hooks/useEditor';
@@ -52,8 +52,11 @@ const dispatch = useDispatch();
       dispatch(showAlert('최소 한 개의 블록은 있어야 합니다.'));
       return;
     }
-    if (window.confirm('해당 블록을 삭제하시겠습니까?')) deleteBlockAction(id, setIsLoading, setError);
-  };
+    dispatch(showConfirm({
+      message: '해당 블록을 삭제하시겠습니까?',
+      onConfirm: () => deleteBlockAction(id, setIsLoading, setError)
+    }));
+};
 
   // 블록 순서 변경
   const handleChangeBlockOrder = async (block_id, dir) => {
@@ -66,27 +69,42 @@ const dispatch = useDispatch();
   };
 
   // 페이지 이동
-  const handleSelectChange = async (e) => {
+  const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
-    if (window.confirm('저장 후 이동하시겠습니까?')) {
-      await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
-      navigate(`/editor/${selectedValue}`);
+    dispatch(showConfirm({
+      message: '저장 후 이동하시겠습니까?',
+      onConfirm: async () => {
+        await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
+        navigate(`/editor/${selectedValue}`);
+      },
+      onCancel: () => {
+        navigate(`/editor/${selectedValue}`);
     }
-  };
+    }));
+};
 
   // 미리보기
   const handlePreview = () => {
     dispatch(showAlert('미리보기'));
   };
 
-  // 저장
+  
+  // const handleSave = async () => {
+  //   const result = await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
+  //   console.log(result);
+  //   alert('저장되었습니다.')
+  // };
+
   const handleSave = async () => {
-    const result = await saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError);
-    console.log(result);
-    dispatch(showAlert('저장되었습니다.'));
+    dispatch(showToast({ message: '저장 되었습니다.', timer: 3000 }));
+    const [result] = await Promise.all([
+      saveBlockAction(page_idx, blocks, blockStyle, setIsLoading, setError),
+      new Promise(resolve => setTimeout(resolve, 3300)) 
+    ]); 
+    dispatch(hideToast());
   };
 
-  if (isLoading) return <Spinner />;
+  // if (isLoading) return <Spinner />;
 
   if (error) {
     dispatch(showAlert('에러', error));
@@ -108,9 +126,9 @@ const dispatch = useDispatch();
             </select>
           </div>
           <div className='editor_btns'>
-            <button className='editor_previewBtn' onClick={handlePreview}>
+            {/* <button className='editor_previewBtn' onClick={handlePreview}>
               미리보기
-            </button>
+            </button> */}
             <button className='editor_saveBtn' onClick={handleSave}>
               저장
             </button>

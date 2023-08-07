@@ -167,9 +167,10 @@
   display: flex;
 }
 .imageTag {
-  width: auto;
-  height: auto;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
   vertical-align: middle;
   border: none;
   outline: none;
@@ -187,6 +188,8 @@
 .imageDiv.backgroundNone {
   height: auto;
   background-color: #fff !important;
+  max-height: -webkit-fit-content;
+  max-height: -moz-fit-content;
   max-height: fit-content;
 }
 .imageDiv.boxCircle {
@@ -370,6 +373,12 @@
   width: 500px;
   height: 200px;
   background-color: #f3f3f3;
+}
+
+
+
+.mobile .module_wideRectangle {
+  zoom: 0.7;
 }
 
 /* 텍스트 블록 css */
