@@ -55,6 +55,24 @@
   justify-content: center !important;
 }
 
+.module_container .module_item{
+  width: 100%;
+  /* height: 100%; */
+}
+
+.module_imageBox{
+  height: 100%;
+}
+
+.module_imageBox >img{
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 100%;
+}
+
+
+
 @media screen and (max-width: 1024px) {
   .detail_wrap {
     max-width: 640px;

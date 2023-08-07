@@ -20,7 +20,7 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen, LinkDic }) => {
     setNoLinkChecked(true);
     setInternalLinkChecked(false);
     setUrlChecked(false);
-    setValidationError(''); 
+    setValidationError('');
     setInputURL('');
   };
 
@@ -28,7 +28,7 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen, LinkDic }) => {
     setNoLinkChecked(false);
     setInternalLinkChecked(true);
     setUrlChecked(false);
-    setValidationError(''); 
+    setValidationError('');
     setInputURL('');
   };
 
@@ -36,7 +36,7 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen, LinkDic }) => {
     setNoLinkChecked(false);
     setInternalLinkChecked(false);
     setUrlChecked(true);
-    setValidationError(''); 
+    setValidationError('');
     setInputURL('');
   };
 
@@ -50,26 +50,78 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen, LinkDic }) => {
     }
   }
 
-  const updateBlockLink = (link) => {
+  const updateHrefInLayoutDesign = (layoutDesign, href) => {
+    const parsedLayoutDesign = JSON.parse(layoutDesign);
+  
+    const updatedLayoutDesign = parsedLayoutDesign.map(layout => {
+      const layoutIdFromLinkDic = parseInt(LinkDic.isLayout.split('_')[1], 10);
+      console.log(layoutIdFromLinkDic)
+      if (layout.layout_id === layoutIdFromLinkDic) {
+        const updatedImages = layout.boxes.images.map((image, i) => {
+          if (i === LinkDic.idx) {
+            return { ...image, href };
+          }
+          return image;
+        });
+  
+        return {
+          ...layout,
+          boxes: {
+            ...layout.boxes,
+            images: updatedImages
+          }
+        };
+      }
+      return layout;
+    });
+  
+    return JSON.stringify(updatedLayoutDesign);
+  }  
+  
+  const updateBlockLink = (href) => {
     dispatch(updateList(blocks.map(block => {
-      if (block.block_id === block_id) {
+      if (block.block_id === block_id && block.layout_design) {  
+        return {
+          ...block,
+          layout_design: updateHrefInLayoutDesign(block.layout_design, href)
+        };
+      } else if (block.block_id === block_id && block.content && block.content.images) {
         return {
           ...block,
           content: {
             ...block.content,
-            images: updateLink(block.content.images, link)
+            images: updateLink(block.content.images, href)
           }
-        }
+        };
       }
-      return block;
+      return block;  
     })));
   };
+  
+  
+  
 
   const handleOptionChange = (e) => {
     const selectedPage = secondList.find((item) => item.idx === Number(e.target.value));
     if (selectedPage) {
       setSelectedLink(selectedPage.link);
     }
+  };
+
+  const handleConfirmClick = () => {
+    if (isUrlChecked) {
+      if (inputURL.startsWith('https://')) {
+        updateBlockLink(inputURL);
+        setValidationError('');
+      } else {
+        setValidationError('URL은 "https://"로 시작해야 합니다.');
+        return;
+      }
+    } else if (isInternalLinkChecked && selectedLink) {
+      const link = `/pages/${selectedLink}`;
+      updateBlockLink(link);
+    }
+    setIsOpen(false);
   };
 
   return (
@@ -103,35 +155,14 @@ const LinkModal = ({ block_id, idx, setIsOpen, isOpen, LinkDic }) => {
             <input type='checkbox' className='notUse' checked={isUrlChecked} onChange={handleUrlCheckboxChange} />
             <label className={isUrlChecked ? '' : 'strikethrough'}>URL 입력</label>
           </div>
-          <input type='text' className='pageInput' placeholder='https://로 시작되는 링크 주소 입력' disabled={isNoLinkChecked} style={{ marginBottom: '40px', paddingLeft: '20px' }} onChange={(e) => setInputURL(e.target.value)} value={inputURL}  />
+          <input type='text' className='pageInput' placeholder='https://로 시작되는 링크 주소 입력' disabled={!isUrlChecked} style={{ marginBottom: '40px', paddingLeft: '20px' }} onChange={(e) => setInputURL(e.target.value)} value={inputURL}  />
         </div>
-        {
-          validationError && 
+        {validationError && 
           <div style={{ color: '#EE7D00', paddingLeft:'22px',position:'relative', top:'-35px' }}>{validationError}</div>
         }
         <div className='modal_btn_box'>
           <button onClick={() => setIsOpen(false)}>닫기</button>
-          <button 
-            onClick={() => {
-              if (isUrlChecked) {
-                if (inputURL.startsWith('https://')) {
-                  updateBlockLink(inputURL);
-                  console.log('URL 디스패치 완료');
-                  setValidationError('');
-                } else {
-                  setValidationError('URL은 "https://"로 시작해야 합니다.');
-                  return;
-                }
-              } else if (selectedLink) {
-                const link = `/pages/${selectedLink}`;
-                updateBlockLink(link);
-                console.log('내부 링크 디스패치 완료');
-              }
-              setIsOpen(false);
-            }}
-          >
-            확인
-          </button>
+          <button onClick={handleConfirmClick}>확인</button>
         </div>
       </div>
     </div>

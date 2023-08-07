@@ -3,6 +3,7 @@ import 'styles/Admin/AdminHeader.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logoutAPI } from 'api/User/logoutAPI';
+import { showConfirm } from 'redux/AlertSlice'; 
 
 const AdminHeader = () => {
   const [tab, setTab] = useState('menu');
@@ -21,10 +22,13 @@ const AdminHeader = () => {
   };
 
   const logoutBtn = () => {
-    if (window.confirm('로그아웃 하시겠습니까?')) {
-      logoutAPI(dispatch);
-      navigate('/');
-    }
+    dispatch(showConfirm({
+      message: '로그아웃 하시겠습니까?',
+      onConfirm: async () => {
+        logoutAPI(dispatch);
+        navigate('/')
+      },
+  }));
   };
 
   useEffect(() => {

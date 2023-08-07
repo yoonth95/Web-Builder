@@ -84,9 +84,10 @@ input[type=range] {
   border: 1px solid #000;
 	background-color: #555;
 	margin-right: 15px;
+	cursor: pointer;
 }
 
-.widthSet_wrap input[type='checkbox']:checked:before {
+.widthSet_wrap input[type='checkbox']:checked::after {
   content: '';
   position: absolute;
   width: 26px;
@@ -96,9 +97,15 @@ input[type=range] {
   top: 50%;
   transform: translate(-50%, -50%);
 }
-.widthSet_wrap p {
+.widthSet_wrap label {
 	color: #888;
 }
-.widthSet_wrap:hover p {
+.widthSet_wrap:hover label {
 	color: #f3f3f3;
+}
+
+input[type=color] {
+	width: 40%;
+	height: 35px;
+	cursor: pointer;
 }

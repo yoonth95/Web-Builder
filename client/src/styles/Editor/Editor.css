@@ -12,9 +12,48 @@
   padding: 10px 50px;
 }
 
-.editor_pages_wrap::before {
+/* .editor_pages_wrap::before {
   content: '';
   width: 300px;
+} */
+
+.editor_backup {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.history_menu_content {
+  position: absolute;
+  left: 0;
+  top: 100px;
+  z-index: 1;
+  width: 100%;
+  overflow-x: hidden;
+  background: #2b3038;
+  visibility: hidden;
+  opacity: 1;
+  transform: translateY(-40px);
+  transition: all 0.2s;
+  height: calc(100vh - 70px);
+}
+
+.history_menu_list {
+  padding: 10px 15px 15px;
+  font-size: 13px;
+}
+
+.editor_backup .history_menu_list li button {
+  display: block;
+  padding: 5px 0 5px 7px;
+  line-height: 1;
+  color: #bcbcbc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s;
 }
 
 .editor_pages {

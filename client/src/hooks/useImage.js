@@ -98,13 +98,14 @@ export const useImageActions = () => {
 
     const deleteImages = (images) => {
       if (idx === undefined) {
-        return images.map(image => ({ ...image, src: '' }));
+        return images.map(image => ({ ...image, src: '', href: '' }));
       } else {
         return images.map((image, i) =>
-          i === idx ? { ...image, src: '' } : image
+          i === idx ? { ...image, src: '', href: '' } : image
         );
       }
     }
+    
 
     // 레이아웃 이미지 삭제
     if (isLayout !== false) {
@@ -117,7 +118,12 @@ export const useImageActions = () => {
                 ...layout,
                 boxes: {
                   ...layout.boxes,
-                  images: deleteImages(layout.boxes.images)
+                  images: layout.boxes.images.map(image => {
+                    if (image.src) {
+                      return { ...image, src: '', href: '' };
+                    }
+                    return image;
+                  })
                 }
               }
             }
@@ -134,6 +140,7 @@ export const useImageActions = () => {
 
       dispatch(updateList(updatedBlocks));
     }
+
     // 레이아웃이 아닌 디자인 이미지 삭제
     else {
       dispatch(updateList(blocks.map(block => {

@@ -26,10 +26,10 @@ const MainHeader = () => {
   const logout = () => {
     dispatch(showConfirm({
       message: '로그아웃 하시겠습니까?',
-      onConfirm: () => {
-          logoutAPI(dispatch);
-      } 
-    }))
+      onConfirm: async () => {
+        logoutAPI(dispatch);
+      },
+  }));
   };
 
   useEffect(() => {
