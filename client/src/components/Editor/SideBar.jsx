@@ -4,47 +4,63 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/SideBar.css';
 import { useSelector } from 'react-redux';
 
+const updateBlockStyle = (blockId, styleUpdater, blockStyle, setBlockStyle) => {
+  if (blockStyle.some((block) => block.block_id === blockId)) {
+    setBlockStyle((prev) =>
+      prev.map((block) =>
+        block.block_id === blockId ? { ...block, style: styleUpdater(block.style) } : block
+      )
+    );
+  }
+};
+
 const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyle, setBlockStyle }) => {
   const [iconColor, setIconColor] = useState('#8f8f8f');
   const blockList = useSelector((state) => state.editor.blockList);
 
+  const handleChange = (field, value) => {
+    const blockId = sideBarOpen.block_id;
+    const styleUpdater = (style) => ({ ...style, [field]: value });
+
+    updateBlockStyle(blockId, styleUpdater, blockStyle, setBlockStyle);
+  };
+
+  // 블록 너비 설정
   const handleWidthChange = () => {
-    const blockId = sideBarOpen.block_id;
-    if (blockStyle.some((block) => block.block_id === blockId)) {
-      setBlockStyle((prev) => prev.map((block) => (block.block_id === blockId ? { ...block, style: { ...block.style, maxWidth: checkBtn ? '100%' : '1240px' } } : block)));
-      return true;
-    }
+    handleChange("maxWidth", checkBtn ? '100%' : '1240px');
   };
 
+  // 블록 padding top 설정
   const handleTopPaddingChange = (e) => {
-    const blockId = sideBarOpen.block_id;
-    if (blockStyle.some((block) => block.block_id === blockId)) {
-      setBlockStyle((prev) => prev.map((block) => (block.block_id === blockId ? { ...block, style: { ...block.style, paddingTop: `${e.target.value}px` } } : block)));
-      return true;
-    }
+    handleChange("paddingTop", `${e.target.value}px`);
   };
 
+  // 블록 padding bottom 설정
   const handleBottomPaddingChange = (e) => {
-    const blockId = sideBarOpen.block_id;
-    if (blockStyle.some((block) => block.block_id === blockId)) {
-      setBlockStyle((prev) => prev.map((block) => (block.block_id === blockId ? { ...block, style: { ...block.style, paddingBottom: `${e.target.value}px` } } : block)));
-    }
+    handleChange("paddingBottom", `${e.target.value}px`);
   };
-  useEffect(() => {
-    handleWidthChange();
-  }, [checkBtn]);
 
-  useEffect(() => {
-    const block = blockList.find((block) => block.block_id === sideBarOpen.block_id);
-    if (block) {
-      const style = JSON.parse(block.block_style);
-      if (style.style.maxWidth === '100%') {
-        setCheckBtn(true);
-      } else if (style.style.maxWidth === '1240px') {
-        setCheckBtn(false);
-      }
-    }
-  }, [blockList, sideBarOpen]);
+  // 블록 배경색 설정
+  const handleBackgroundColorChange = (e) => {
+    handleChange("backgroundColor", e.target.value);
+  };
+
+  // useEffect(() => {
+  //   handleWidthChange();
+  // }, [checkBtn]);
+
+  // useEffect(() => {
+  //   const block = blockList.find((block) => block.block_id === sideBarOpen.block_id);
+  //   if (block) {
+  //     console.log(JSON.parse(block.block_style));
+  //     const style = JSON.parse(block.block_style);
+  //     if (style.style.maxWidth === '100%') {
+  //       setCheckBtn(true);
+  //     } else if (style.style.maxWidth === '1240px') {
+  //       setCheckBtn(false);
+  //     }
+  //   }
+  // }, [blockList, sideBarOpen]);
 
   return (
     <div className='subMenu sub_menu' style={{ display: 'block' }}>
@@ -59,10 +75,12 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
           onMouseLeave={() => setIconColor('#8f8f8f')}
         />
       </div>
+      {/* 블록 너비 설정 */}
       <div className='widthSet_wrap' onChange={(e) => setCheckBtn((prevCheckBtn) => !prevCheckBtn)}>
-        {/* <input type='checkbox' checked={checkBtn} /> */}
+        <input type='checkbox' defaultChecked={checkBtn} />
         <p>화면 너비에 맞추기</p>
       </div>
+      {/* 블록 패딩 설정 */}
       <div style={{ marginTop: '10px' }}>
         <p className='title1'>패딩 설정</p>
       </div>
@@ -79,9 +97,7 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
               type='range'
               className='radioCheckSelect range_style1'
               name='padding_top'
-              min='0'
-              max='400'
-              step='10'
+              min='0' max='400' step='10'
               value={Number(blockStyle.find((block) => block.block_id === sideBarOpen.block_id)?.style.paddingTop.replace('px', '')) || 0}
               onChange={handleTopPaddingChange}
             />
@@ -104,9 +120,7 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
               type='range'
               className='radioCheckSelect range_style1'
               name='padding_bottom'
-              min='0'
-              max='400'
-              step='10'
+              min='0' max='400' step='10'
               value={Number(blockStyle.find((block) => block.block_id === sideBarOpen.block_id)?.style.paddingBottom.replace('px', '')) || 0}
               onChange={handleBottomPaddingChange}
             />
@@ -118,6 +132,13 @@ const SideBar = ({ checkBtn, setCheckBtn, sideBarOpen, setSideBarOpen, blockStyl
           </div>
         </li>
       </ul>
+      {/* 블록 배경색 설정 */}
+      <div style={{ marginTop: '10px' }}>
+        <p className='title1'>배경색 설정</p>
+      </div>
+      <div style={{ padding: '20px' }}>
+        <input type="color" value={blockStyle.find(block => block.block_id === sideBarOpen.block_id)?.style.backgroundColor || '#ffffff'} onChange={handleBackgroundColorChange}/>
+      </div>
     </div>
   );
 };

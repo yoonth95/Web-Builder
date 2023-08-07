@@ -36,6 +36,7 @@ export const useEditorActions = () => {
               maxWidth: "1240px",
               paddingTop: "0px",
               paddingBottom: "0px",
+              backgroundColor: "#ffffff",
             },
             block_id: block_id,
           }
@@ -68,6 +69,7 @@ export const useEditorActions = () => {
                     maxWidth: "1240px",
                     paddingTop: "0px",
                     paddingBottom: "0px",
+                    backgroundColor: "#ffffff",
                   },
                   block_id: block.block_id,
                 }
@@ -121,6 +123,7 @@ export const useEditorActions = () => {
         maxWidth: "1240px",
         paddingTop: "0px",
         paddingBottom: "0px",
+        backgroundColor: "#ffffff",
       },
       block_id: block_id,
     }
