@@ -107,6 +107,10 @@
   color: #f8b76c;
 }
 /* 블록 공통 css */
+.defaultPadding {
+  padding: 20px 0;
+  height: 100%;
+}
 .normal_module {
   height: 100%;
 }
@@ -332,6 +336,8 @@
   justify-content: center;
   transition: padding 0.4s;
   padding: 50px 0;
+  height: 100%;
+  align-items: center;
 }
 
 /* 목록 블록 css */
@@ -394,6 +400,7 @@
   padding: 20px 0;
 }
 .module_text_line {
+  position: relative;
   padding: 5px;
 }
 

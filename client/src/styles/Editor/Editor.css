@@ -83,7 +83,13 @@
   color: black;
 }
 
-.editor_saveBtn {
+.editor_btns .editor_saveBtn {
+  color: #ee7d00;
+    background-color: #ffebd6;
+    border: 1px solid #ee7d00;
+}
+
+.editor_saveBtn:hover {
   background-color: #ee7d00;
   color: #fff;
 }

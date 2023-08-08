@@ -39,46 +39,84 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
     fetchData();
   }, [filterData]);
 
+
+  // const renderBox = (block) => {
+  //   const { design_type, content, block_id, design_id, layout_design } = block;
+
+  //   if (content) {
+  //     const arg = {
+  //       content: content,
+  //       block_id: block_id,
+  //       blockStyle: JSON.parse(block.block_style),
+  //       layout_design: layout_design,
+  //     };
+
+  //     return DetailRenderBox[design_type](arg);
+  //   } else {
+  //     const typeItem = designType.find((item) => item.type === design_type);
+
+  //     const filteredBoxes = typeItem && typeItem.boxes?.filter((box) => box.id === design_id);
+
+  //     return filteredBoxes?.map((box) =>
+  //       DetailRenderBox[design_type]({
+  //         content: box,
+  //         block_id: block_id,
+  //         blockStyle: JSON.parse(block.block_style),
+  //         layout_design: layout_design
+  //       }),
+  //     );
+  //   }
+  // };
+
   const renderBox = (block) => {
-    const { design_type, content, block_id, design_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId } = block;
-
-    if (content) {
-      const arg = {
-        content: content,
-        block_id: block_id,
-        blockStyle: JSON.parse(block.block_style),
-        handleUpdateText: handleUpdateText,
-        layout_design: layout_design,
-        clickHandler: clickHandler,
-        setIsLayoutDesign: setIsLayoutDesign,
-        setLayoutId: setLayoutId,
-      };
-
-      return DetailRenderBox[design_type](arg);
-    } else {
-      const typeItem = designType.find((item) => item.type === design_type);
-
-      const filteredBoxes = typeItem && typeItem.boxes?.filter((box) => box.id === design_id);
-
-      return filteredBoxes?.map((box) =>
-        DetailRenderBox[design_type]({
-          box: box,
-          block_id: block_id,
-          blockStyle: JSON.parse(block.block_style),
-          handleUpdateText: handleUpdateText,
-          layout_design: layout_design,
-          clickHandler: clickHandler,
-          setIsLayoutDesign: setIsLayoutDesign,
-          setLayoutId: setLayoutId,
-        }),
-      );
+    const defaultStyle = {
+      maxWidth: '1240px',
+      paddingTop: '0px',
+      paddingBottom: '0px',
+      backgroundColor: '#ffffff',
     }
-  };
+
+    const arg = {
+      content: block.content,
+      block_id: block.block_id,
+      blockStyle: JSON.parse(block.block_style) || defaultStyle,
+      layout_design: block.layout_design,
+    }
+
+    return DetailRenderBox[block.design_type](arg);
+  }
 
   return (
     <div className='detail_wrap'>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} windowWidth={windowWidth} />
       {data
+        ?.sort((a, b) => a.block_order - b.block_order)
+        .filter((block) => block.design_type !== 'default')
+        .map((block) => {
+          if (block.design_type === 'table') {
+            return (
+              <div key={block.block_id} className='module_block'>
+                <div className='normal_wrap' style={{ backgroundColor: '#ffffff' }}>
+                  <div className='module_wrap' style={{ maxWidth: '1240px', paddingTop: '0px', paddingBottom: '0px' }}>
+                    <div className='module_container'>
+                      <ApplyTable design_id={block.design_id} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          } else {
+            return (
+              <div key={block.block_id} className='module_block'>
+                {renderBox(block)}
+              </div>
+            )
+          }
+        })
+      }
+
+
+      {/* {data
         ?.sort((a, b) => a.block_order - b.block_order) // block_order 순으로 정렬
         .filter((block) => block.design_type !== 'default') // design_type이 default가 아닌 것만 필터링
         .map((block) => {
@@ -169,7 +207,7 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
               {renderBlockByType(block.design_type, block, shouldRender)}
             </div>
           );
-        })}
+        })} */}
     </div>
   );
 };

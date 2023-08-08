@@ -118,73 +118,94 @@
     "boxes": [
       {
         "id": "1",
-        "thickness": "1px",
-        "style": "solid",
-        "length": "long",
-        "direction": "horizontal"
+        "style": {
+          "borderTop": "1px solid #B3B3B3",
+          "width": "100%",
+          "height": "auto",
+          "transform": "rotate(0deg)"
+        }
       },
       {
         "id": "2",
-        "thickness": "1px",
-        "style": "dashed",
-        "length": "long",
-        "direction": "horizontal"
+        "style": {
+          "borderTop": "1px dashed #B3B3B3",
+          "width": "100%",
+          "height": "auto",
+          "transform": "rotate(0deg)"
+        }
       },
       {
         "id": "3",
-        "thickness": "2px",
-        "style": "solid",
-        "length": "long",
-        "direction": "horizontal"
+        "style": {
+          "borderTop": "2px solid #B3B3B3",
+          "width": "100%",
+          "height": "auto",
+          "transform": "rotate(0deg)"
+        }
       },
       {
         "id": "4",
-        "thickness": "2px",
-        "style": "dashed",
-        "length": "long",
-        "direction": "horizontal"
+        "style": {
+          "borderTop": "2px dashed #B3B3B3",
+          "width": "100%",
+          "height": "auto",
+          "transform": "rotate(0deg)"
+        }
       },
       {
         "id": "5",
-        "thickness": "3px",
-        "style": "solid",
-        "length": "long",
-        "direction": "horizontal"
+        "style": {
+          "borderTop": "3px solid #B3B3B3",
+          "width": "100%",
+          "height": "auto",
+          "transform": "rotate(0deg)"
+        }
       },
       {
         "id": "6",
-        "thickness": "3px",
-        "style": "dashed",
-        "length": "long",
-        "direction": "horizontal"
+        "style": {
+          "borderTop": "3px dashed #B3B3B3",
+          "width": "100%",
+          "height": "auto",
+          "transform": "rotate(0deg)"
+        }
       },
       {
         "id": "7",
-        "thickness": "1px",
-        "style": "solid",
-        "length": "short",
-        "direction": "horizontal"
+        "style": {
+          "borderTop": "1px solid #B3B3B3",
+          "width": "25%",
+          "height": "auto",
+          "transform": "rotate(0deg)"
+        }
       },
       {
         "id": "8",
-        "thickness": "3px",
-        "style": "dotted",
-        "length": "long",
-        "direction": "horizontal"
+        "style": {
+          "backgroundImage": "radial-gradient(circle, rgb(179, 179, 179) 15%, transparent 0%)",
+          "backgroundSize": "25px 100%",
+          "width": "100%",
+          "height": "3px",
+          "transform": "rotate(0deg)"
+        }
       },
       {
         "id": "9",
-        "thickness": "1px",
-        "style": "solid",
-        "length": "short",
-        "direction": "diagonal"
+        "style": {
+          "borderTop": "1px solid #B3B3B3",
+          "width": "25%",
+          "height": "auto",
+          "transform": "rotate(135deg)"
+        }
       },
       {
         "id": "10",
-        "thickness": "1px",
-        "style": "solid",
-        "length": "short",
-        "direction": "vertical"
+        "style": {
+          "borderTop": "1px solid #B3B3B3",
+          "width": "20%",
+          "height": "auto",
+          "transform": "rotate(90deg)"
+        }
       }
     ]
   },
@@ -205,8 +226,8 @@
         "hasText": true,
         "lines": [
           {
-            "marginTop": "6px",
-            "fontSize": "12px",
+            "margin": "15px",
+            "fontSize": "20px",
             "fontWeight": "400",
             "color": "#333",
             "text": "초단기한글"
@@ -221,14 +242,14 @@
         "hasDetails": true,
         "lines": [
           {
-            "margin": "5px auto",
-            "fontSize": "10px",
+            "margin": "12px auto",
+            "fontSize": "20px",
             "color": "#333",
             "text": "제목"
           },
           {
             "fontFamily": "Noto Sans",
-            "fontSize": "10px",
+            "fontSize": "15px",
             "fontWeight": "350",
             "color": "#666",
             "text": "친구들과 함께 모여 교과 과정에 필요한 핵심 과목을 <br />집중적으로 관리 받습니다. 전문 선생님의 학습 관리로 자기주도 <br />학습을 성장시킬 수 있습니다."
@@ -244,22 +265,22 @@
         "hasTinyText": true,
         "lines": [
           {
-            "margin": "2px auto",
+            "margin": "10px auto",
             "color": "#ee7d00",
             "fontFamily": "Noto Sans",
-            "fontSize": "10px",
+            "fontSize": "20px",
             "fontWeight": "350",
             "text": "색깔 있는 제목"
           },
           {
-            "margin": "4px auto 9px",
-            "fontSize": "10px",
+            "margin": "2px auto 12px",
+            "fontSize": "15px",
             "fontFamily": "Noto Sans",
             "text": "주 1회 / 과목당 10분"
           },
           {
             "fontFamily": "Noto Sans",
-            "fontSize": "10px",
+            "fontSize": "15px",
             "fontWeight": "350",
             "color": "#666",
             "text": "학습관리 및 상담"
@@ -274,15 +295,15 @@
         "hasContent": true,
         "lines": [
           {
-            "margin": "5px auto",
-            "fontSize": "10px",
+            "margin": "12px auto",
+            "fontSize": "20px",
             "color": "#333",
             "text": "제목"
           },
           {
-            "font-family": "Noto Sans",
-            "font-size": "10px",
-            "font-weight": "350",
+            "fontFamily": "Noto Sans",
+            "fontSize": "15px",
+            "fontWeight": "350",
             "text": "북패드 디지털 콘텐츠를 활용하여 <br />학생들의 지면 학습을 더욱 심도 깊고 <br />쉽게 이해하여 기본 개념을 탄탄하게 합니다."
           }
         ]

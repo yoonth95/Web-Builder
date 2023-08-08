@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
 
 // redux
-import { useDispatch,useSelector } from 'react-redux';
-import { showAlert,showConfirm,showToast,hideToast } from 'redux/AlertSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { showAlert, showConfirm, showToast, hideToast } from 'redux/AlertSlice';
 
 // hooks
 import { useEditorActions } from 'hooks/useEditor';
@@ -11,9 +11,8 @@ import { useEditorActions } from 'hooks/useEditor';
 // 컴포넌트
 import Block from 'components/Editor/Block';
 import Nav from 'components/Main/Nav';
-import Spinner from 'components/Spinner/Spinner';
-
-// import SideBar from 'components/Editor/SideBar';
+// import Spinner from 'components/Spinner/Spinner';
+import Loading from 'components/Spinner/Loading';
 
 // icon 및 css
 import 'styles/Editor/Editor.css';
@@ -33,20 +32,21 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const [blockStyle, setBlockStyle] = useState([]); // 블록 스타일 상태 값
   const [historyList, setHistoryList] = useState([]); // 히스토리 리스트
   const [isToggle, setIsToggle] = useState(false); // 히스토리 토글
+  const [isWaiting, setIsWaiting] = useState(false); // 블록 추가, 삭제, 순서 변경 시 대기 상태
 
   const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction, saveBlockAction } = useEditorActions();
 
   useEffect(() => {
     // 블록 조회
     const getBlocks = async () => {
-      await getBlocksAction(Number(page_idx), setIsLoading, setError, setBlockStyle, setHistoryList);
+      await getBlocksAction(Number(page_idx), setIsLoading, setError, setBlockStyle, setHistoryList, setIsWaiting);
     };
     getBlocks();
   }, [page_idx]);
 
   // 블록 추가
-  const addBlock = (order, dir) => {
-    insertBlockAction(Number(page_idx), order, dir, setIsLoading, setError);
+  const addBlock = async (order, dir) => {
+    await insertBlockAction(Number(page_idx), order, dir, setIsLoading, setError, setIsWaiting);
   };
 
   // 블록 삭제
@@ -57,13 +57,15 @@ const Editor = ({ isLoading, setIsLoading }) => {
     }
     dispatch(showConfirm({
       message: '해당 블록을 삭제하시겠습니까?',
-      onConfirm: () => deleteBlockAction(id, setIsLoading, setError)
+      onConfirm: async () => {
+        await deleteBlockAction(id, setIsLoading, setError, setIsWaiting);
+      }
     }));
 };
 
   // 블록 순서 변경
   const handleChangeBlockOrder = async (block_id, dir) => {
-    await updateBlockOrderAction(block_id, dir, setIsLoading, setError);
+    await updateBlockOrderAction(block_id, dir, setIsLoading, setError, setIsWaiting);
   };
 
   // 사이즈 변경
@@ -181,6 +183,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
             ))}
         </div>
       </div>
+      {isWaiting && <Loading />}
     </>
   );
 };

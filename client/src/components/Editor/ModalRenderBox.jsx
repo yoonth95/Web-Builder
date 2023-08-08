@@ -22,7 +22,6 @@ export const ModalRenderBox = {
     );
   },
   line: (box, index, designSelectId, selectedId) => {
-    const isDotted = box.style === 'dotted';
     const isSelected = selectedId === box.id;
     return (
       <div
@@ -31,16 +30,7 @@ export const ModalRenderBox = {
         style={{ height: '96px', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0', border: isSelected ? '2px solid #ee7d00' : '' }}
         onClick={() => designSelectId(box.id)}
       >
-        <div
-          style={{
-            borderTop: isDotted ? 'none' : `${box.thickness} ${box.style} #B3B3B3`,
-            backgroundImage: isDotted ? `radial-gradient(circle, rgb(179, 179, 179) 15%, transparent 0%)` : 'none',
-            backgroundSize: isDotted ? '25px 100%' : 'auto',
-            width: box.length === 'long' ? '100%' : '15%',
-            transform: box.direction === 'diagonal' ? 'rotate(135deg)' : box.direction === 'vertical' ? 'rotate(90deg)' : 'none',
-            height: isDotted ? `${box.thickness}` : 'auto',
-          }}
-        />
+        <div style={box.style}></div>
       </div>
     );
   },
@@ -93,14 +83,16 @@ export const ModalRenderBox = {
     const isSelected = selectedId === box.id;
 
     const renderElement = (element) => {
+      const keyForElement = element.layout_id || Math.random().toString();
+
       if (element.children) {
         return (
-          <div key={element.layout_id} style={element.style}>
+          <div key={keyForElement} style={element.style}>
             {element.children.map((child) => renderElement(child))}
           </div>
         );
       } else {
-        return <div key={element.layout_id} className='layoutBox' style={element.style}></div>;
+        return <div key={keyForElement} className='layoutBox' style={element.style}></div>;
       }
     };
 

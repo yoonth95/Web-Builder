@@ -2,7 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  /* height: 200px; */
+  height: 100%;
 }
 
 .module_rectangle_detail > img,
@@ -62,6 +63,10 @@
   padding-top: none;
 }
 
+.normal_wrap {
+  height: 100%;
+}
+
 .module_container {
   justify-content: center !important;
 }
@@ -103,7 +108,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
+    /* height: 100px; */
+    height: 100%;
   }
   .block_container > img {
     width: 100%;

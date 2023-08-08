@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
 import ApplyTable from 'components/Editor/ApplyTable';
-
 import EditToolBar from 'components/Editor/EditToolBar';
+import TextLine from 'components/ToolBar/TextLine';
+import TextEditor from 'components/Editor/TextEditor';
+
+
+import CKEditor from '@ckeditor/ckeditor5-react';
+import BalloonEditor from '@ckeditor/ckeditor5-build-balloon';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWandMagicSparkles, faImage, faPaperclip, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -35,55 +41,57 @@ export const EditorRenderBox = {
     }
 
     return (
-      <div key={block_id} className='normal_module' style={{ backgroundColor: backgroundColor }}>
-        <div className='module_wrap' style={restOfStyles}>
-          <div className={`module_container ${screen}`} style={design?.layout}>
-            {[...Array(design?.images.length)].map((_, i) => {
-              let shape = '',
-                isCircle = false;
-              if (design?.images[i].shape === 'circle') {
-                shape = '50%';
-                isCircle = true;
-              }
-              return (
-                <div key={i} className={`${design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} ${isCircle ? 'boxCircle' : ''}`} style={{ borderRadius: shape }}>
-                  {design?.images[i].src !== '' ? (
-                    <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop' : ''}`}>
-                      <div className='icon_container'>
-                        <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, idx: i, isLayout: isLayout })}>
-                          <FontAwesomeIcon icon={faTrashCan} />
-                        </span>
-                        <div style={{ display: 'flex', gap: '20px' }}>
-                          <label className='imgIcon'>
+      <div className='defaultPadding'>
+        <div key={block_id} className='normal_module' style={{ backgroundColor: backgroundColor }}>
+          <div className='module_wrap' style={restOfStyles}>
+            <div className={`module_container ${screen}`} style={design?.layout}>
+              {[...Array(design?.images.length)].map((_, i) => {
+                let shape = '',
+                  isCircle = false;
+                if (design?.images[i].shape === 'circle') {
+                  shape = '50%';
+                  isCircle = true;
+                }
+                return (
+                  <div key={i} className={`${design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} ${isCircle ? 'boxCircle' : ''}`} style={{ borderRadius: shape }}>
+                    {design?.images[i].src !== '' ? (
+                      <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop' : ''}`}>
+                        <div className='icon_container'>
+                          <span className='deleteIcon' onClick={() => deleteImage({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                            <FontAwesomeIcon icon={faTrashCan} />
+                          </span>
+                          <div style={{ display: 'flex', gap: '20px' }}>
+                            <label className='imgIcon'>
+                              <FontAwesomeIcon icon={faImage} />
+                              <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
+                            </label>
+                            <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                              <FontAwesomeIcon icon={faPaperclip} />
+                            </span>
+                          </div>
+                        </div>
+                        <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={{ borderRadius: shape }} loading='lazy' />
+                      </div>
+                    ) : (
+                      <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop imgHover' : ''}`} style={{ borderRadius: shape }}>
+                        <div className='downIcon'>
+                          <FontAwesomeIcon icon={faDownload} />
+                        </div>
+                        <div className='attatchIcon' style={{ borderRadius: shape }}>
+                          <label>
                             <FontAwesomeIcon icon={faImage} />
                             <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
                           </label>
-                          <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
+                          <label onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
                             <FontAwesomeIcon icon={faPaperclip} />
-                          </span>
+                          </label>
                         </div>
                       </div>
-                      <img className='imageTag' src={`${design?.images[i].src}`} alt='' style={{ borderRadius: shape }} loading='lazy' />
-                    </div>
-                  ) : (
-                    <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop imgHover' : ''}`} style={{ borderRadius: shape }}>
-                      <div className='downIcon'>
-                        <FontAwesomeIcon icon={faDownload} />
-                      </div>
-                      <div className='attatchIcon' style={{ borderRadius: shape }}>
-                        <label>
-                          <FontAwesomeIcon icon={faImage} />
-                          <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, idx: i, isLayout: isLayout })} />
-                        </label>
-                        <label onClick={() => attatchLink({ block_id: blockId, idx: i, isLayout: isLayout })}>
-                          <FontAwesomeIcon icon={faPaperclip} />
-                        </label>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -105,21 +113,11 @@ export const EditorRenderBox = {
       backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
 
-    const isDotted = design?.style === 'dotted';
     return (
       <div key={block_id} className='normal_module' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap' style={restOfStyles}>
           <div className='module_container_line'>
-            <div
-              style={{
-                borderTop: isDotted ? 'none' : `${design?.thickness} ${design?.style} #B3B3B3`,
-                backgroundImage: isDotted ? `radial-gradient(circle, rgb(179, 179, 179) 15%, transparent 0%)` : 'none',
-                backgroundSize: isDotted ? '25px 100%' : 'auto',
-                width: design?.length === 'long' ? '100%' : '15%',
-                transform: design?.direction === 'diagonal' ? 'rotate(135deg)' : design?.direction === 'vertical' ? 'rotate(90deg)' : 'none',
-                height: isDotted ? `${design.thickness}` : 'auto',
-              }}
-            />
+            <div style={design.style}></div>
           </div>
         </div>
       </div>
@@ -168,7 +166,7 @@ export const EditorRenderBox = {
                           <FontAwesomeIcon icon={faImage} />
                           <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, isLayout: isLayout })} />
                         </label>
-                        <span className='linkIcon' onClick={() => attatchLink({ block_id: blockId, isLayout: isLayout })}>
+                        <span className='linkIcon' onClick={() => { attatchLink({ block_id: blockId, idx: 0, isLayout: isLayout })}}>
                           <FontAwesomeIcon icon={faPaperclip} />
                         </span>
                       </div>
@@ -240,6 +238,16 @@ export const EditorRenderBox = {
           <div className={`module_container ${screen}`} style={{ textAlign: `${design?.alignments}` }}>
             <div className='module_text_item'>
               {design?.lines.map((line, i) => (
+                // // 임의로 만든 에디터
+                // <TextLine key={i}
+                //   index={i}
+                //   line={line}
+                //   handleUpdateText={(index, text) => handleUpdateText(blockId, index, text, isLayout)}
+                //   screenSize={screenSize}
+                //   maxWidth={restOfStyles.maxWidth}
+                // />
+
+                // 영욱님이 하시던거
                 <React.Fragment key={i}>
                   <div
                     onMouseUp={handleTextSelection}
@@ -257,6 +265,9 @@ export const EditorRenderBox = {
                   {line.button && <button className={line.buttonStyle}>{line.button}</button>}
                   <EditToolBar textRef={textRef} position={selectedTextPosition} />
                 </React.Fragment>
+
+                // ckeditor 사용
+                // <TextEditor key={i} line={line} index={i} handleUpdateText={handleUpdateText} block_id={blockId} isLayout={isLayout} />
               ))}
             </div>
           </div>
