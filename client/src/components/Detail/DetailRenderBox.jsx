@@ -1,12 +1,13 @@
 import React from 'react';
-
 import ApplyTable from 'components/Editor/ApplyTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
+// import 'styles/Detail/Detail.css';
 import 'styles/Detail/Detail.css';
 
 export const DetailRenderBox = {
-  image: ({content, block_id, blockStyle}) => {
+  image: ({ content, block_id, blockStyle }) => {
+    console.log('content', content);
     let backgroundColor = 'revert';
     let restOfStyles = {
       maxWidth: '1240px',
@@ -18,32 +19,37 @@ export const DetailRenderBox = {
         maxWidth: blockStyle.style.maxWidth,
         paddingTop: blockStyle.style.paddingTop,
         paddingBottom: blockStyle.style.paddingBottom,
-      }
+      };
       backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
-    
+
     return (
-      <div key={block_id} className='normal_wrap' style={{backgroundColor: backgroundColor}}>
+      <div key={block_id} className='normal_wrap' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap' style={restOfStyles}>
           <div className='module_container' style={content?.layout}>
             {[...Array(content?.images.length)].map((_, i) => {
-              return(<div className='module_item' key={i} style={content?.style}>
-                <div className='module_imageBox' style={{cursor:'pointer'}}>
-                  <img src={`${content?.images[i].src}`} alt='' onClick={() => {
-                    if (content?.images[i].href) {
-                      window.location.href = content?.images[i].href;
-                    }
-                  }} />
+              return (
+                <div className='module_item' key={i} style={content?.style}>
+                  <div className='module_imageBox' style={{ cursor: 'pointer' }}>
+                    <img
+                      src={`${content?.images[i].src}`}
+                      alt=''
+                      onClick={() => {
+                        if (content?.images[i].href) {
+                          window.location.href = content?.images[i].href;
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>)
-            }
-            )}
+              );
+            })}
           </div>
         </div>
       </div>
     );
   },
-  line: ({box, block_id, blockStyle}) => {
+  line: ({ box, block_id, blockStyle }) => {
     let backgroundColor = 'revert';
     let restOfStyles = {
       maxWidth: '1240px',
@@ -55,12 +61,12 @@ export const DetailRenderBox = {
         maxWidth: blockStyle.style.maxWidth,
         paddingTop: blockStyle.style.paddingTop,
         paddingBottom: blockStyle.style.paddingBottom,
-      }
+      };
       backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
     const isDotted = box?.style === 'dotted';
     return (
-      <div key={block_id} className='normal_wrap' style={{backgroundColor: backgroundColor}}>
+      <div key={block_id} className='normal_wrap' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap' style={restOfStyles}>
           <div className='module_container_line_detail'>
             <div
@@ -78,8 +84,7 @@ export const DetailRenderBox = {
       </div>
     );
   },
-  list: ({box, block_id, blockStyle}) => {
-    console.log('box', box);
+  list: ({ content, block_id, blockStyle }) => {
     let backgroundColor = 'revert';
     let restOfStyles = {
       maxWidth: '1240px',
@@ -91,23 +96,27 @@ export const DetailRenderBox = {
         maxWidth: blockStyle.style.maxWidth,
         paddingTop: blockStyle.style.paddingTop,
         paddingBottom: blockStyle.style.paddingBottom,
-      }
+      };
       backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
     return (
-      <div key={block_id} className='normal_wrap' style={{backgroundColor: backgroundColor}}>
+      <div key={block_id} className='normal_wrap' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap font-style' style={restOfStyles}>
           <div className='module_container_list'>
             <div className='module_list_item'>
-              <div className={`module_${box?.shape}_detail`} style={{cursor:'pointer'}}>
-                <img src={`${box?.images[0].src}`} alt='' onClick={() => {
-                    if (box?.images[0].href) {
-                      window.location.href = box?.images[0].href;
+              <div className={`module_${content?.shape}_detail`} style={{ cursor: 'pointer' }}>
+                <img
+                  src={`${content?.images[0].src}`}
+                  alt=''
+                  onClick={() => {
+                    if (content?.images[0].href) {
+                      window.location.href = content?.images[0].href;
                     }
-                  }}/>
+                  }}
+                />
               </div>
-              {box?.lines &&
-                box?.lines.map((line, lineIndex) => (
+              {content?.lines &&
+                content?.lines.map((line, lineIndex) => (
                   <div
                     key={lineIndex}
                     style={{ margin: line.margin, fontFamily: line.fontFamily || 'inherit', fontSize: line.fontSize, fontWeight: line.fontWeight, color: line.color }}
@@ -121,9 +130,9 @@ export const DetailRenderBox = {
       </div>
     );
   },
-  text: ({box, block_id, blockStyle, handleUpdateText}) => {
+  text: ({ content, block_id, blockStyle, handleUpdateText }) => {
     let blockId, isLayout;
-    if (block_id.includes('layout')) {
+    if (block_id?.includes('layout')) {
       [blockId, isLayout] = block_id.split('/');
     } else {
       blockId = block_id;
@@ -141,15 +150,15 @@ export const DetailRenderBox = {
         maxWidth: blockStyle.style.maxWidth,
         paddingTop: blockStyle.style.paddingTop,
         paddingBottom: blockStyle.style.paddingBottom,
-      }
+      };
       backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
     return (
-      <div key={blockId} className='normal_wrap' style={{backgroundColor: backgroundColor}}>
+      <div key={blockId} className='normal_wrap' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap' style={restOfStyles}>
-          <div className='module_container' style={{ textAlign: `${box?.alignments}` }}>
+          <div className='module_container' style={{ textAlign: `${content?.alignments}` }}>
             <div className='module_text_item'>
-              {box?.lines.map((line, i) => (
+              {content?.lines.map((line, i) => (
                 <React.Fragment key={i}>
                   <div
                     key={i}
@@ -167,7 +176,8 @@ export const DetailRenderBox = {
     );
   },
   table: null,
-  layout: ({content, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId}) => {
+  layout: ({ content, block_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId }) => {
+    console.log(content, 'layout');
     let backgroundColor = 'revert';
     let restOfStyles = {
       maxWidth: '1240px',
@@ -179,12 +189,12 @@ export const DetailRenderBox = {
         maxWidth: blockStyle.style.maxWidth,
         paddingTop: blockStyle.style.paddingTop,
         paddingBottom: blockStyle.style.paddingBottom,
-      }
+      };
       backgroundColor = blockStyle.style.backgroundColor || backgroundColor;
     }
     const parsed_layout_design = layout_design ? JSON.parse(layout_design) : null;
     return (
-      <div key={block_id} className='normal_wrap' style={{backgroundColor: backgroundColor}}>
+      <div key={block_id} className='normal_wrap' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap' style={restOfStyles}>
           <div className='module_container'>
             <div className='module_layout_item' style={content?.style}>
@@ -255,15 +265,15 @@ export const DetailRenderBox = {
                           >
                             {layout_child ? (
                               layout_child_design_type === 'image' ? (
-                                DetailRenderBox.image({child_boxes, child_index})
+                                DetailRenderBox.image({ child_boxes, child_index })
                               ) : layout_child_design_type === 'text' ? (
-                                DetailRenderBox.text({child_boxes, child_index, handleUpdateText})
+                                DetailRenderBox.text({ child_boxes, child_index, handleUpdateText })
                               ) : layout_child_design_type === 'list' ? (
-                                DetailRenderBox.list({child_boxes, child_index, handleUpdateText})
+                                DetailRenderBox.list({ child_boxes, child_index, handleUpdateText })
                               ) : layout_child_design_type === 'table' ? (
                                 <ApplyTable design_id={tableDesignId} />
                               ) : layout_child_design_type === 'line' ? (
-                                DetailRenderBox.line({child_boxes, child_index})
+                                DetailRenderBox.line({ child_boxes, child_index })
                               ) : null
                             ) : (
                               <ClickDiv />
@@ -273,15 +283,15 @@ export const DetailRenderBox = {
                       })
                     ) : layout ? (
                       layout_design_type === 'image' ? (
-                        DetailRenderBox.image({boxes, index})
+                        DetailRenderBox.image({ content: boxes, block_id: index })
                       ) : layout_design_type === 'text' ? (
-                        DetailRenderBox.text({boxes, index, handleUpdateText})
+                        DetailRenderBox.text({ content: boxes, block_id: index, handleUpdateText })
                       ) : layout_design_type === 'list' ? (
-                        DetailRenderBox.list({boxes, index, handleUpdateText})
+                        DetailRenderBox.list({ content: boxes, block_id: index, handleUpdateText })
                       ) : layout_design_type === 'table' ? (
                         <ApplyTable design_id={tableDesignId} />
                       ) : layout_design_type === 'line' ? (
-                        DetailRenderBox.line({boxes, index})
+                        DetailRenderBox.line({ boxes, index })
                       ) : null
                     ) : (
                       <ClickDiv />

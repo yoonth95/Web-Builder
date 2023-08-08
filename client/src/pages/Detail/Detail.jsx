@@ -6,6 +6,7 @@ import { GetBlocksAPI } from 'api/Editor';
 import designType from 'data/designType';
 import { DetailRenderBox } from 'components/Detail/DetailRenderBox';
 import ApplyTable from 'components/Editor/ApplyTable';
+import 'styles/Detail/Detail.css';
 
 const Detail = ({ isLoading, setIsLoading, setError }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -38,8 +39,6 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
     fetchData();
   }, [filterData]);
 
-  console.log(data, 'data')
-
   const renderBox = (block) => {
     const { design_type, content, block_id, design_id, blockStyle, handleUpdateText, layout_design, clickHandler, setIsLayoutDesign, setLayoutId } = block;
 
@@ -53,7 +52,7 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
         clickHandler: clickHandler,
         setIsLayoutDesign: setIsLayoutDesign,
         setLayoutId: setLayoutId,
-      }
+      };
 
       return DetailRenderBox[design_type](arg);
     } else {
@@ -61,16 +60,18 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
 
       const filteredBoxes = typeItem && typeItem.boxes?.filter((box) => box.id === design_id);
 
-      return filteredBoxes?.map((box) => DetailRenderBox[design_type]({
-        box: box,
-        block_id: block_id,
-        blockStyle: JSON.parse(block.block_style),
-        handleUpdateText: handleUpdateText,
-        layout_design: layout_design,
-        clickHandler: clickHandler,
-        setIsLayoutDesign: setIsLayoutDesign,
-        setLayoutId: setLayoutId,
-      }));
+      return filteredBoxes?.map((box) =>
+        DetailRenderBox[design_type]({
+          box: box,
+          block_id: block_id,
+          blockStyle: JSON.parse(block.block_style),
+          handleUpdateText: handleUpdateText,
+          layout_design: layout_design,
+          clickHandler: clickHandler,
+          setIsLayoutDesign: setIsLayoutDesign,
+          setLayoutId: setLayoutId,
+        }),
+      );
     }
   };
 
@@ -82,7 +83,7 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
         .filter((block) => block.design_type !== 'default') // design_type이 default가 아닌 것만 필터링
         .map((block) => {
           let layout_design = block.layout_design;
-          if (typeof block.layout_design === 'string') { 
+          if (typeof block.layout_design === 'string') {
             try {
               layout_design = JSON.parse(block.layout_design); // 디자인 유형이 layout_design인경우 design style을 파싱
             } catch (error) {
@@ -107,12 +108,12 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
           if (layout_design && elements && layout_design.length === elementsLength) {
             shouldRender = true;
 
-            const elementsLayoutIds = elements.flatMap(element => {
+            const elementsLayoutIds = elements.flatMap((element) => {
               if (element.layout_id) {
                 return [element.layout_id];
               }
               if (element.children) {
-                return element.children.map(child => child.layout_id);
+                return element.children.map((child) => child.layout_id);
               }
               return [];
             });
@@ -140,14 +141,14 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
                 maxWidth: block_style.style.maxWidth,
                 paddingTop: block_style.style.paddingTop,
                 paddingBottom: block_style.style.paddingBottom,
-              }
+              };
               backgroundColor = block_style.style.backgroundColor || backgroundColor;
             }
             switch (type) {
               case 'table':
                 return (
                   <div className='module_block'>
-                    <div className='normal_wrap' style={{backgroundColor: backgroundColor}}>
+                    <div className='normal_wrap' style={{ backgroundColor: backgroundColor }}>
                       <div className='module_wrap' style={restOfStyles}>
                         <div className='module_container'>
                           <ApplyTable design_id={block.design_id} />
@@ -168,8 +169,7 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
               {renderBlockByType(block.design_type, block, shouldRender)}
             </div>
           );
-        })
-      }
+        })}
     </div>
   );
 };
