@@ -100,11 +100,11 @@ export const useEditorActions = () => {
       if (block.block_id === block_id) {
         const existingRows = block.content?.rows || [];
         const updatedRows = [...existingRows];
-  
-        const updatedRow = { ...updatedRows[row] }; 
+
+        const updatedRow = { ...updatedRows[row] };
         updatedRow[col] = content;
         updatedRows[row] = updatedRow;
-  
+
         return {
           ...block,
           content: {
@@ -116,9 +116,9 @@ export const useEditorActions = () => {
       return block;
     });
   };
-  
-  
-  
+
+
+
   // 블록 추가
   const insertBlockAction = async (page_idx, order, dir, setIsLoading, setError) => {
     const block_id = `${page_idx}_${new Date().getTime()}_${Math.floor(Math.random() * 899999) + 100000}`;
@@ -151,11 +151,11 @@ export const useEditorActions = () => {
         return block;
       });
 
-      // for (const updateBlock of updatedBlocks) {
-      //   if (blocks.find(block => block.block_id === updateBlock.block_id).block_order !== updateBlock.block_order) {
-      //     await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
-      //   }
-      // }
+      for (const updateBlock of updatedBlocks) {
+        if (blocks.find(block => block.block_id === updateBlock.block_id).block_order !== updateBlock.block_order) {
+          await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
+        }
+      }
 
       await InsertBlockAPI(newBlock);
 

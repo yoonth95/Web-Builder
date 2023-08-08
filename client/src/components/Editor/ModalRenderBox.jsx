@@ -14,8 +14,8 @@ export const ModalRenderBox = {
             return (
               <div key={i} style={{ borderRadius: shape }} className='imageBox'>
                 <FontAwesomeIcon icon={faImage} />
-              </div>          
-            )
+              </div>
+            );
           })}
         </div>
       </div>
@@ -91,13 +91,22 @@ export const ModalRenderBox = {
   table: null,
   layout: (box, index, designSelectId, selectedId) => {
     const isSelected = selectedId === box.id;
+
+    const renderElement = (element) => {
+      if (element.children) {
+        return (
+          <div key={element.layout_id} style={element.style}>
+            {element.children.map((child) => renderElement(child))}
+          </div>
+        );
+      } else {
+        return <div key={element.layout_id} className='layoutBox' style={element.style}></div>;
+      }
+    };
+
     return (
       <div key={index} className='typeBox' style={{ ...box.style, gap: '10px', border: isSelected ? '2px solid #ee7d00' : '' }} onClick={() => designSelectId(box.id)}>
-        {box.elements.map((element, i) => (
-          <div key={i} className={element.children ? '' : 'layoutBox'} style={element.style}>
-            {element.children ? element.children.map((child, j) => <div key={j} className='layoutBox' style={child.style}></div>) : null}
-          </div>
-        ))}
+        {box.elements.map((element) => renderElement(element))}
       </div>
     );
   },

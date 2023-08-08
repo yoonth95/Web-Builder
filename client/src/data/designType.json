@@ -440,7 +440,8 @@
         "style": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between"
+          "justifyContent": "space-between",
+          "alignItems": "stretch"
         },
         "elements": [
           {
@@ -465,7 +466,8 @@
         "style": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between"
+          "justifyContent": "space-between",
+          "alignItems": "stretch"
         },
         "elements": [
           {
@@ -490,7 +492,8 @@
         "style": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between"
+          "justifyContent": "space-between",
+          "alignItems": "stretch"
         },
         "elements": [
           {
@@ -522,7 +525,8 @@
         "style": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between"
+          "justifyContent": "space-between",
+          "alignItems": "stretch"
         },
         "elements": [
           {
@@ -538,6 +542,7 @@
               "display": "flex",
               "flexDirection": "column",
               "justifyContent": "space-between",
+              "alignItems": "stretch",
               "gap": "10px",
               "width": "100%"
             },
@@ -564,7 +569,8 @@
         "style": {
           "display": "flex",
           "flexDirection": "row",
-          "justifyContent": "space-between"
+          "justifyContent": "space-between",
+          "alignItems": "stretch"
         },
         "elements": [
           {
@@ -620,6 +626,7 @@
               "display": "flex",
               "flexDirection": "row",
               "justifyContent": "space-between",
+              "alignItems": "stretch",
               "gap": "10px"
             },
             "children": [
@@ -689,6 +696,99 @@
           "width": "100%"
         },
         "elements": [{ "layout_id": 1 }, { "layout_id": 2 }, { "layout_id": 3 }, { "layout_id": 4 }]
+      },
+      {
+        "id": "9",
+        "layout": "0.3 : 1.5",
+        "style": {
+          "display": "flex",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "alignItems": "stretch"
+        },
+        "elements": [
+          {
+            "layout_id": 1,
+            "style": {
+              "flex": 0.3,
+              "width": "100%"
+            }
+          },
+          {
+            "style": {
+              "flex": 1.5,
+              "width": "100%",
+              "display": "flex",
+              "flexDirection": "column",
+              "justifyContent": "space-between",
+              "gap": "10px"
+            },
+            "children": [
+              {
+                "style": {
+                  "flex": 1,
+                  "width": "100%",
+                  "display": "flex",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "stretch",
+                  "gap": "10px"
+                },
+                "children": [
+                  {
+                    "layout_id": 2,
+                    "style": {
+                      "flex": 1
+                    }
+                  },
+                  {
+                    "layout_id": 3,
+                    "style": {
+                      "flex": 1
+                    }
+                  },
+                  {
+                    "layout_id": 4,
+                    "style": {
+                      "flex": 1
+                    }
+                  }
+                ]
+              },
+              {
+                "style": {
+                  "flex": 1,
+                  "width": "100%",
+                  "display": "flex",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "alignItems": "stretch",
+                  "gap": "10px"
+                },
+                "children": [
+                  {
+                    "layout_id": 5,
+                    "style": {
+                      "flex": 1
+                    }
+                  },
+                  {
+                    "layout_id": 6,
+                    "style": {
+                      "flex": 1
+                    }
+                  },
+                  {
+                    "layout_id": 7,
+                    "style": {
+                      "flex": 1
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   }
