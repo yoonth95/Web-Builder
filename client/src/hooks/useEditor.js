@@ -21,9 +21,10 @@ export const useEditorActions = () => {
   const dispatch = useDispatch();
 
   // 에디터 블록 조회
-  const getBlocksAction = async (page_idx, setIsLoading, setError, setBlockStyle, setHistoryList) => {
+  const getBlocksAction = async (page_idx, setIsLoading, setError, setBlockStyle, setHistoryList, setIsWaiting) => {
     try {
       setIsLoading(true);
+      setIsWaiting(true);
       const data = await GetBlocksAPI(page_idx);
 
       if (data === null) {
@@ -54,6 +55,7 @@ export const useEditorActions = () => {
           dispatch(updateList([newBlock]))
           await InsertBlockAPI(newBlock);
           setIsLoading(false);
+          setIsWaiting(false);
         } else {
           let blockList = [];
           if (blocks && blocks.length > 0) {
@@ -86,12 +88,14 @@ export const useEditorActions = () => {
           setHistoryList(dupSaveData);
           dispatch(updateList(blockList));
           setIsLoading(false);
+          setIsWaiting(false);
         }
       }
     } catch (err) {
       console.error(err.message);
       setError(err);
       setIsLoading(false);
+      setIsWaiting(false);
     }
   }
   // 테이블 셀별 수정.
@@ -120,7 +124,7 @@ export const useEditorActions = () => {
 
 
   // 블록 추가
-  const insertBlockAction = async (page_idx, order, dir, setIsLoading, setError) => {
+  const insertBlockAction = async (page_idx, order, dir, setIsLoading, setError, setIsWaiting) => {
     const block_id = `${page_idx}_${new Date().getTime()}_${Math.floor(Math.random() * 899999) + 100000}`;
     const block_style = {
       style: {
@@ -144,6 +148,7 @@ export const useEditorActions = () => {
 
     try {
       setIsLoading(true);
+      setIsWaiting(true);
       const updatedBlocks = blocks.map(block => {
         if (block.block_order >= newBlock.block_order) {
           return { ...block, block_order: block.block_order + 1 }
@@ -170,6 +175,7 @@ export const useEditorActions = () => {
       setError(err);
     } finally {
       setIsLoading(false);
+      setIsWaiting(false);
     }
   };
 
@@ -248,7 +254,7 @@ export const useEditorActions = () => {
 
 
   // 블록 삭제
-  const deleteBlockAction = async (block_id, setIsLoading, setError) => {
+  const deleteBlockAction = async (block_id, setIsLoading, setError, setIsWaiting) => {
     const blockToDelete = blocks.find(block => block.block_id === block_id);
     if (!blockToDelete) {
       throw new Error('Block not found');
@@ -256,6 +262,7 @@ export const useEditorActions = () => {
 
     try {
       setIsLoading(true);
+      setIsWaiting(true);
 
       let error = false;
       const result = await DeleteBlockAPI(block_id);
@@ -270,14 +277,14 @@ export const useEditorActions = () => {
         return block;
       });
 
-      // for (const updateBlock of updatedBlocks) {
-      //   if (blocks.find(block => block.block_id === updateBlock.block_id).block_order !== updateBlock.block_order) {
-      //     const result2 = await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
-      //     if (!result2) {
-      //       error = true;
-      //     }
-      //   }
-      // }
+      for (const updateBlock of updatedBlocks) {
+        if (blocks.find(block => block.block_id === updateBlock.block_id).block_order !== updateBlock.block_order) {
+          const result2 = await UpdateBlockOrderAPI(updateBlock.block_id, updateBlock.block_order);
+          if (!result2) {
+            error = true;
+          }
+        }
+      }
 
       if (!error) dispatch(updateList(updatedBlocks.filter(block => block.block_id !== block_id)));
 
@@ -286,13 +293,15 @@ export const useEditorActions = () => {
       setError(err);
     } finally {
       setIsLoading(false);
+      setIsWaiting(false);
     }
   };
 
   // 블록 순서 수정
-  const updateBlockOrderAction = async (block_id, dir, setIsLoading, setError) => {
+  const updateBlockOrderAction = async (block_id, dir, setIsLoading, setError, setIsWaiting) => {
     try {
       setIsLoading(true);
+      setIsWaiting(true);
       const blockToMoveIndex = blocks.findIndex(block => block.block_id === block_id);
       if (blockToMoveIndex === -1) {
         throw new Error('Block not found');
@@ -310,10 +319,10 @@ export const useEditorActions = () => {
         blockToMove.block_order -= 1;
 
         // 서버에 블록 순서 업데이트
-        // await Promise.allSettled([
-        //   UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
-        //   UpdateBlockOrderAPI(blockAbove.block_id, blockAbove.block_order)
-        // ]);
+        await Promise.allSettled([
+          UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
+          UpdateBlockOrderAPI(blockAbove.block_id, blockAbove.block_order)
+        ]);
 
         newBlocks[blockToMoveIndex] = blockToMove;
         newBlocks[blockAboveIndex] = blockAbove;
@@ -328,10 +337,10 @@ export const useEditorActions = () => {
         blockToMove.block_order += 1;
 
         // 서버에 블록 순서 업데이트
-        // await Promise.all([
-        //   UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
-        //   UpdateBlockOrderAPI(blockBelow.block_id, blockBelow.block_order)
-        // ]);
+        await Promise.all([
+          UpdateBlockOrderAPI(blockToMove.block_id, blockToMove.block_order),
+          UpdateBlockOrderAPI(blockBelow.block_id, blockBelow.block_order)
+        ]);
 
         // 새로운 상태를 Redux store에 반영
         newBlocks[blockToMoveIndex] = blockToMove;
@@ -346,6 +355,7 @@ export const useEditorActions = () => {
       setError(err);
     } finally {
       setIsLoading(false);
+      setIsWaiting(false);
     }
   };
 
