@@ -5,7 +5,7 @@ import { updateList } from 'redux/editorSlice';
 
 import PropTypes from 'prop-types';
 
-//redux 
+//redux
 import { showAlert } from 'redux/AlertSlice';
 
 // 컴포넌트 및 데이터
@@ -17,7 +17,6 @@ import SideBar from 'components/Editor/SideBar';
 import LinkModal from 'components/Modal/LinkModal';
 import { useEditorActions } from 'hooks/useEditor';
 import { useImageActions } from 'hooks/useImage';
-
 
 // icon 및 css
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -39,13 +38,26 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const [sideBarOpen, setSideBarOpen] = useState({ open: false, block_id: '' });
   const [isModalOpen, setIsModalOpen] = useState({ open: false, block_id: '' });
   const [isOpen, setIsOpen] = useState(false);
-  const blocks = useSelector(state => state.editor.blockList);
+  const blocks = useSelector((state) => state.editor.blockList);
 
+  const textRef = useRef(null);
+  const [selectedTextPosition, setSelectedTextPosition] = useState(null);
+  const handleTextSelection = () => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setSelectedTextPosition({
+        x: (rect.left + rect.right) / 2,
+        y: rect.top,
+      });
+    }
+  };
   const [LinkDic, setLinkDic] = useState({
-    layout_id: '',  
-    block_id:'',
-    idx:'',
-    isLayout:'',
+    layout_id: '',
+    block_id: '',
+    idx: '',
+    isLayout: '',
   });
 
   // 블록 마우스 오버 시 툴 바 버튼 보이게
@@ -62,7 +74,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       paddingTop: '0px',
       paddingBottom: '0px',
       backgroundColor: '#ffffff',
-    }
+    };
 
     const arg = {
       block_id: id, // 블록 id
@@ -77,6 +89,9 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       attatchImg: attatchImg, // 이미지 첨부
       attatchLink: attatchLink, // 링크 첨부
       deleteImage: deleteImage, // 이미지 삭제
+      textRef: textRef,
+      handleTextSelection: handleTextSelection,
+      selectedTextPosition: selectedTextPosition,
     };
 
     return EditorRenderBox[design_type](arg);
@@ -84,6 +99,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
 
   // 이미지 첨부
   const attatchImg = ({ tag, block_id, idx, isLayout }) => {
+    console.log(isLayout);
     if (!tag.target.files[0] || !tag.target.files[0].type.includes('image')) {
       dispatch(showAlert('이미지 파일만 첨부해주세요.'));
       return;
@@ -94,7 +110,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   // 링크 첨부
   const attatchLink = ({ block_id, idx, isLayout }) => {
     setIsOpen(!isOpen);
-    setLinkDic({block_id: block_id, idx: idx, isLayout: isLayout});
+    setLinkDic({ block_id: block_id, idx: idx, isLayout: isLayout });
     console.log(LinkDic);
   };
 
@@ -105,7 +121,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
 
   // 툴 바 버튼
   const correctionBtn = [
-    { icon: faEdit, clickFunc: () => setSideBarOpen({ open: true, block_id: block_id }) } ,
+    { icon: faEdit, clickFunc: () => setSideBarOpen({ open: true, block_id: block_id }) },
     { icon: faArrowRotateRight, clickFunc: () => setIsModalOpen({ open: true, block_id: block_id }) },
     { icon: faArrowUp, clickFunc: (id) => handleChangeBlockOrder(id, 'up') },
     { icon: faArrowDown, clickFunc: (id) => handleChangeBlockOrder(id, 'down') },
@@ -113,18 +129,18 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   ];
 
   const updateColumnNamesInBlock = (blocks, block_id, col, newName) => {
-    return blocks.map(block => {
+    return blocks.map((block) => {
       if (block.block_id === block_id) {
         const updatedContent = {
           ...block.content,
           cols: {
             ...block.content.cols,
-            [col]: newName
-          }
+            [col]: newName,
+          },
         };
         return {
           ...block,
-          content: updatedContent
+          content: updatedContent,
         };
       }
       return block;
@@ -203,9 +219,11 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
             </div>
             {design_type === 'table' ? (
               <div className='module_block'>
-                <div className='normal_module' style={{backgroundColor: blockStyle.style.backgroundColor}} >
-                  <div className={`module_wrap ${checkBtn ? 'widthSet' : ''}`}
-                      style={{ paddingTop: blockStyle.style.paddingTop, paddingBottom: blockStyle.style.paddingBottom, maxWidth: blockStyle.style.maxWidth }}>
+                <div className='normal_module' style={{ backgroundColor: blockStyle.style.backgroundColor }}>
+                  <div
+                    className={`module_wrap ${checkBtn ? 'widthSet' : ''}`}
+                    style={{ paddingTop: blockStyle.style.paddingTop, paddingBottom: blockStyle.style.paddingBottom, maxWidth: blockStyle.style.maxWidth }}
+                  >
                     <div className='module_container'>
                       <ApplyTable design_id={design_id} block_id={block_id} handleCellChange={handleCellChange} handleColumnNameChange={handleColumnNameChange} />
                     </div>
@@ -230,7 +248,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       <div className={`block_container_side ${sideBarOpen.open ? 'open' : 'close'}`}>
         <SideBar sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} />
       </div>
-      {isOpen && <LinkModal isOpen={isOpen} setIsOpen={setIsOpen} block_id={block_id} LinkDic={LinkDic}/>}
+      {isOpen && <LinkModal isOpen={isOpen} setIsOpen={setIsOpen} block_id={block_id} LinkDic={LinkDic} />}
     </>
   );
 }
@@ -243,9 +261,7 @@ Block.propTypes = {
   design_id: PropTypes.string.isRequired,
   block_order: PropTypes.number.isRequired,
   layout_design: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
-  // block_content: PropTypes.oneOfType([PropTypes.object, PropTypes.oneOf([null])]),
   addBlock: PropTypes.func.isRequired,
   deleteBlock: PropTypes.func.isRequired,
   handleChangeBlockOrder: PropTypes.func.isRequired,
-  // blockStyle: PropTypes.object.isRequired,
 };
