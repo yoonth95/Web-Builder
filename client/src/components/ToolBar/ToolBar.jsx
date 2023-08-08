@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBold, faItalic, faUnderline, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPalette } from '@fortawesome/free-solid-svg-icons';
 
-const ToolBar = ({ toolbarPosition, handleStyleChange }) => {
+const ToolBar = forwardRef(({ toolbarPosition, handleStyleChange }, ref) => {
+//   function makeTextBold() {
+//     const selection = window.getSelection();
+//     if (!selection.rangeCount) return;
+
+//     const range = selection.getRangeAt(0);
+//     const span = document.createElement("span");
+//     span.style.fontWeight = "bold";
+//     range.surroundContents(span);
+//     selection.removeAllRanges();
+// }
+
   return (
-    <div className='options' style={{ left: `${toolbarPosition.x}px`, top: `${toolbarPosition.y}px` }}>
+    <div className='options' ref={ref} style={{ left: `${toolbarPosition.x}px`, top: `${toolbarPosition.y}px` }}>
       <button className='option_btn' onClick={() => handleStyleChange('bold')}>
         <FontAwesomeIcon icon={faBold} />
       </button>
@@ -28,6 +39,6 @@ const ToolBar = ({ toolbarPosition, handleStyleChange }) => {
       </button>
     </div>
   );
-};
+});
 
 export default ToolBar;
