@@ -242,26 +242,26 @@ export const EditorRenderBox = {
     return (
       <div key={block_id} className='normal_module' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap' style={restOfStyles}>
-            <div className={`module_container ${screen}`} style={{ textAlign: `${design?.alignments}` }}>
+            <div className={`module_container ${screen}`} style={{ textAlign: design?.alignments }}>
                 <div className='module_text_item'>
                 {design?.lines.map((line, i) => (
                     <React.Fragment key={i}>
                         {screenSize === 'desktop' ? (
-                            <TextEditor 
-                                line={line} 
-                                index={i} 
-                                handleUpdateText={handleUpdateText} 
-                                block_id={blockId} 
-                                isLayout={isLayout} 
-                            />
+                          <TextEditor 
+                            line={line} 
+                            index={i} 
+                            handleUpdateText={handleUpdateText} 
+                            block_id={blockId} 
+                            isLayout={isLayout} 
+                          />
                         ) : (
-                            <div
-                                className='module_text_line textWidth'
-                                contentEditable={false}
-                                suppressContentEditableWarning
-                                style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
-                                dangerouslySetInnerHTML={{ __html: line.text }}
-                            ></div>
+                          <div
+                            className='module_text_line textWidth'
+                            contentEditable={false}
+                            suppressContentEditableWarning
+                            style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
+                            dangerouslySetInnerHTML={{ __html: line.text }}
+                          ></div>
                         )}
                         {line.button && <button className={line.buttonStyle}>{line.button}</button>}
                     </React.Fragment>
@@ -353,7 +353,7 @@ const renderContent = (element, block_id, parsed_layout_design, clickHandler, se
           layout_design_type === 'image' ? (
             EditorRenderBox.image({ design: boxes, block_id: index, attatchImg, attatchLink, deleteImage, screenSize })
           ) : layout_design_type === 'text' ? (
-            EditorRenderBox.text({ design: boxes, block_id: index, handleUpdateText: handleUpdateText })
+            EditorRenderBox.text({ design: boxes, block_id: index, handleUpdateText: handleUpdateText, screenSize })
           ) : layout_design_type === 'list' ? (
             EditorRenderBox.list({ design: boxes, block_id: index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage, screenSize })
           ) : layout_design_type === 'table' ? (
