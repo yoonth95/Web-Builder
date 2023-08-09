@@ -13,7 +13,8 @@ import {
   DeleteBlockAPI,
   UpdateBlockLayoutAPI,
   SaveBlockAPI,
-  CopyDeisgnAPI
+  CopyDeisgnAPI,
+  ChangeMenuSaveTimeAPI
 } from '../api/Editor';
 
 export const useEditorActions = () => {
@@ -21,7 +22,7 @@ export const useEditorActions = () => {
   const dispatch = useDispatch();
 
   // 에디터 블록 조회
-  const getBlocksAction = async (page_idx, setIsLoading, setError, setBlockStyle, setHistoryList, setIsWaiting) => {
+  const getBlocksAction = async (page_idx, setIsLoading, setError, setBlockStyle, setHistoryList, setIsWaiting, setOriginalData) => {
     try {
       setIsLoading(true);
       setIsWaiting(true);
@@ -30,7 +31,7 @@ export const useEditorActions = () => {
       if (data === null) {
         Navigate('/notfound');
       } else {
-        if (data.length === 0) {
+        if (data.result.length === 0) {
           const block_id = `${page_idx}_${new Date().getTime()}_${Math.floor(Math.random() * 899999) + 100000}`;
           const block_style = {
             style: {
@@ -62,8 +63,8 @@ export const useEditorActions = () => {
             blockList = [...blocks];
           }
           const saveData = [];
-          data.forEach(block => {
-            saveData.push(block.save_date);
+          data.result.forEach(block => {
+            if (block.save_data) saveData.push(block.save_date);
             if (!blockList.find(b => b.block_id === block.block_id)) {
               blockList.push(block);
 
@@ -84,9 +85,17 @@ export const useEditorActions = () => {
               }
             }
           });
-          const dupSaveData = [...new Set(saveData)]
-          setHistoryList(dupSaveData);
+          setOriginalData(blockList);
           dispatch(updateList(blockList));
+          
+          // save_time 중복 제거
+          const saveTime = data.save_time.map(item => {
+            return Object.values(item)[0];
+          });
+          const dupSaveData = [...new Set(saveTime)];
+          setHistoryList(dupSaveData);
+          
+          
           setIsLoading(false);
           setIsWaiting(false);
         }
@@ -414,7 +423,11 @@ export const useEditorActions = () => {
           content: content
         };
       });
-      const result = await SaveBlockAPI(page_idx, blockToBase64);
+      const offset = 1000 * 60 * 60 * 9
+      const koreaNow = new Date((new Date()).getTime() + offset)
+      const save_time = koreaNow.toISOString().replace("T", " ").split('.')[0];
+
+      const result = await SaveBlockAPI(page_idx, blockToBase64, save_time);
 
       return result;
     } catch (err) {
@@ -433,6 +446,19 @@ export const useEditorActions = () => {
     reset();
   }
 
+  // menu 테이블 save_time 변경
+  const changeMenuSaveTimeAction = async (page_idx, save_time, setError, setIsWaiting) => {
+    try {
+      setIsWaiting(true)
+      const changeData = await ChangeMenuSaveTimeAPI(page_idx, save_time);
+      dispatch(updateList(changeData));
+    } catch (err) {
+      setError(err);
+      console.error(err.message);
+    } finally {
+      setIsWaiting(false);
+    }
+  }
 
-  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction, handleUpdateText, designCopyAction, updateTableDataInBlock };
+  return { getBlocksAction, insertBlockAction, updateBlockDesignAction, deleteBlockAction, updateBlockOrderAction, updateBlockLayoutAction, saveBlockAction, handleUpdateText, designCopyAction, updateTableDataInBlock, changeMenuSaveTimeAction };
 };

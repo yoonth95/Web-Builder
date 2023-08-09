@@ -1,8 +1,8 @@
-export const SaveBlockAPI = async (page_idx, blocks, save_time) => {
+export const ChangeMenuSaveTimeAPI = async (page_idx, save_time) => {
   try {
-    const res = await fetch('/api/saveBlock', {
-      method: 'PUT',
-      body: JSON.stringify({page_idx, blocks, save_time}),
+    const res = await fetch('/api/changeMenuSaveTimeAPI', {
+      method: 'POST',
+      body: JSON.stringify({page_idx, save_time}),
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     });

@@ -45,15 +45,12 @@
   font-size: 13px;
 }
 
-.editor_backup .history_menu_list li button {
-  display: block;
-  padding: 5px 0 5px 7px;
-  line-height: 1;
-  color: #bcbcbc;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color 0.2s;
+.history-dropdown {
+  position: absolute;
+  top: 40px;
+  /* margin-top: 10px; */
+  display: flex;
+  flex-direction: column;
 }
 
 .editor_pages {

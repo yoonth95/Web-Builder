@@ -21,7 +21,8 @@ export const GetBlocksAPI = async (idx) => {
             return null; // 메뉴가 없는 경우
         }
 
-        const blocks = await fetchData(`/api/getBlocks/${idx}`);
+        const blocks = menu[0].save_time === null ? await fetchData(`/api/getBlocks/${idx}`) : await fetchData(`/api/getBlocksBackup/${idx}/${menu[0].save_time}`);
+
         return blocks; // 블록이 없는 경우 빈 배열이 반환됨
     } catch (err) {
         console.error(err);

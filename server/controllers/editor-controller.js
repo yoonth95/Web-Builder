@@ -36,6 +36,36 @@ exports.getBlocks = async (req, res) => {
     }
 };
 
+// 에디터 블록 백업 가져오기
+exports.getBlocksBackup = async (req, res) => {
+    const { idx, save_time } = req.params;
+
+    try {
+        const getBlocksBackupSaveTime = await editorDB.getBlocksBackupSaveTime(idx);
+        const getBlocks = await editorDB.getBlocksBackup(idx, save_time);
+        const result = getBlocks.map((block) => {
+            const content = block.content
+                ? JSON.parse(Buffer.from(Buffer.from(block.content).toString('utf-8'), 'base64').toString('utf-8'))
+                : null;
+
+            const layout_design = block.layout_design
+                ? Buffer.from(Buffer.from(block.layout_design).toString('utf-8'), 'base64').toString('utf-8')
+                : null;
+
+            return {
+                ...block,
+                layout_design,
+                content,
+            }
+        });
+
+        res.status(200).json({result: result, save_time: getBlocksBackupSaveTime});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json(err);
+    }
+};
+
 // 에디터 블록 추가
 exports.insertBlock = async (req, res) => {
     const data = req.body;
@@ -107,7 +137,7 @@ exports.updateBlockLayout = async (req, res) => {
 // 에디터 블록 저장
 exports.saveBlock = async (req, res) => {
     const data = req.body;
-    const { page_idx, blocks } = data;
+    const { page_idx, blocks, save_time } = data;
 
     // 에디터 블록 저장 시, 에디터 블록에 포함되지 않은 이미지 파일 전부 삭제
     // const imagesDirPath = path.join('static/images', String(page_idx));
@@ -131,7 +161,7 @@ exports.saveBlock = async (req, res) => {
     // });
     
     try {
-        const result = await editorDB.saveBlock(page_idx, blocks);
+        const result = await editorDB.saveBlock(page_idx, blocks, save_time);
         res.status(200).json(result);
     } catch (err) {
         console.error(err);
@@ -232,4 +262,40 @@ function copyFiles(sourceDir, targetDir) {
             console.log(`Copied file ${file} to ${sourceDir}`);
         }
     }
-  }
+}
+
+exports.changeMenuSaveTimeAPI = async (req, res) => {
+    const data = req.body;
+
+    try {
+        // 히스토리 값 가져오기
+        const getHistoryData = await editorDB.getBlocksBackup(data.page_idx, data.save_time);
+
+        // menus 테이블 save_time 값 변경
+        await editorDB.changeMenuSaveTimeAPI(data.page_idx, data.save_time);
+
+        // 기존 blocks 테이블 값 지우고 히스토리 값으로 블록 업데이트
+        await editorDB.updateBlock(data.page_idx, getHistoryData);
+
+        const result = getHistoryData.map((block) => {
+            const content = block.content
+            ? JSON.parse(Buffer.from(Buffer.from(block.content).toString('utf-8'), 'base64').toString('utf-8'))
+            : null;
+
+            const layout_design = block.layout_design
+            ? Buffer.from(Buffer.from(block.layout_design).toString('utf-8'), 'base64').toString('utf-8')
+            : null;
+
+            return {
+                ...block,
+                layout_design,
+                content,
+            }
+        });
+
+        res.status(200).json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json('디자인 선택 오류');
+    }
+}
