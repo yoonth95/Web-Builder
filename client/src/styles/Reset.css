@@ -164,9 +164,6 @@ html {
   margin: 0;
   padding: 0;
 }
-iframe {
-  display: none;
-}
 
 body::-webkit-scrollbar {
   display: none;

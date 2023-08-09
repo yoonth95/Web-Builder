@@ -25,32 +25,61 @@
   position: relative;
 }
 
-.history_menu_content {
+.editor_open {
   position: absolute;
-  left: 0;
+  top: 15px;
+  width: 60%;
+  height: 45px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  color: #fff;
+  background-color: #2b3038;
+  cursor: pointer;
+}
+
+/* .editor_backup .editor_open:hover{
+  background-color:#ee7d00 ;
+  color: #fff;
+} */
+
+.history-dropdown {
+  position: absolute;
+  left: 60px;
   top: 100px;
-  z-index: 1;
-  width: 100%;
-  overflow-x: hidden;
-  background: #2b3038;
-  visibility: hidden;
-  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  height: 360px;
+  background-color: #2b3038;
   transform: translateY(-40px);
   transition: all 0.2s;
-  height: calc(100vh - 70px);
+  opacity: 0;
+  visibility: hidden;
+  overflow-x: hidden;
+  z-index: 1;
+}
+.history-dropdown.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.history-dropdown button {
+  color: #ffffff;
+  padding: 5px 0;
+}
+
+.history-dropdown button:hover {
+  background-color: #43484d;
+}
+
+.history-dropdown::-webkit-scrollbar {
+  display: none;
 }
 
 .history_menu_list {
   padding: 10px 15px 15px;
   font-size: 13px;
-}
-
-.history-dropdown {
-  position: absolute;
-  top: 40px;
-  /* margin-top: 10px; */
-  display: flex;
-  flex-direction: column;
 }
 
 .editor_pages {

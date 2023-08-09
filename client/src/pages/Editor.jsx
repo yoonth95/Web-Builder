@@ -34,9 +34,9 @@ const Editor = ({ isLoading, setIsLoading }) => {
   const [showHistory, setShowHistory] = useState(false); // 히스토리 토글
   const [isWaiting, setIsWaiting] = useState(false); // 블록 추가, 삭제, 순서 변경 시 대기 상태
   const [originalData, setOriginalData] = useState([]); // db에서 가져온 원본 데이터
-  const [nowHistory, setNowHistory] = useState(''); // 현재 히스토리
 
   const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction, saveBlockAction, changeMenuSaveTimeAction } = useEditorActions();
+
 
   useEffect(() => {
     // 블록 조회
@@ -44,7 +44,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
       await getBlocksAction(Number(page_idx), setIsLoading, setError, setBlockStyle, setHistoryList, setIsWaiting, setOriginalData);
     };
     getBlocks();
-  }, [page_idx, nowHistory]);
+  }, [page_idx]);
 
   // 블록 추가
   const addBlock = async (order, dir) => {
@@ -151,8 +151,6 @@ const Editor = ({ isLoading, setIsLoading }) => {
     }));
   };
 
-  // if (isLoading) return <Spinner />;
-
   useEffect(() => {
     if (error) {
       dispatch(showAlert('에러', error));
@@ -165,16 +163,14 @@ const Editor = ({ isLoading, setIsLoading }) => {
       <div className='editor_wrap'>
         <div className='editor_pages_wrap'>
           <div className='editor_backup'>
-            <button onClick={() => setShowHistory(!showHistory)}>복원하기</button>
-            {showHistory && (
-              <div className='history-dropdown'>
-                {historyList.map((item, index) => (
-                  <button key={index} onClick={() => handleHistoryChange(item)}>
-                    {item}
-                  </button>
-                ))}
-              </div>
-            )}
+            <button className='editor_open' onClick={() => setShowHistory(!showHistory)}>복원하기</button>
+            <div className={`history-dropdown ${showHistory ? 'show' : ''}`}>
+              {historyList.map((item, index) => (
+                <button key={index} onClick={() => handleHistoryChange(item)}>
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
           
           <div className='editor_pages'>

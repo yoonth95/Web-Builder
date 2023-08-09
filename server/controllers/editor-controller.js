@@ -29,7 +29,7 @@ exports.getBlocks = async (req, res) => {
             }
         });
 
-        res.status(200).json(result);
+        res.status(200).json({result: result});
     } catch (err) {
         console.error(err);
         res.status(500).json(err);

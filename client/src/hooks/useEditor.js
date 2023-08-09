@@ -88,12 +88,14 @@ export const useEditorActions = () => {
           setOriginalData(blockList);
           dispatch(updateList(blockList));
           
-          // save_time 중복 제거
-          const saveTime = data.save_time.map(item => {
-            return Object.values(item)[0];
-          });
-          const dupSaveData = [...new Set(saveTime)];
-          setHistoryList(dupSaveData);
+          if (data.save_time) {
+            // save_time 중복 제거
+            const saveTime = data.save_time.map(item => {
+              return Object.values(item)[0];
+            });
+            const dupSaveData = [...new Set(saveTime)];
+            setHistoryList(dupSaveData);
+          }
           
           
           setIsLoading(false);
