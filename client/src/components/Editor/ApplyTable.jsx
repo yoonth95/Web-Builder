@@ -2,14 +2,16 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {useLocation} from "react-router-dom"
 import { useTable } from "react-table";
 import { useSelector } from 'react-redux';
-
+import TextEditor from 'components/Editor/TextEditor';
 
 const EditableCell = ({
   value: initialValue,
   row: { index },
   column: { id },
   updateMyData,
-  block_id
+  block_id,
+  handleUpdateText,
+  screenSize,
   }) => {
   const [value, setValue] = useState(initialValue);
   const {pathname} = useLocation();
@@ -20,7 +22,7 @@ const EditableCell = ({
     const block = blockList.find(block => block.block_id === block_id);
     return block?.content?.rows?.[index]?.[id] || initialValue; 
 });
-
+  const canEdit =  screenSize === 'desktop';
 
   const onChange = (e) => {
     if(authority){
@@ -33,9 +35,23 @@ const EditableCell = ({
   useEffect(() => {
     setValue(cellValueFromRedux);
   }, [cellValueFromRedux]);
-
+  function getFontSize(screenSize) {
+    if (screenSize === 'desktop') {
+      return '15px'; 
+    } else if (screenSize === 'tablet') {
+      return '13px';
+    } else {
+      return '5px'; 
+    }
+  }
   return (
-  <input value={value || ""} onChange={onChange} disabled={authority}  style={{textAlign:"center" , padding:"10px" , border:"none", width:'100%'}}/>
+    <input value={value || ""} onChange={canEdit ? onChange : undefined} disabled={authority}  style={{textAlign:"center" , padding:"10px" , border:"none", width:'100%' , fontSize:getFontSize(screenSize)}}/>
+    // <TextEditor 
+    //     line={{text: value}} 
+    //     handleUpdateText={handleUpdateText}
+    //     block_id={block_id} 
+    //     isLayout={!authority} 
+    // />
   );
 };
 
@@ -45,6 +61,8 @@ const EditableHeaderCell = ({
   handleColumnNameChange,
   block_id,
   authority,
+  handleUpdateText,
+  screenSize,
 }) => {
   const [currentName, setCurrentName] = useState(columnName);
 
@@ -53,7 +71,7 @@ const EditableHeaderCell = ({
     const block = blockList.find(block => block.block_id === block_id);
     return block?.content?.cols?.[columnIdx] || columnName;
   });
-
+  const canEdit =  screenSize === 'desktop';
   useEffect(() => {
     setCurrentName(headerValueFromRedux);
   }, [headerValueFromRedux]);
@@ -66,15 +84,30 @@ const EditableHeaderCell = ({
   const handleBlur = () => {
     handleColumnNameChange(block_id, `col${columnIdx + 1}`, currentName);
   };
-
+  function getFontSize(screenSize) {
+    if (screenSize === 'desktop') {
+      return '20px'; 
+    } else if (screenSize === 'tablet') {
+      return '15px';
+    } else {
+      return '10px'; 
+    }
+  }
   return (
     <input
       value={currentName}
-      onChange={handleChange}
-      onBlur={handleBlur}
+      onChange={canEdit ? handleChange : undefined}
+      onBlur={canEdit ? handleBlur : undefined}
       disabled={authority}
-      style={{ width: "100%" , border:"none", textAlign:"center", backgroundColor:"#EE7D00", color:"#f3f3f3", fontSize:'20px', fontWeight:'700'}}
+      style={{ width: "100%" , border:"none", textAlign:"center", backgroundColor:"#EE7D00", color:"#f3f3f3", fontSize:getFontSize(screenSize), fontWeight:'700'}}
     />
+    // <TextEditor 
+    // line={{text: currentName}} 
+    // handleUpdateText={handleUpdateText}
+    // block_id={block_id} 
+    // isLayout={!authority} 
+    // style={{ width: "100%" , border:"none", textAlign:"center", backgroundColor:"#EE7D00", color:"#f3f3f3", fontSize:'20px', fontWeight:'700'}}
+    // />
   );
 };
 const defaultColumn = {
@@ -82,7 +115,7 @@ const defaultColumn = {
 };
 
 const MyTable = ({ columns,data,updateMyData,columnNames,setColumnNames,editColumnName,setEditColumnName,newColumnName,
-  setNewColumnName,handleCellChange, block_id, handleColumnNameChange}) => {
+  setNewColumnName,handleCellChange, block_id, handleColumnNameChange,handleUpdateText, screenSize}) => {
   const { getTableProps,getTableBodyProps,headerGroups,rows,prepareRow,} = useTable({columns,data,defaultColumn,updateMyData});
   const {pathname} = useLocation();
   const authority = pathname.includes("pages") 
@@ -106,6 +139,8 @@ const MyTable = ({ columns,data,updateMyData,columnNames,setColumnNames,editColu
                     handleColumnNameChange={handleColumnNameChange}
                     block_id={block_id}
                     authority={authority}
+                    handleUpdateText={handleUpdateText}
+                    screenSize={screenSize}
                   />
                 </th>
               ))}
@@ -122,7 +157,7 @@ const MyTable = ({ columns,data,updateMyData,columnNames,setColumnNames,editColu
                   {...cell.getCellProps()}
                   style={{ padding: "0", margin: "0" }}
                 >
-                  {cell.render("Cell", { block_id: block_id })}
+                  {cell.render("Cell", { block_id: block_id , screenSize: screenSize })}
                 </td>
               ))}
             </tr>
@@ -148,7 +183,7 @@ const selectTableHeaders = (state, block_id, cols) => {
   return numberOfKeys ? Object.values(reduxColumnNames) : defaultColumnNames;
 };
 
-const ApplyTable = ({ design_id, handleCellChange, block_id, handleColumnNameChange }) => {
+const ApplyTable = ({ design_id, handleCellChange, block_id, handleColumnNameChange, handleUpdateText, screenSize}) => {
   const [designSize, setDesignSize] = useState(design_id.split(",").map(Number));
   const [rows, cols] = designSize;
 
@@ -253,6 +288,8 @@ useEffect(() => {
       handleCellChange={handleCellChange}
       block_id={block_id}
       handleColumnNameChange={handleColumnNameChange}
+      handleUpdateText={handleUpdateText}
+      screenSize={screenSize}
     />
   );
 };

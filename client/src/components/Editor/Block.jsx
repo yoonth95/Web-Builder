@@ -40,19 +40,6 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const [isOpen, setIsOpen] = useState(false);
   const blocks = useSelector((state) => state.editor.blockList);
 
-  const textRef = useRef(null);
-  const [selectedTextPosition, setSelectedTextPosition] = useState(null);
-  const handleTextSelection = () => {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      setSelectedTextPosition({
-        x: (rect.left + rect.right) / 2,
-        y: rect.top,
-      });
-    }
-  };
   const [LinkDic, setLinkDic] = useState({
     layout_id: '',
     block_id: '',
@@ -89,9 +76,6 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       attatchImg: attatchImg, // 이미지 첨부
       attatchLink: attatchLink, // 링크 첨부
       deleteImage: deleteImage, // 이미지 삭제
-      textRef: textRef,
-      handleTextSelection: handleTextSelection,
-      selectedTextPosition: selectedTextPosition,
     };
 
     return EditorRenderBox[design_type](arg);
@@ -225,7 +209,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
                     style={{ paddingTop: blockStyle.style.paddingTop, paddingBottom: blockStyle.style.paddingBottom, maxWidth: blockStyle.style.maxWidth }}
                   >
                     <div className='module_container'>
-                      <ApplyTable design_id={design_id} block_id={block_id} handleCellChange={handleCellChange} handleColumnNameChange={handleColumnNameChange} />
+                      <ApplyTable design_id={design_id} block_id={block_id} handleCellChange={handleCellChange} handleColumnNameChange={handleColumnNameChange} screenSize={screenSize}/>
                     </div>
                   </div>
                 </div>

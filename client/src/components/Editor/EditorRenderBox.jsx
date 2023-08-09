@@ -1,13 +1,7 @@
 import React, { useState, useRef } from 'react';
 
 import ApplyTable from 'components/Editor/ApplyTable';
-import EditToolBar from 'components/Editor/EditToolBar';
-import TextLine from 'components/ToolBar/TextLine';
 import TextEditor from 'components/Editor/TextEditor';
-
-
-import CKEditor from '@ckeditor/ckeditor5-react';
-import BalloonEditor from '@ckeditor/ckeditor5-build-balloon';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWandMagicSparkles, faImage, faPaperclip, faDownload } from '@fortawesome/free-solid-svg-icons';
@@ -131,7 +125,7 @@ export const EditorRenderBox = {
       blockId = block_id;
       isLayout = false;
     }
-
+    
     const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
 
     let backgroundColor = 'revert';
@@ -191,16 +185,29 @@ export const EditorRenderBox = {
                 )}
               </div>
               {design?.lines &&
-                design?.lines.map((line, lineIndex) => (
-                  <div
-                    key={lineIndex}
-                    contentEditable={screenSize === 'desktop' ? true : false}
-                    suppressContentEditableWarning
-                    style={{ margin: line.margin, fontFamily: line.fontFamily || 'inherit', fontSize: line.fontSize, fontWeight: line.fontWeight, color: line.color }}
-                    className={`${line.className} textWidth`}
-                    onBlur={(e) => handleUpdateText(blockId, lineIndex, e.target.innerHTML, isLayout)}
-                    dangerouslySetInnerHTML={{ __html: line.text }}
-                  />
+                design?.lines.map((line, i) => (
+                  <React.Fragment key={i}>
+                    {screenSize === 'desktop' ? (
+                        <TextEditor 
+                            line={line} 
+                            index={i} 
+                            handleUpdateText={handleUpdateText} 
+                            block_id={blockId} 
+                            isLayout={isLayout} 
+                        />
+                    ) : (
+                      <div
+                        key={i}
+                        contentEditable={false}
+                        suppressContentEditableWarning
+                        style={{ margin: line.margin, fontFamily: line.fontFamily || 'inherit', fontSize: line.fontSize, fontWeight: line.fontWeight, color: line.color }}
+                        className={`${line.className} textWidth`}
+                        onBlur={(e) => handleUpdateText(blockId, i, e.target.innerHTML, isLayout)}
+                        dangerouslySetInnerHTML={{ __html: line.text }}
+                      />
+                    )}
+                    {line.button && <button className={line.buttonStyle}>{line.button}</button>}
+                  </React.Fragment>
                 ))}
             </div>
           </div>
@@ -208,7 +215,7 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  text: ({ design, block_id, blockStyle, handleUpdateText, screenSize, textRef, selectedTextPosition, handleTextSelection }) => {
+  text: ({ design, block_id, blockStyle, handleUpdateText, screenSize}) => {
     let blockId, isLayout;
     if (block_id.includes('layout')) {
       [blockId, isLayout] = block_id.split('/');
@@ -235,43 +242,33 @@ export const EditorRenderBox = {
     return (
       <div key={block_id} className='normal_module' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap' style={restOfStyles}>
-          <div className={`module_container ${screen}`} style={{ textAlign: `${design?.alignments}` }}>
-            <div className='module_text_item'>
-              {design?.lines.map((line, i) => (
-                // // 임의로 만든 에디터
-                // <TextLine key={i}
-                //   index={i}
-                //   line={line}
-                //   handleUpdateText={(index, text) => handleUpdateText(blockId, index, text, isLayout)}
-                //   screenSize={screenSize}
-                //   maxWidth={restOfStyles.maxWidth}
-                // />
-
-                // 영욱님이 하시던거
-                <React.Fragment key={i}>
-                  <div
-                    onMouseUp={handleTextSelection}
-                    ref={textRef}
-                    key={i}
-                    className='module_text_line textWidth'
-                    contentEditable={screenSize === 'desktop' ? true : false}
-                    suppressContentEditableWarning
-                    style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
-                    onBlur={(e) => {
-                      handleUpdateText(blockId, i, e.target.innerHTML, isLayout);
-                    }}
-                    dangerouslySetInnerHTML={{ __html: line.text }}
-                  ></div>
-                  {line.button && <button className={line.buttonStyle}>{line.button}</button>}
-                  <EditToolBar textRef={textRef} position={selectedTextPosition} />
-                </React.Fragment>
-
-                // ckeditor 사용
-                // <TextEditor key={i} line={line} index={i} handleUpdateText={handleUpdateText} block_id={blockId} isLayout={isLayout} />
-              ))}
-            </div>
+            <div className={`module_container ${screen}`} style={{ textAlign: `${design?.alignments}` }}>
+                <div className='module_text_item'>
+                {design?.lines.map((line, i) => (
+                    <React.Fragment key={i}>
+                        {screenSize === 'desktop' ? (
+                            <TextEditor 
+                                line={line} 
+                                index={i} 
+                                handleUpdateText={handleUpdateText} 
+                                block_id={blockId} 
+                                isLayout={isLayout} 
+                            />
+                        ) : (
+                            <div
+                                className='module_text_line textWidth'
+                                contentEditable={false}
+                                suppressContentEditableWarning
+                                style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
+                                dangerouslySetInnerHTML={{ __html: line.text }}
+                            ></div>
+                        )}
+                        {line.button && <button className={line.buttonStyle}>{line.button}</button>}
+                    </React.Fragment>
+                      ))}
+                  </div>
+              </div>
           </div>
-        </div>
       </div>
     );
   },
@@ -360,7 +357,7 @@ const renderContent = (element, block_id, parsed_layout_design, clickHandler, se
           ) : layout_design_type === 'list' ? (
             EditorRenderBox.list({ design: boxes, block_id: index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage, screenSize })
           ) : layout_design_type === 'table' ? (
-            <ApplyTable design_id={tableDesignId} />
+            <ApplyTable design_id={tableDesignId} handleUpdateText={handleUpdateText} screenSize={screenSize}/>
           ) : layout_design_type === 'line' ? (
             EditorRenderBox.line({ design: boxes, block_id: index })
           ) : null
