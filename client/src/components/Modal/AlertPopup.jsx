@@ -2,12 +2,13 @@ import React,{useState,useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideAlert,hideConfirm, confirm ,cancel,showToast,updateProgress,hideToast} from 'redux/AlertSlice';
 
-import './AlertPopup.css';
+import 'styles/Modal/AlertPopup.css';
 
 const AlertPopup = () => {
     const dispatch = useDispatch();
     const { message, showAlert, confirmMessage, cancelled, toastMessage, showToast, progress } = useSelector(state => state.alert);  
     const [toastAnimation, setToastAnimation] = useState("");
+   
     // Alert 메시지에 대한 useEffect
     useEffect(() => {
         if (message) {

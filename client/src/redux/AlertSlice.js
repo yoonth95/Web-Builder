@@ -40,26 +40,26 @@ export const alertSlice = createSlice({
         cancel: (state) => {
             if (state.onCancel) state.onCancel();
             state.onCancel = null;
-            state.cancelled = true;  // 취소 버튼이 눌렸다는 것을 표시
+            state.cancelled = true;  
         },
         hideConfirm: (state) => {
             state.confirmMessage = null;
             state.onConfirm = null;
             state.onCancel = null;
-            state.cancelled = false;  // 초기 상태로 되돌림
+            state.cancelled = false; 
         },
         showToast: (state, action) => {
-            state.toastMessage = action.payload.message;  // message와 timer 두 속성으로 분리
+            state.toastMessage = action.payload.message;  
             state.showToast = true;
             state.progress = 100;
             state.timer = action.payload.timer;
           },
-        hideToast: (state) => {  // 토스트 메시지 숨기기 액션
+        hideToast: (state) => {  
             state.toastMessage = null;
             state.showToast = false;
             state.progress = 0;
         },
-        updateProgress: (state, action) => {  // 프로그레스 바 업데이트 액션
+        updateProgress: (state, action) => {  
             state.progress = action.payload;
         },
     },
