@@ -39,7 +39,6 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
     fetchData();
   }, [filterData]);
 
-
   // const renderBox = (block) => {
   //   const { design_type, content, block_id, design_id, layout_design } = block;
 
@@ -89,7 +88,7 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
   return (
     <div className='detail_wrap'>
       <Nav isLoading={isLoading} setIsLoading={setIsLoading} windowWidth={windowWidth} />
-      {data
+      {data?.result
         ?.sort((a, b) => a.block_order - b.block_order)
         .filter((block) => block.design_type !== 'default')
         .map((block) => {
