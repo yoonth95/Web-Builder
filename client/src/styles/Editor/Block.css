@@ -194,7 +194,9 @@
   width: 100%;
   min-height: 200px;
   background-color: #f3f3f3;
+  /* width: 15rem; */
 }
+
 .imageDiv.backgroundNone {
   height: auto;
   background-color: #fff !important;
@@ -207,6 +209,7 @@
   height: 15rem;
   min-height: revert;
 }
+
 .imageDiv.boxCircle:before {
   content: '';
   display: block;
