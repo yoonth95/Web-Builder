@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {useLocation} from "react-router-dom"
 import { useTable } from "react-table";
 import { useSelector } from 'react-redux';
-import TextEditor from 'components/Editor/TextEditor';
+// import TextEditor from 'components/Editor/TextEditor';
 
 const EditableCell = ({
   value: initialValue,
@@ -63,6 +63,7 @@ const EditableHeaderCell = ({
   authority,
   handleUpdateText,
   screenSize,
+  blocks,
 }) => {
   const [currentName, setCurrentName] = useState(columnName);
 
@@ -82,8 +83,9 @@ const EditableHeaderCell = ({
   };
 
   const handleBlur = () => {
-    handleColumnNameChange(block_id, `col${columnIdx + 1}`, currentName);
+    handleColumnNameChange(blocks, block_id, `col${columnIdx + 1}`, currentName);
   };
+
   function getFontSize(screenSize) {
     if (screenSize === 'desktop') {
       return '20px'; 
@@ -115,7 +117,7 @@ const defaultColumn = {
 };
 
 const MyTable = ({ columns,data,updateMyData,columnNames,setColumnNames,editColumnName,setEditColumnName,newColumnName,
-  setNewColumnName,handleCellChange, block_id, handleColumnNameChange,handleUpdateText, screenSize}) => {
+  setNewColumnName,handleCellChange, block_id, handleColumnNameChange,handleUpdateText, screenSize, blocks}) => {
   const { getTableProps,getTableBodyProps,headerGroups,rows,prepareRow,} = useTable({columns,data,defaultColumn,updateMyData});
   const {pathname} = useLocation();
   const authority = pathname.includes("pages") 
@@ -141,6 +143,7 @@ const MyTable = ({ columns,data,updateMyData,columnNames,setColumnNames,editColu
                     authority={authority}
                     handleUpdateText={handleUpdateText}
                     screenSize={screenSize}
+                    blocks={blocks}
                   />
                 </th>
               ))}
@@ -157,7 +160,7 @@ const MyTable = ({ columns,data,updateMyData,columnNames,setColumnNames,editColu
                   {...cell.getCellProps()}
                   style={{ padding: "0", margin: "0" }}
                 >
-                  {cell.render("Cell", { block_id: block_id , screenSize: screenSize })}
+                  {cell.render("Cell", { block_id: block_id , screenSize: screenSize, blocks: blocks })}
                 </td>
               ))}
             </tr>
@@ -179,16 +182,16 @@ const selectTableHeaders = (state, block_id, cols) => {
   const reduxColumnNames = block?.content?.cols || {};
   const numberOfKeys = Object.keys(reduxColumnNames).length;
   const defaultColumnNames = Array(cols).fill(0).map((_, index) => `Column ${index + 1}`);
-
+  console.log(defaultColumnNames);
   return numberOfKeys ? Object.values(reduxColumnNames) : defaultColumnNames;
 };
 
 const ApplyTable = ({ design_id, handleCellChange, block_id, handleColumnNameChange, handleUpdateText, screenSize}) => {
   const [designSize, setDesignSize] = useState(design_id.split(",").map(Number));
   const [rows, cols] = designSize;
-
+  const blocks = useSelector((state) => state.editor.blockList);
   const tableDataFromRedux = useSelector((state) => selectTableData(state, block_id));
-  const initialColumnNamesFromRedux = useSelector(state => selectTableHeaders(state, block_id));
+  const initialColumnNamesFromRedux = useSelector(state => selectTableHeaders(state, block_id, cols));
 
   const [columnNames, setColumnNames] = useState(initialColumnNamesFromRedux);
   
@@ -290,6 +293,7 @@ useEffect(() => {
       handleColumnNameChange={handleColumnNameChange}
       handleUpdateText={handleUpdateText}
       screenSize={screenSize}
+      blocks={blocks}
     />
   );
 };

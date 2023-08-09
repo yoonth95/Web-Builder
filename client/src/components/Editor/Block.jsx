@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowRotateRight, faArrowUp, faEdit, faTrash, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import 'styles/Editor/Block.css';
 
+
 function Block({ block_id, design_type, design_id, block_order, layout_design, block_content, addBlock, deleteBlock, handleChangeBlockOrder, blockStyle, screenSize }) {
   const isDefault = design_type === 'default';
   const blockContainerRef = useRef(null);
@@ -39,6 +40,7 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
   const [isModalOpen, setIsModalOpen] = useState({ open: false, block_id: '' });
   const [isOpen, setIsOpen] = useState(false);
   const blocks = useSelector((state) => state.editor.blockList);
+
 
   const [LinkDic, setLinkDic] = useState({
     layout_id: '',
@@ -129,17 +131,18 @@ function Block({ block_id, design_type, design_id, block_order, layout_design, b
       }
       return block;
     });
-  };
+  };  
 
-  const handleColumnNameChange = (block_id, col, newName) => {
+  const handleColumnNameChange = (blocks, block_id, col, newName) => {
+  
     const updatedBlockList = updateColumnNamesInBlock(blocks, block_id, col, newName);
     dispatch(updateList(updatedBlockList));
   };
-  const handleCellChange = (block_id, col, row, content) => {
+  const handleCellChange = (blocks, block_id, col, row, content) => {
     const updatedBlockList = updateTableDataInBlock(blocks, block_id, col, row, content);
     dispatch(updateList(updatedBlockList));
   };
-
+  
   // 블록 추가 버튼 렌더링
   const renderAddBlockButton = (a) => {
     if (!sideBarOpen.open) {
