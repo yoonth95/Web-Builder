@@ -87,7 +87,7 @@ export const useEditorActions = () => {
           });
           setOriginalData(blockList);
           dispatch(updateList(blockList));
-          
+
           if (data.save_time) {
             // save_time 중복 제거
             const saveTime = data.save_time.map(item => {
@@ -96,8 +96,8 @@ export const useEditorActions = () => {
             const dupSaveData = [...new Set(saveTime)];
             setHistoryList(dupSaveData);
           }
-          
-          
+
+
           setIsLoading(false);
           setIsWaiting(false);
         }
@@ -110,8 +110,8 @@ export const useEditorActions = () => {
     }
   }
   // 테이블 셀별 수정.
-  const updateTableDataInBlock = (blockList, block_id, col, row, content) => {
-    return blockList.map(block => {
+  const updateTableDataInBlock = (block_id, col, row, content) => {
+    return blocks.map(block => {
       if (block.block_id === block_id) {
         const existingRows = block.content?.rows || [];
         const updatedRows = [...existingRows];
@@ -395,7 +395,7 @@ export const useEditorActions = () => {
   };
 
   // 블록 저장
-  const saveBlockAction = async (page_idx, blocks, setIsLoading, setError) => {
+  const saveBlockAction = async (page_idx, blocks, setIsLoading, setError, setHistoryList) => {
     try {
       setIsLoading(true);
       // const save_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -430,6 +430,7 @@ export const useEditorActions = () => {
       const save_time = koreaNow.toISOString().replace("T", " ").split('.')[0];
 
       const result = await SaveBlockAPI(page_idx, blockToBase64, save_time);
+      setHistoryList(prev => [save_time, ...prev]);
 
       return result;
     } catch (err) {
