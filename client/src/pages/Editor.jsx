@@ -37,7 +37,6 @@ const Editor = ({ isLoading, setIsLoading }) => {
 
   const { getBlocksAction, insertBlockAction, deleteBlockAction, updateBlockOrderAction, saveBlockAction, changeMenuSaveTimeAction } = useEditorActions();
 
-
   useEffect(() => {
     // 블록 조회
     const getBlocks = async () => {
@@ -57,12 +56,14 @@ const Editor = ({ isLoading, setIsLoading }) => {
       dispatch(showAlert('최소 한 개의 블록은 있어야 합니다.'));
       return;
     }
-    dispatch(showConfirm({
-      message: '해당 블록을 삭제하시겠습니까?',
-      onConfirm: async () => {
-        await deleteBlockAction(id, setIsLoading, setError, setIsWaiting);
-      }
-    }));
+    dispatch(
+      showConfirm({
+        message: '해당 블록을 삭제하시겠습니까?',
+        onConfirm: async () => {
+          await deleteBlockAction(id, setIsLoading, setError, setIsWaiting);
+        },
+      }),
+    );
   };
 
   // 블록 순서 변경
@@ -78,22 +79,23 @@ const Editor = ({ isLoading, setIsLoading }) => {
   // 페이지 이동
   const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
-    dispatch(showConfirm({
-      message: '저장 후 이동하시겠습니까?',
-      onConfirm: async () => {
-        try {
-          await saveBlockAction(page_idx, blocks, setIsLoading, setError);
-          dispatch(showToast({ message: '저장 되었습니다.', timer: 3000 }));
-          setTimeout(() => {
-            navigate(`/editor/${selectedValue}`);
-          }, 3000);
-        } catch{
-        }
-      },
-      onCancel: () => {
-        navigate(`/editor/${selectedValue}`);
-      }
-    }));
+    dispatch(
+      showConfirm({
+        message: '저장 후 이동하시겠습니까?',
+        onConfirm: async () => {
+          try {
+            await saveBlockAction(page_idx, blocks, setIsLoading, setError);
+            dispatch(showToast({ message: '저장 되었습니다.', timer: 3000 }));
+            setTimeout(() => {
+              navigate(`/editor/${selectedValue}`);
+            }, 3000);
+          } catch {}
+        },
+        onCancel: () => {
+          navigate(`/editor/${selectedValue}`);
+        },
+      }),
+    );
   };
 
   // 미리보기
@@ -106,13 +108,12 @@ const Editor = ({ isLoading, setIsLoading }) => {
     try {
       const isEqual = arrayEqual(blocks, originalData);
       if (!isEqual) {
-        await saveBlockAction(page_idx, blocks, setIsLoading, setError);
+        await saveBlockAction(page_idx, blocks, setIsLoading, setError, setHistoryList);
         dispatch(showToast({ message: '저장 되었습니다.', timer: 3000 }));
       } else {
         dispatch(showAlert('변경 내역이 없어 저장되지 않습니다.'));
       }
-    } catch { 
-    }
+    } catch {}
   };
 
   // redux block 값이랑 db에서 가져온 원본 데이터랑 비교
@@ -130,25 +131,27 @@ const Editor = ({ isLoading, setIsLoading }) => {
       }
     }
     return true;
-  }
+  };
 
   // 블록 히스토리 값으로 변경하기
   const handleHistoryChange = async (history) => {
-    dispatch(showConfirm({
-      message: '해당 날짜의 데이터를 불러오시겠습니까?',
-      onConfirm: async () => {
-        try {
-          await changeMenuSaveTimeAction(page_idx, history, setError, setIsWaiting);
+    dispatch(
+      showConfirm({
+        message: '해당 날짜의 데이터를 불러오시겠습니까?',
+        onConfirm: async () => {
+          try {
+            await changeMenuSaveTimeAction(page_idx, history, setError, setIsWaiting);
+            setShowHistory(false);
+          } catch {
+            dispatch(showAlert('히스토리 변경에 실패했습니다.'));
+            setShowHistory(false);
+          }
+        },
+        onCancel: () => {
           setShowHistory(false);
-        } catch{
-          dispatch(showAlert('히스토리 변경에 실패했습니다.'));
-          setShowHistory(false);
-        }
-      },
-      onCancel: () => {
-        setShowHistory(false);
-      }
-    }));
+        },
+      }),
+    );
   };
 
   useEffect(() => {
@@ -163,7 +166,9 @@ const Editor = ({ isLoading, setIsLoading }) => {
       <div className='editor_wrap'>
         <div className='editor_pages_wrap'>
           <div className='editor_backup'>
-            <button className='editor_open' onClick={() => setShowHistory(!showHistory)}>복원하기</button>
+            <button className='editor_open' onClick={() => setShowHistory(!showHistory)}>
+              복원하기
+            </button>
             <div className={`history-dropdown ${showHistory ? 'show' : ''}`}>
               {historyList.map((item, index) => (
                 <button key={index} onClick={() => handleHistoryChange(item)}>
@@ -172,7 +177,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
               ))}
             </div>
           </div>
-          
+
           <div className='editor_pages'>
             <label className='editor_pageList_Label'>현재 페이지</label>
             <select className='editor_pageList' value={page_idx} onChange={handleSelectChange}>
@@ -202,7 +207,7 @@ const Editor = ({ isLoading, setIsLoading }) => {
       </div>
       <div className={screenSize}>
         <Nav isLoading={isLoading} setIsLoading={setIsLoading} screenSize={screenSize} type='편집' />
-        <div style={{marginBottom: '30px'}}>
+        <div style={{ marginBottom: '30px' }}>
           {[...blocks]
             .filter((e) => e.page_id === Number(page_idx))
             .sort((a, b) => a.block_order - b.block_order)

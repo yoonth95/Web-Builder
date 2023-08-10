@@ -47,7 +47,11 @@ export const EditorRenderBox = {
                   isCircle = true;
                 }
                 return (
-                  <div key={i} className={`${design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} ${isCircle ? 'boxCircle' : ''}`} style={{ borderRadius: shape }}>
+                  <div
+                    key={i}
+                    className={`${design?.images[i].src !== '' ? 'imageDiv backgroundNone' : 'imageDiv'} ${isCircle ? 'boxCircle' : design.id === '7' ? 'boxOnly' : ''}`}
+                    style={{ borderRadius: shape }}
+                  >
                     {design?.images[i].src !== '' ? (
                       <div className={`moduleBox ${screenSize === 'desktop' ? 'desktop' : ''}`}>
                         <div className='icon_container'>
@@ -125,7 +129,7 @@ export const EditorRenderBox = {
       blockId = block_id;
       isLayout = false;
     }
-    
+
     const screen = screenSize === 'desktop' ? 'container_desktop' : screenSize === 'tablet' ? 'container_tablet' : 'container_mobile';
 
     let backgroundColor = 'revert';
@@ -160,7 +164,12 @@ export const EditorRenderBox = {
                           <FontAwesomeIcon icon={faImage} />
                           <input type='file' accept='image/*' onChange={(e) => attatchImg({ tag: e, block_id: blockId, isLayout: isLayout })} />
                         </label>
-                        <span className='linkIcon' onClick={() => { attatchLink({ block_id: blockId, idx: 0, isLayout: isLayout })}}>
+                        <span
+                          className='linkIcon'
+                          onClick={() => {
+                            attatchLink({ block_id: blockId, idx: 0, isLayout: isLayout });
+                          }}
+                        >
                           <FontAwesomeIcon icon={faPaperclip} />
                         </span>
                       </div>
@@ -188,13 +197,7 @@ export const EditorRenderBox = {
                 design?.lines.map((line, i) => (
                   <React.Fragment key={i}>
                     {screenSize === 'desktop' ? (
-                        <TextEditor 
-                            line={line} 
-                            index={i} 
-                            handleUpdateText={handleUpdateText} 
-                            block_id={blockId} 
-                            isLayout={isLayout} 
-                        />
+                      <TextEditor line={line} index={i} handleUpdateText={handleUpdateText} block_id={blockId} isLayout={isLayout} />
                     ) : (
                       <div
                         key={i}
@@ -215,7 +218,7 @@ export const EditorRenderBox = {
       </div>
     );
   },
-  text: ({ design, block_id, blockStyle, handleUpdateText, screenSize}) => {
+  text: ({ design, block_id, blockStyle, handleUpdateText, screenSize }) => {
     let blockId, isLayout;
     if (block_id.includes('layout')) {
       [blockId, isLayout] = block_id.split('/');
@@ -242,33 +245,27 @@ export const EditorRenderBox = {
     return (
       <div key={block_id} className='normal_module' style={{ backgroundColor: backgroundColor }}>
         <div className='module_wrap' style={restOfStyles}>
-            <div className={`module_container ${screen}`} style={{ textAlign: design?.alignments }}>
-                <div className='module_text_item'>
-                {design?.lines.map((line, i) => (
-                    <React.Fragment key={i}>
-                        {screenSize === 'desktop' ? (
-                          <TextEditor 
-                            line={line} 
-                            index={i} 
-                            handleUpdateText={handleUpdateText} 
-                            block_id={blockId} 
-                            isLayout={isLayout} 
-                          />
-                        ) : (
-                          <div
-                            className='module_text_line textWidth'
-                            contentEditable={false}
-                            suppressContentEditableWarning
-                            style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
-                            dangerouslySetInnerHTML={{ __html: line.text }}
-                          ></div>
-                        )}
-                        {line.button && <button className={line.buttonStyle}>{line.button}</button>}
-                    </React.Fragment>
-                      ))}
-                  </div>
-              </div>
+          <div className={`module_container ${screen}`} style={{ textAlign: design?.alignments }}>
+            <div className='module_text_item'>
+              {design?.lines.map((line, i) => (
+                <React.Fragment key={i}>
+                  {screenSize === 'desktop' ? (
+                    <TextEditor line={line} index={i} handleUpdateText={handleUpdateText} block_id={blockId} isLayout={isLayout} />
+                  ) : (
+                    <div
+                      className='module_text_line textWidth'
+                      contentEditable={false}
+                      suppressContentEditableWarning
+                      style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
+                      dangerouslySetInnerHTML={{ __html: line.text }}
+                    ></div>
+                  )}
+                  {line.button && <button className={line.buttonStyle}>{line.button}</button>}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
+        </div>
       </div>
     );
   },
@@ -357,26 +354,26 @@ const renderContent = (element, block_id, parsed_layout_design, clickHandler, se
           ) : layout_design_type === 'list' ? (
             EditorRenderBox.list({ design: boxes, block_id: index, handleUpdateText: handleUpdateText, attatchImg, attatchLink, deleteImage, screenSize })
           ) : layout_design_type === 'table' ? (
-            <ApplyTable design_id={tableDesignId} handleUpdateText={handleUpdateText} screenSize={screenSize}/>
+            <ApplyTable design_id={tableDesignId} handleUpdateText={handleUpdateText} screenSize={screenSize} />
           ) : layout_design_type === 'line' ? (
             EditorRenderBox.line({ design: boxes, block_id: index })
           ) : null
         ) : (
-          <ClickDiv layout_id={element.layout_id} setLayoutId={setLayoutId} clickHandler={clickHandler} setIsLayoutDesign={setIsLayoutDesign} />
+          <ClickDiv layout_id={element.layout_id} setLayoutId={setLayoutId} clickHandler={clickHandler} setIsLayoutDesign={setIsLayoutDesign} screenSize={screenSize} />
         )}
       </div>
     );
   }
 };
 
-const ClickDiv = ({ layout_id, setLayoutId, clickHandler, setIsLayoutDesign }) => {
+const ClickDiv = ({ layout_id, setLayoutId, clickHandler, setIsLayoutDesign, screenSize }) => {
   const clickEvent = (layout_id, setLayoutId, clickHandler, setIsLayoutDesign) => {
     setLayoutId(layout_id);
     setIsLayoutDesign(true);
     clickHandler();
   };
   return (
-    <div className='layout_wrap' onClick={(e) => clickEvent(layout_id, setLayoutId, clickHandler, setIsLayoutDesign)}>
+    <div className='layout_wrap' onClick={(e) => (screenSize === 'desktop' ? clickEvent(layout_id, setLayoutId, clickHandler, setIsLayoutDesign) : null)}>
       <FontAwesomeIcon className='icon_design_select' icon={faWandMagicSparkles} />
       <p className='txt_design_select'>디자인을 선택하세요</p>
     </div>

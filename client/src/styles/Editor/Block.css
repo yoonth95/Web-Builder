@@ -18,7 +18,6 @@
   z-index: 600;
 }
 
-
 .block_correction_btn.delete_block_btn {
   width: 25px;
   height: 25px;
@@ -443,7 +442,6 @@
   max-width: 100%;
 }
 
-
-.boxOnly{
+.boxOnly {
   width: 15rem;
 }
