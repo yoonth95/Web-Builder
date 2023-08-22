@@ -84,11 +84,12 @@ const Editor = ({ isLoading, setIsLoading }) => {
         message: '저장 후 이동하시겠습니까?',
         onConfirm: async () => {
           try {
-            await saveBlockAction(page_idx, blocks, setIsLoading, setError);
-            dispatch(showToast({ message: '저장 되었습니다.', timer: 3000 }));
-            setTimeout(() => {
-              navigate(`/editor/${selectedValue}`);
-            }, 3000);
+            // await saveBlockAction(page_idx, blocks, setIsLoading, setError);
+            // dispatch(showToast({ message: '저장 되었습니다.', timer: 3000 }));
+            navigate(`/editor/${selectedValue}`);
+            // setTimeout(() => {
+
+            // }, 3000);
           } catch {}
         },
         onCancel: () => {

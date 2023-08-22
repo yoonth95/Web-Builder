@@ -39,51 +39,23 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
     fetchData();
   }, [filterData]);
 
-  // const renderBox = (block) => {
-  //   const { design_type, content, block_id, design_id, layout_design } = block;
-
-  //   if (content) {
-  //     const arg = {
-  //       content: content,
-  //       block_id: block_id,
-  //       blockStyle: JSON.parse(block.block_style),
-  //       layout_design: layout_design,
-  //     };
-
-  //     return DetailRenderBox[design_type](arg);
-  //   } else {
-  //     const typeItem = designType.find((item) => item.type === design_type);
-
-  //     const filteredBoxes = typeItem && typeItem.boxes?.filter((box) => box.id === design_id);
-
-  //     return filteredBoxes?.map((box) =>
-  //       DetailRenderBox[design_type]({
-  //         content: box,
-  //         block_id: block_id,
-  //         blockStyle: JSON.parse(block.block_style),
-  //         layout_design: layout_design
-  //       }),
-  //     );
-  //   }
-  // };
-
   const renderBox = (block) => {
     const defaultStyle = {
       maxWidth: '1240px',
       paddingTop: '0px',
       paddingBottom: '0px',
       backgroundColor: '#ffffff',
-    }
+    };
 
     const arg = {
       content: block.content,
       block_id: block.block_id,
       blockStyle: JSON.parse(block.block_style) || defaultStyle,
       layout_design: block.layout_design,
-    }
+    };
 
     return DetailRenderBox[block.design_type](arg);
-  }
+  };
 
   return (
     <div className='detail_wrap'>
@@ -103,110 +75,15 @@ const Detail = ({ isLoading, setIsLoading, setError }) => {
                   </div>
                 </div>
               </div>
-            )
+            );
           } else {
             return (
               <div key={block.block_id} className='module_block'>
                 {renderBox(block)}
               </div>
-            )
+            );
           }
-        })
-      }
-
-
-      {/* {data
-        ?.sort((a, b) => a.block_order - b.block_order) // block_order 순으로 정렬
-        .filter((block) => block.design_type !== 'default') // design_type이 default가 아닌 것만 필터링
-        .map((block) => {
-          let layout_design = block.layout_design;
-          if (typeof block.layout_design === 'string') {
-            try {
-              layout_design = JSON.parse(block.layout_design); // 디자인 유형이 layout_design인경우 design style을 파싱
-            } catch (error) {
-              console.error('Error parsing layout_design:', error);
-            }
-          }
-
-          const elements = block.content?.elements;
-
-          let shouldRender = false;
-
-          const elementsLength = elements?.reduce((count, element) => {
-            if (element.layout_id) {
-              return count + 1;
-            }
-            if (element.children) {
-              return count + element.children.length;
-            }
-            return count;
-          }, 0);
-
-          if (layout_design && elements && layout_design.length === elementsLength) {
-            shouldRender = true;
-
-            const elementsLayoutIds = elements.flatMap((element) => {
-              if (element.layout_id) {
-                return [element.layout_id];
-              }
-              if (element.children) {
-                return element.children.map((child) => child.layout_id);
-              }
-              return [];
-            });
-
-            for (let i = 0; i < layout_design.length; i++) {
-              if (!elementsLayoutIds.includes(layout_design[i].layout_id)) {
-                shouldRender = false;
-                break;
-              }
-            }
-          } else if (layout_design?.length === elementsLength) {
-            shouldRender = false;
-          }
-
-          const renderBlockByType = (type, block, shouldRender) => {
-            const block_style = JSON.parse(block.block_style);
-            let backgroundColor = '#ffffff';
-            let restOfStyles = {
-              maxWidth: '1240px',
-              paddingTop: '0px',
-              paddingBottom: '0px',
-            };
-            if (block_style) {
-              restOfStyles = {
-                maxWidth: block_style.style.maxWidth,
-                paddingTop: block_style.style.paddingTop,
-                paddingBottom: block_style.style.paddingBottom,
-              };
-              backgroundColor = block_style.style.backgroundColor || backgroundColor;
-            }
-            switch (type) {
-              case 'table':
-                return (
-                  <div className='module_block'>
-                    <div className='normal_wrap' style={{ backgroundColor: backgroundColor }}>
-                      <div className='module_wrap' style={restOfStyles}>
-                        <div className='module_container'>
-                          <ApplyTable design_id={block.design_id} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              case 'layout':
-                return shouldRender ? <div className='module_block'>{renderBox(block)}</div> : null;
-              default:
-                return <div className='module_block'>{renderBox(block)}</div>;
-            }
-          };
-
-          return (
-            <div key={block.block_id} className='block_container' style={{ height: 'auto', outline: 'none' }}>
-              {renderBlockByType(block.design_type, block, shouldRender)}
-            </div>
-          );
-        })} */}
+        })}
     </div>
   );
 };
