@@ -161,9 +161,11 @@
 }
 .container_tablet .textWidth {
   max-width: 750px;
+  zoom: 0.8;
 }
 .container_mobile .textWidth {
-  max-width: 350px;
+  /* max-width: 350px; */
+  zoom: 0.5;
 }
 
 .imgHover:hover {
