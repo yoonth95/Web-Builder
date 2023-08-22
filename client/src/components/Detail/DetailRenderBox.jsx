@@ -25,7 +25,7 @@ export const DetailRenderBox = {
           <div className='module_wrap' style={restOfStyles}>
             <div className='module_container' style={content?.layout}>
               {[...Array(content?.images.length)].map((_, i) => {
-                let shape = ''
+                let shape = '';
                 if (content?.images[i].shape === 'circle') {
                   shape = '50%';
                 }
@@ -35,7 +35,7 @@ export const DetailRenderBox = {
                       <img
                         src={`${content?.images[i].src}`}
                         alt=''
-                        style={content?.images[i].href !== '' ? {cursor: 'pointer', borderRadius: shape} : {cursor: '', borderRadius: shape}}
+                        style={content?.images[i].href !== '' ? { cursor: 'pointer', borderRadius: shape } : { cursor: '', borderRadius: shape }}
                         onClick={() => {
                           if (content?.images[i].href) {
                             window.location.href = content?.images[i].href;
@@ -100,7 +100,7 @@ export const DetailRenderBox = {
         <div className='module_wrap font-style' style={restOfStyles}>
           <div className='module_container_list'>
             <div className='module_list_item'>
-              <div className={`module_${content?.shape}_detail`} style={content?.images[0].href !== '' ? {cursor: "pointer"} : {cursor: ''}}>
+              <div className={`module_${content?.shape}_detail`} style={content?.images[0].href !== '' ? { cursor: 'pointer' } : { cursor: '' }}>
                 <img
                   src={`${content?.images[0].src}`}
                   alt=''
@@ -118,7 +118,7 @@ export const DetailRenderBox = {
                   <div
                     key={lineIndex}
                     style={{ margin: line.margin, fontFamily: line.fontFamily || 'inherit', fontSize: line.fontSize, fontWeight: line.fontWeight, color: line.color }}
-                    className={`${line.className} textWidth`}
+                    className={`${line.className} textWidth ck-content`}
                     dangerouslySetInnerHTML={{ __html: line.text }}
                   />
                 ))}
@@ -152,7 +152,7 @@ export const DetailRenderBox = {
                 <React.Fragment key={i}>
                   <div
                     key={i}
-                    className='module_text_line textWidth'
+                    className='module_text_line textWidth ck-content'
                     style={{ margin: line.margin, fontSize: line.fontSize, color: line.color, fontWeight: line.fontWeight }}
                     dangerouslySetInnerHTML={{ __html: line.text }}
                   ></div>
@@ -188,20 +188,13 @@ export const DetailRenderBox = {
         <div className='module_wrap' style={restOfStyles}>
           <div className={`module_container`}>
             <div className='module_layout_item' style={content?.style}>
-              {content?.elements.map((element, i) =>
-                renderContent(
-                  element,
-                  block_id,
-                  parsed_layout_design,
-                  DetailRenderBox
-                ),
-              )}
+              {content?.elements.map((element, i) => renderContent(element, block_id, parsed_layout_design, DetailRenderBox))}
             </div>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  },
 };
 
 const renderContent = (element, block_id, parsed_layout_design, DetailRenderBox) => {
@@ -222,9 +215,7 @@ const renderContent = (element, block_id, parsed_layout_design, DetailRenderBox)
   if (element.children) {
     return (
       <div key={keyForElement} className={element.children ? '' : layout ? '' : 'module_layoutBox'} style={element.style}>
-        {element.children.map((child, j) =>
-          renderContent(child, block_id, parsed_layout_design, DetailRenderBox),
-        )}
+        {element.children.map((child, j) => renderContent(child, block_id, parsed_layout_design, DetailRenderBox))}
       </div>
     );
   } else {
@@ -242,9 +233,7 @@ const renderContent = (element, block_id, parsed_layout_design, DetailRenderBox)
           ) : layout_design_type === 'line' ? (
             DetailRenderBox.line({ content: boxes, block_id: index })
           ) : null
-        ) : (
-          null
-        )}
+        ) : null}
       </div>
     );
   }
