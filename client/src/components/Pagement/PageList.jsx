@@ -19,8 +19,8 @@ const PageList = ({menu,parentList,setIsOpen,dispatch}) => {
       <div className='info_content title' title={menu.title}>
         {menu.title}
       </div>
-      <div className='info_content link' title={`/page/${menu.link}`}>
-        /page/{menu.link}
+      <div className='info_content link' title={`/pages/${menu.link}`}>
+        /pages/{menu.link}
       </div>
       <div className='info_content btn'>
         <span className='txt_info_content_btn' title={parentList.filter((e) => e.idx === menu.parent_id)[0].title}>

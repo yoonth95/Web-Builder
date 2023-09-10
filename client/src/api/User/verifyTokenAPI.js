@@ -12,6 +12,7 @@ export const verifyTokenAPI = async () => {
 
     const data = await res.json();
     const userInfo = {
+      user_idx: data.user.user_idx,
       user_id: data.user.userID,
       user_name: data.user.userName,
     };

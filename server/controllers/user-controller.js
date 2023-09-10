@@ -65,6 +65,7 @@ exports.login = async (req, res) => {
     // JWT 생성
     const token = jwt.sign(
       {
+        user_idx: getUser[0].idx,
         userID: getUser[0].userID,
         userName: getUser[0].userName,
       },
@@ -78,6 +79,7 @@ exports.login = async (req, res) => {
     });
 
     res.status(200).json({
+      user_idx: getUser[0].idx,
       user_id: getUser[0].userID,
       user_name: getUser[0].userName,
       token,
@@ -116,4 +118,17 @@ exports.verifyToken = (req, res) => {
     result.user = decoded;
     res.status(200).json(result);
   });
+};
+
+
+exports.getUserId = async (req, res) => {
+  const { idx } = req.params;
+
+  try {
+    const UserId = await userDB.getUserId(idx);
+    res.status(200).json(UserId);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
 };

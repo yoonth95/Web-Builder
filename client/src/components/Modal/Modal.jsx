@@ -7,8 +7,10 @@ import { showAlert } from 'redux/AlertSlice';
 import SelectBox from 'components/Management/SelectBox';
 import useInputValues from 'hooks/useInput';
 import 'styles/Modal/Modal.css';
+import { useLocation } from 'react-router-dom';
 
 const Modal = ({ isOpen, setIsOpen }) => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const { btn } = useSelector((state) => state.btn);
   const { page } = useSelector((state) => state.page);
@@ -95,7 +97,7 @@ const Modal = ({ isOpen, setIsOpen }) => {
                   <input ref={inputRef} type='text' className='pageInput' name='title' placeholder={btn === '메뉴' ? '메뉴 항목' : `페이지 명`} value={title} onChange={handleChange} />
                   <input type='text' className='pageInput' name='link' placeholder='페이지 주소' value={link} onChange={handleChange} />
                   <div className='modal_page_infor'>
-                    <p>{`http://localhost:3000/page/${link}`}</p>
+                    <p>{`http://localhost:3000/main/${location.pathname.split("/").at(-1)}/pages/${link}`}</p>
                     <div style={{ display: btn === '복제' ? 'none' : 'block' }}>
                       <input type='checkbox' name='new_window' checked={new_window} onChange={handleChange} />
                       새창 열기

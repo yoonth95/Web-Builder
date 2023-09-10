@@ -11,6 +11,7 @@ const useAuth = async (setIsLoading, setIsAuthenticated) => {
       setIsLoading(true);
       try {
         const userInfo = await verifyTokenAPI();
+        console.log(userInfo)
         dispatch(setUser(userInfo));
         setIsAuthenticated(true);
       } catch (err) {

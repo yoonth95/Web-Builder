@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateList } from 'redux/menuSlice';
 import { showAlert } from 'redux/AlertSlice';
 import { GetMenuAPI, DeleteMenuAPI, UpdateMenuAPI, InsertMenuAPI, OrderMenuAPI } from '../api/Admin';
-import { useState } from 'react';
 
 export const useMenuActions = () => {
   const dispatch = useDispatch();
@@ -10,11 +9,9 @@ export const useMenuActions = () => {
   const { user } = useSelector((state) => state.user);
 
   // 메뉴 조회
-  const getMenuAction = async (setIsLoading) => {
+  const getMenuAction = async (setIsLoading, user_idx) => {
     try {
-      const userID = user.user_id;
-
-      const data = await GetMenuAPI(userID);
+      const data = user ? await GetMenuAPI(false, user.user_id) : await GetMenuAPI(true, user_idx);
       let f_list = [];
       let s_list = [];
       data.forEach((item) => {
@@ -27,6 +24,7 @@ export const useMenuActions = () => {
       console.error(err.message);
       dispatch(showAlert('조회 오류'));
       setIsLoading(true);
+      return true;
     }
   };
 
