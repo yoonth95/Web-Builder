@@ -13,9 +13,9 @@ export const fetchData = async (url) => {
 };
 
 
-export const GetBlocksAPI = async (idx) => {
+export const GetBlocksAPI = async (userID, idx) => {
     try {
-        const menu = await fetchData(`/api/getMenu/${idx}`);
+        const menu = await fetchData(`/api/getMenu/${userID}/${idx}`);
 
         if (menu.length === 0) {
             return null; // 메뉴가 없는 경우

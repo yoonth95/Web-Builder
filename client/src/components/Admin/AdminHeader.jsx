@@ -46,8 +46,8 @@ const AdminHeader = () => {
       <div className='info_box'>
         <img src="https://cache.wjthinkbig.com/WEB_RESOURCE/WJBOOKCLUB/images/layout_2023/logo.png" onClick={() => onBtnClick('menu')} alt='로고 이미지' />
         <div>
-          <span onClick={() => navigate('/mypage')}>마이페이지</span>
-          <span className='line'>&#124;</span>
+          <span onClick={() => navigate('/mypage')}>메인페이지</span>
+          <span className='line' style={{textAlign: "center"}}>&#124;</span>
           <span onClick={logoutBtn}>로그아웃</span>
         </div>
       </div>

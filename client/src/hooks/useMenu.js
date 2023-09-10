@@ -7,11 +7,14 @@ import { useState } from 'react';
 export const useMenuActions = () => {
   const dispatch = useDispatch();
   const { firstList, secondList } = useSelector((state) => state.menu);
+  const { user } = useSelector((state) => state.user);
 
   // 메뉴 조회
   const getMenuAction = async (setIsLoading) => {
     try {
-      const data = await GetMenuAPI();
+      const userID = user.user_id;
+
+      const data = await GetMenuAPI(userID);
       let f_list = [];
       let s_list = [];
       data.forEach((item) => {
@@ -30,7 +33,9 @@ export const useMenuActions = () => {
   // 메뉴 삭제
   const deleteMenuAction = async (id, order_num, parent_id) => {
     try {
-      await DeleteMenuAPI(id, order_num, parent_id);
+      const userID = user.user_id;
+
+      await DeleteMenuAPI(id, order_num, parent_id, userID);
       const newFirstList = firstList.filter((item) => item.idx !== id);
       const newSecondList = secondList.filter((item) => item.idx !== id);
       dispatch(updateList({ listName: 'firstList', newList: newFirstList }));
@@ -60,7 +65,8 @@ export const useMenuActions = () => {
   // 메뉴 추가
   const insertMenuAction = async (title, link, parent_id, new_window, setIsOpen, reset) => {
     try {
-      const data = await InsertMenuAPI(title, link, parent_id, new_window);
+      const userID = user.user_id;
+      const data = await InsertMenuAPI(title, link, parent_id, new_window, userID);
       dispatch(showAlert('메뉴를 추가하였습니다.'));
       setIsOpen(false);
       reset();

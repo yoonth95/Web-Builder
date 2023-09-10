@@ -1,6 +1,6 @@
-export const GetMenuAPI = async () => {
+export const GetMenuAPI = async (userID) => {
   try {
-    const res = await fetch('/api/getMenu', {
+    const res = await fetch(`/api/getMenu/${userID}`, {
       method: 'GET',
       credentials: 'include',
     });
