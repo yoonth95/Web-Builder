@@ -102,8 +102,10 @@
 [윤태현]: https://github.com/yoonth95
 [서윤정]: https://github.com/annasyun
 
+## 4. 데이터베이스 ERD
+![image](https://github.com/yoonth95/Web-Builder/assets/78673090/e0121c88-a55d-4a81-b67c-9efa2ee8a38d)
 
-## 4. 프로젝트 구조
+## 5. 프로젝트 구조
 ```
 📦 Project
 ├─ .gitignore
