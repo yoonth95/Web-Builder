@@ -105,7 +105,10 @@
 ## 4. 데이터베이스 ERD
 ![image](https://github.com/yoonth95/Web-Builder/assets/78673090/e0121c88-a55d-4a81-b67c-9efa2ee8a38d)
 
-## 5. 프로젝트 구조
+## 5. API 명세서
+![image](https://github.com/yoonth95/Web-Builder/assets/78673090/1d3477fa-3ece-4fb9-8ffb-a849d459eba2)
+
+## 6. 프로젝트 구조
 ```
 📦 Project
 ├─ .gitignore
